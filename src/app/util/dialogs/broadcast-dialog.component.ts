@@ -18,6 +18,7 @@ export class BroadcastDialogComponent implements OnInit {
   allowanceMode: boolean;
   isAllowanceGranted: boolean;
   callbackTx: any;
+  gasPrice: number
 
   constructor(
     public web3Service: Web3Service,
@@ -28,6 +29,7 @@ export class BroadcastDialogComponent implements OnInit {
     this.callbackTx = data.callbackTx;
     this.signedRequestObject = data.signedRequestObject;
     this.requestData = data.signedRequestObject.signedRequestData;
+    this.gasPrice = data.gasPrice;
     this.loading = false;
     this.isAllowanceGranted = false;
 
@@ -69,7 +71,13 @@ export class BroadcastDialogComponent implements OnInit {
     this.web3Service
       .broadcastSignedRequestAsPayer(
         this.signedRequestObject,
-        this.requestData.expectedAmounts
+        this.requestData.expectedAmounts,
+        {
+          transactionOptions: {
+            gasPrice: this.gasPrice,
+            skipERC20checkAllowance: true
+      }
+    }
       )
       .on('broadcasted', response => {
         this.dialogRef.close(response.transaction.hash);

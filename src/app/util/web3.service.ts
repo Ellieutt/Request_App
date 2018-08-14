@@ -27,7 +27,7 @@ export class Web3Service {
     1: 'https://mainnet.infura.io/BQBjfSi5EKSCQQpXebO',
     4: 'https://rinkeby.infura.io/BQBjfSi5EKSCQQpXebO'
   };
-  private defaultGasPrice = 10000000000; // 10 gwei
+  public defaultGasPrice = 10000000000; // 10 gwei
 
   public metamask = false;
   public ledgerConnected = false;

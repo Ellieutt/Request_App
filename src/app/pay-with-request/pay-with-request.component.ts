@@ -21,6 +21,7 @@ export class PayWithRequestComponent implements OnInit {
   requestNetworkId: number;
   queryParamError: boolean;
   redirectUrl: string;
+  gasPrice: number;
   max: number;
   min: number;
   date = new Date();
@@ -54,6 +55,9 @@ export class PayWithRequestComponent implements OnInit {
 
     this.callbackUrl = queryParams.callbackUrl;
     this.requestNetworkId = queryParams.networkId;
+    this.gasPrice = ('gasPrice' in queryParams)
+      ? queryParams.gasPrice
+      : this.web3Service.defaultGasPrice;
 
     // reload requestObject with its web3 if account has changed
     this.web3Service.accountObservable.subscribe(account => {
@@ -170,7 +174,8 @@ export class PayWithRequestComponent implements OnInit {
         autoFocus: false,
         data: {
           callbackTx,
-          signedRequestObject: this.signedRequestObject
+          signedRequestObject: this.signedRequestObject,
+          gasPrice: this.gasPrice
         }
       })
       .afterClosed()
