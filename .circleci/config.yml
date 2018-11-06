@@ -1,58 +1,89 @@
 version: 2
 
+references:
+  working_directory: &working_directory
+    ~/repo
+  attach_workspace: &attach_workspace
+    attach_workspace:
+      at: *working_directory
+  node_image: &node_image
+    image: circleci/node:8
+  python_image: &python_image
+    image: circleci/python:2.7-jessie
+  ganache_image: &ganache_image
+    image: trufflesuite/ganache-cli
+    command:
+      - "-l"
+      - "90000000"
+      - "-m"
+      - "candy maple cake sugar pudding cream honey rich smooth crumble sweet treat"
+  ipfs_image: &ipfs_image
+    image: ipfs/go-ipfs
+  rn_image: &rn_image
+    image: benjlevesque/request-network-dev-env:latest
+  puppeteer_image: &puppeteer_image
+    image: benjlevesque/circleci-puppeteer:latest
 jobs:
   install:
-    docker:
-      - image: circleci/node:8
-    working_directory: ~/repo
+    docker: 
+      - *node_image
+    working_directory: *working_directory
     steps:
       - checkout
       - run:
           name: 'Install node modules'
           command: 'yarn'
       - persist_to_workspace:
-          root: ~/repo
+          root: *working_directory
           paths: .
   commit-lint:
-    docker:
-      - image: circleci/node:8
-    working_directory: ~/repo
+    docker: 
+      - *node_image
+    working_directory: *working_directory
     steps:
-      - attach_workspace:
-          at: ~/repo
+      - *attach_workspace
       - run:
           name: 'Lint commit messages'
           command: 'yarn commit:ci'
   format-lint:
-    docker:
-      - image: circleci/node:8
-    working_directory: ~/repo
+    docker: 
+      - *node_image
+    working_directory: *working_directory
     steps:
-      - attach_workspace:
-          at: ~/repo
+      - *attach_workspace
       - run:
           name: 'Prettier lint'
           command: 'yarn format:ci'
   build:
-    docker:
-      - image: circleci/node:8
-    working_directory: ~/repo
+    docker: 
+      - *node_image
+    working_directory: *working_directory
     steps:
-      - attach_workspace:
-          at: ~/repo
+      - *attach_workspace
       - run:
           name: 'Build service'
           command: 'yarn build'
       - persist_to_workspace:
-          root: ~/repo
+          root: *working_directory
           paths: ./dist
-  deploy:
+  test:
     docker:
-      - image: circleci/python:2.7-jessie
-    working_directory: ~/repo
+      - *puppeteer_image
+      - *ganache_image
+      - *ipfs_image
+      - *rn_image
+    working_directory: *working_directory
     steps:
-      - attach_workspace:
-          at: ~/repo
+      - *attach_workspace
+      - run:
+          name: Run E2E tests
+          command: yarn e2e:ci
+  deploy:
+    docker: 
+      - *python_image
+    working_directory: *working_directory
+    steps:
+      - *attach_workspace
       - run:
           name: Install awscli
           command: sudo pip install awscli
@@ -74,11 +105,14 @@ workflows:
       - build:
           requires:
             - install
-            - commit-lint
-            - format-lint
-      - deploy:
+      - test: 
           requires:
             - build
+      - deploy:
+          requires:
+            - test
+            - commit-lint
+            - format-lint
           filters:
             branches:
               only: master

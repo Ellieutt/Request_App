@@ -2,20 +2,34 @@ const util = require('util');
 const puppeteer = require('puppeteer');
 const checkPortStatus = util.promisify(require('portscanner').checkPortStatus);
 const IPFSFactory = require('ipfsd-ctl');
-const { IPFS_PORT, GANACHE_PORT, debug } = require('./config.json');
+const initWeb3Page = require('./web3.setup');
+const {
+  IPFS_PORT,
+  GANACHE_PORT,
+  APP_PORT,
+  debug,
+  mnemonic,
+} = require('./config.json');
 
 module.exports = class E2eSetup {
   constructor(appUrl) {
-    this.appUrl = appUrl;
+    this.appUrl = `http://localhost:${APP_PORT}`;
+    this.providerUrl = `http://localhost:${GANACHE_PORT}`;
+  }
+  sleep(ms) {
+    return new Promise(r => setTimeout(r, ms));
   }
   async startup() {
     await this.checkGanacheIsRunning();
     await this.setupIpfs();
+    await this.checkWebServerIsRunning();
     await this.setupPuppeter();
+    await this.navigate(this.appUrl);
+    await initWeb3Page(this.page, this.providerUrl, mnemonic);
   }
 
-  async navigate() {
-    await this.page.goto(this.appUrl);
+  async navigate(url) {
+    await this.page.goto(url, { waitUntil: 'domcontentloaded' });
   }
 
   async stop() {
@@ -28,6 +42,23 @@ module.exports = class E2eSetup {
     }
   }
 
+  async checkWebServerIsRunning() {
+    const attempts = 10;
+    for (let index = 1; index <= attempts; index++) {
+      console.log(
+        `Trying to contact webserver... (attempt ${index}/${attempts})`
+      );
+      const status = await checkPortStatus(APP_PORT, '127.0.0.1');
+      if (status === 'open') {
+        console.log('Web Server running!');
+        return;
+      } else {
+        await this.sleep(5000);
+      }
+    }
+    throw new Error(`WebServer not reachable on port ${APP_PORT}`);
+  }
+
   async setupPuppeter() {
     this.browser = await puppeteer.launch({
       args: ['--no-sandbox', '--disable-web-security'],
@@ -36,6 +67,9 @@ module.exports = class E2eSetup {
     });
 
     this.page = await this.browser.newPage();
+    this.page.on('console', async msg => {
+      console.log(`[BROWSER] ${msg.text()}`);
+    });
   }
 
   async setupIpfs() {

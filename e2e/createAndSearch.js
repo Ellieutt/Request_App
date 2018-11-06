@@ -8,8 +8,9 @@ module.exports = async function main(page, providerUrl) {
   const accPayer = '0xB514C66223c7F3AE419f61cc74cF3c1DFC3510F2';
   const expectedAmount = '1.53421693';
 
-  await page.waitForSelector('#wallet-type');
-
+  console.log('checking page...');
+  await page.waitForSelector('#wallet-type', { timeout: 60000 });
+  console.log('page is ok, running tests');
   // Fill the request fields and submit
   await page.type('input[name=expectedAmount]', expectedAmount);
   await page.type('input[name=payerETHAddress]', accPayer);
@@ -71,4 +72,7 @@ module.exports = async function main(page, providerUrl) {
     el => el.textContent
   )).match('[0-9.,]+')[0];
   expect(searchRequestAmount).to.equal(expectedAmount);
+  console.log(
+    `Test successful ! (searchRequestAmount: ${searchRequestAmount})`
+  );
 };

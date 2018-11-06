@@ -1,10 +1,36 @@
 version: 2
 
+references:
+  working_directory: &working_directory
+    ~/repo
+  attach_workspace: &attach_workspace
+    attach_workspace:
+      at: *working_directory
+  node_image: &node_image
+    image: circleci/node:8
+  python_image: &python_image
+    image: circleci/python:2.7-jessie
+  ganache_image: &ganache_image
+    image: trufflesuite/ganache-cli
+    command:
+      - "-l"
+      - "90000000"
+      - "-m"
+      - "candy maple cake sugar pudding cream honey rich smooth crumble sweet treat"
+  ipfs_image: &ipfs_image
+    image: ipfs/go-ipfs
+  rn_image: &rn_image
+    image: benjlevesque/request-network-dev-env:latest
+  puppeteer_image: &puppeteer_image
+    image: benjlevesque/circleci-puppeteer:latest
 jobs:
   build:
     docker: 
-      - image: 'circleci/node:8'
-    working_directory: '~/repo'
+      - *puppeteer_image
+      - *ganache_image
+      - *ipfs_image
+      - *rn_image
+    working_directory: *working_directory
     steps:
       - checkout
       - run:
@@ -14,17 +40,5 @@ jobs:
           name: 'Build service'
           command: 'yarn build'
       - run:
-          name: 'Install pip'
-          command: 'sudo apt-get install -y python-pip'
-      - run:
-          name: 'Install awscli'
-          command: 'sudo pip install awscli'
-      - deploy:
-          name: 'Deploy to S3'
-          command: 'aws s3 sync ./dist s3://baguette-app.request.network --acl public-read --delete'
-
-workflows:
-  version: 2
-  build:
-    jobs:
-      - build
+          name: Run E2E tests
+          command: yarn e2e:ci    

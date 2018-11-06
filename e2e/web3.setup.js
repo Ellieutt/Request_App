@@ -1,21 +1,23 @@
-const readFileSync = require('fs').readFileSync;
 
-async function loadContents(urls) {
-  var contents = [];
+async function loadScripts(page, urls) {
   for (url of urls) {
-    const raw = url.startsWith('http')
-      ? await (await fetch(url)).text()
-      : readFileSync(url).toString();
-    contents.push(raw);
+    await page.evaluate(url => {
+      return new Promise(resolve => {
+        const script = document.createElement('script');
+        script.onload = () => {
+          resolve();
+        };
+        script.src = url;
+        document.head.append(script);
+      });
+    }, url);
+    console.log(`loaded ${url}`);
   }
-  return contents;
 }
 
-async function injectWeb3(scripts, providerUrl, mnemonic) {
+function injectWeb3(providerUrl, mnemonic) {
   console.log('[E2E] Injecting Web3...');
-  for (script of scripts) {
-    eval(script);
-  }
+  
   lightwallet.keystore.createVault(
     {
       password: 'abcd',
@@ -27,34 +29,27 @@ async function injectWeb3(scripts, providerUrl, mnemonic) {
         console.warn(err);
         return;
       }
-
       ks.passwordProvider = function(cb) {
-        console.log('password!');
         cb(null, 'abcd');
       };
 
-      // var web3Provider = new SignerProvider(providerUrl, {
-      //   signTransaction: (rawTx, cb) => cb(null, ks.signTransaction(rawTx)),
-      // });
       var web3Provider = new HookedWeb3Provider({
         host: providerUrl,
         transaction_signer: ks,
       });
       var web3 = new Web3(web3Provider);
       window.web3 = web3;
-      console.log('[E2E] Web3 injected!');
+      window.dispatchEvent(new Event('web3.ready'));
+      console.log('[E2E] Web3 injected!', web3.currentProvider);
     }
   );
 }
 
 module.exports = async function initWeb3Page(page, providerUrl, mnemonic) {
-  const contents = await loadContents([
-    //'https://requirejs.org/docs/release/2.3.6/minified/require.js',
+  await loadScripts(page, [
     'https://cdn.jsdelivr.net/gh/ethereum/web3.js/dist/web3.min.js',
-    'node_modules/eth-lightwallet/dist/lightwallet.min.js',
-    //'node_modules/ethjs-provider-signer/dist/ethjs-provider-signer.min.js',
-    'node_modules/hooked-web3-provider/build/hooked-web3-provider.min.js',
+    'https://cdn.jsdelivr.net/npm/eth-lightwallet@3.0.1/dist/lightwallet.min.js',
+    'https://cdn.jsdelivr.net/npm/hooked-web3-provider@1.0.0/build/hooked-web3-provider.min.js',
   ]);
-  await page.evaluateOnNewDocument(injectWeb3, contents, providerUrl, mnemonic);
-  return page;
+  await page.evaluate(injectWeb3, providerUrl, mnemonic);
 };

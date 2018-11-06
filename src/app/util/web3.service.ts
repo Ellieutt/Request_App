@@ -59,11 +59,15 @@ export class Web3Service {
       this.setEtherscanUrl();
     });
 
-    window.addEventListener('load', async event => {
+    // enable the possibility to reload web3
+    window.addEventListener('web3.ready', async event => {
       console.log('web3service instantiate web3');
       await this.checkAndInstantiateWeb3();
       setInterval(async () => await this.refreshAccounts(), 1000);
       this.web3Ready = true;
+    });
+    window.addEventListener('load', () => {
+      window.dispatchEvent(new Event('web3.ready'));
     });
   }
 

@@ -11,12 +11,14 @@
     "start": "ng serve",
     "dev:aot": "ng serve --aot",
     "dev:https": "ng serve --ssl",
-    "build": "ng build --prod --aot",
+    "build": "ng build --prod --aot --source-map=false",
     "test": "ng test",
     "lint": "ng lint",
     "postinstall": "node ./scripts/patch.js",
     "dev:e2e": "ng serve --configuration=e2e",
-    "e2e": "node e2e/run.js"
+    "e2e": "node e2e/run.js",
+    "e2e:ci": "concurrently -k --success first 'yarn serve' 'yarn e2e'",
+    "serve":"http-server ./dist -p 4200 --silent"
   },
   "prettier": {
     "singleQuote": true,
@@ -48,6 +50,7 @@
     "angular-blockies": "1.1.1",
     "angularx-qrcode": "^1.2.2",
     "bootstrap": "^4.1.3",
+    "concurrently": "^4.0.1",
     "core-js": "^2.5.7",
     "font-awesome": "^4.7.0",
     "hammerjs": "^2.0.8",
@@ -78,6 +81,7 @@
     "ganache-cli": "^6.1.6",
     "go-ipfs-dep": "^0.4.17",
     "hooked-web3-provider": "^1.0.0",
+    "http-server": "^0.11.1",
     "husky": "^1.1.2",
     "ipfsd-ctl": "^0.39.0",
     "jasmine-core": "^3.1.0",

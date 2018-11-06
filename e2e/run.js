@@ -1,25 +1,25 @@
 const E2eSetup = require('./e2e.setup');
 const createAndSearch = require('./createAndSearch');
-const initWeb3Page = require('./web3.setup');
-const { GANACHE_PORT, mnemonic } = require('./config.json');
 
 async function runTests() {
-  const providerUrl = `http://localhost:${GANACHE_PORT}`;
-  const appUrl = 'http://localhost:4200';
-
   // Setup test environment
-  const setup = new E2eSetup(appUrl);
+  const setup = new E2eSetup();
   await setup.startup();
 
-  await initWeb3Page(setup.page, providerUrl, mnemonic);
-  setup.navigate();
+  let returnCode = 0;
 
-  // Run tests
-  await createAndSearch(setup.page, providerUrl);
-
-  // Stop test environment
-  await setup.stop();
-  // await process.exit(0);
+  try {
+    // Run tests
+    await createAndSearch(setup.page, setup.providerUrl);
+  }
+  catch (er) {
+    console.log(er);
+    returnCode = 1;
+  } finally {
+    // Stop test environment
+    await setup.stop();
+    await process.exit(returnCode);
+  }
 }
 
 runTests();
