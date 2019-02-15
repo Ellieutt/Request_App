@@ -22,7 +22,7 @@ references:
   rn_image: &rn_image
     image: benjlevesque/request-network-dev-env:latest
   puppeteer_image: &puppeteer_image
-    image: benjlevesque/circleci-puppeteer:latest
+    image: circleci/node:8-browsers
 jobs:
   install:
     docker: 

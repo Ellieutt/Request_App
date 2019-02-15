@@ -18,6 +18,7 @@ export class BroadcastDialogComponent implements OnInit {
   allowanceMode: boolean;
   isAllowanceGranted: boolean;
   callbackTx: any;
+  currencyContract: any;
 
   constructor(
     public web3Service: Web3Service,
@@ -28,13 +29,24 @@ export class BroadcastDialogComponent implements OnInit {
     this.callbackTx = data.callbackTx;
     this.signedRequestObject = data.signedRequestObject;
     this.requestData = data.signedRequestObject.signedRequestData;
-    this.loading = false;
+    this.loading = true;
     this.isAllowanceGranted = false;
-
+    this.currencyContract = this.requestData.currencyContract;
     this.allowanceMode =
       this.requestData.currency !== 'ETH' && this.requestData.currency !== 'BTC'
         ? true
         : false;
+    this.checkAllowance();
+  }
+
+  async checkAllowance() {
+    const allowance = await this.web3Service.getAllowance(
+      this.currencyContract
+    );
+    if (allowance >= this.requestData.expectedAmounts[0]) {
+      this.isAllowanceGranted = true;
+    }
+    this.loading = false;
   }
 
   async ngOnInit() {
