@@ -10,7 +10,7 @@
         <div *ngIf="request.errorTxHash; else errorRequestIdBlock" class="">
           <p>{{ request.errorTxHash }}</p>
           <p>
-            <a style="opacity: 0.8; color: #5392ff !important;" href="{{web3Service.etherscanUrl}}tx/{{txHash}}" target="_blank">
+            <a style="opacity: 0.8; color: #008c62 !important;" href="{{web3Service.etherscanUrl}}tx/{{txHash}}" target="_blank">
               <i>{{ web3Service.etherscanUrl}}tx/{{txHash.substring(0, 10) }}...{{ txHash.substring(txHash.length-5, txHash.length) }}</i>
             </a>
           </p>
@@ -62,7 +62,7 @@
                   <i>{{request.data.data.date | date: 'fullDate'}}</i>
                 </div>
                 <div class="mt-1">
-                  <a *ngIf="txHash" class="fs-14 pr-1" style="opacity: 0.8; color: #5392ff !important;" href="{{web3Service.etherscanUrl}}tx/{{txHash}}" target="_blank">
+                  <a *ngIf="txHash" class="fs-14 pr-1" style="opacity: 0.8; color: #008c62 !important;" href="{{web3Service.etherscanUrl}}tx/{{txHash}}" target="_blank">
                     <i>{{ web3Service.etherscanUrl}}tx/{{txHash.substring(0, 10) }}...{{ txHash.substring(txHash.length-5, txHash.length) }}</i>
                   </a>
                   <span *ngIf="request.status" class="status-{{request.status.replace(' ','-')}} fs-12">{{request.status}}</span>
@@ -178,7 +178,7 @@
                         <div class="fc-primary semi-bold">
                           <i>Waiting for transaction to be mined...
                             <br/>
-                            <a style="opacity: 0.8; color: #5392ff !important;" href="{{web3Service.etherscanUrl}}tx/{{loading}}" target="_blank">{{ web3Service.etherscanUrl}}tx/{{loading.substring(0, 10) }}...{{ loading.substring(loading.length-5, loading.length) }}</a>
+                            <a style="opacity: 0.8; color: #008c62 !important;" href="{{web3Service.etherscanUrl}}tx/{{loading}}" target="_blank">{{ web3Service.etherscanUrl}}tx/{{loading.substring(0, 10) }}...{{ loading.substring(loading.length-5, loading.length) }}</a>
                           </i>
                         </div>
                       </div>
