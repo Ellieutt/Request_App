@@ -36,7 +36,11 @@ export class BroadcastDialogComponent implements OnInit {
       this.requestData.currency !== 'ETH' && this.requestData.currency !== 'BTC'
         ? true
         : false;
-    this.checkAllowance();
+    if (this.allowanceMode) {
+      this.checkAllowance();
+    } else {
+      this.loading = false;
+    }
   }
 
   async checkAllowance() {
