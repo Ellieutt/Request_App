@@ -473,7 +473,7 @@ export class Web3Service {
     this.confirmTxOnLedgerMsg();
     return this.requestNetwork.requestERC20Service.approveTokenForSignedRequest(
       signedRequest,
-      this.amountToBN(amount, signedRequest.currency),
+      amount,
       transactionOptions
     );
   }
