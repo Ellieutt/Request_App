@@ -134,6 +134,9 @@ export class AdvancedInvoiceComponent implements OnInit {
       buyerInfo: this.buyerInfo,
       invoiceItems: this.invoiceItems,
       paymentTerms: this.paymentTerms,
+      miscellaneous: {
+        builderId: 'app.request.network',
+      },
     });
 
     this.form = this.formBuilder.group({
