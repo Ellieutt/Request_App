@@ -164,6 +164,8 @@ export class HomeComponent implements OnInit {
       }
     }
 
+    data['miscellaneous'] = { builderId: 'app.request.network' };
+
     const callback = response => {
       this.createLoading = false;
 
