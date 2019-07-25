@@ -17,6 +17,10 @@ body {
   font-weight: 300;
 }
 
+body *[class*="mat"]:not(.mat-icon) {
+  @include serif-font();
+}
+
 body {
   margin: 0;
 }
@@ -545,4 +549,54 @@ input[type='number']::-webkit-inner-spin-button {
 // supports Mozilla
 input[type='number'] {
   -moz-appearance: textfield;
+}
+
+@media (min-width: 1200px) {
+  .container {
+    max-width: 1400px !important;
+  }
+}
+
+h1 {
+  color: #000;
+  font-size: 36px;
+  font-weight: bold;
+}
+
+b {
+  font-weight: bold !important;
+}
+
+ul {
+  padding-left: 0;
+  list-style: none
+}
+
+ul li {
+  position: relative; 
+  margin-bottom: 24px;
+}
+
+ul li:after {
+  content: '';
+  position: absolute;
+  left: -30px;
+  top: 11px;
+  margin-top: -1px;
+  height: 3px;
+  width: 16px;
+  background: #00E6A0;
+}
+
+.mat-flat-button.mat-accent, .mat-raised-button.mat-accent, .mat-fab.mat-accent, .mat-mini-fab.mat-accent {
+  color: #000 !important;
+}
+
+.mat-button, .mat-raised-button, .mat-icon-button, .mat-stroked-button, .mat-flat-button, .mat-fab, .mat-mini-fab {
+  font-weight: 300 !important;
+}
+
+.home-invoice-header {
+  margin-bottom: 16px;
+  border-bottom: 1px solid #E9E9E9;
 }

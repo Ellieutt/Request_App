@@ -22,7 +22,7 @@ export class RequestComponent implements OnInit, OnDestroy {
   request: any;
   progress: number;
   url = window.location.href;
-  copyUrlTxt = 'Copy url';
+  copyUrlTxt = 'Copy URL';
   txHash: string;
   searchValueSubscription: any;
   timerInterval: any;
@@ -121,9 +121,8 @@ export class RequestComponent implements OnInit, OnDestroy {
     if (result.request && result.request.requestId) {
       const blockNumber = await this.web3Service.getBlockNumber();
 
-      // if not on local network, wait 1 block confirmation
+      // wait 1 block confirmation
       if (
-        this.web3Service.networkIdObservable.value > 4 ||
         blockNumber - result.transaction.blockNumber > 0
       ) {
         return this.utilService.setSearchValue(result.request.requestId);
