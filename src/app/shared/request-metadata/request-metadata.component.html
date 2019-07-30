@@ -1,10 +1,12 @@
-<div class="d-flex fc-blue-grey p-4 request-metadata" >
+<div *ngIf="description" class="p-2 request-metadata">
   <div class="p-4" *ngIf="!data;else metadata_section">loading...</div>
   <ng-template #metadata_section>
-    <p class="p-3"></p>
-    <p>
+    <div class="p-3"></div>
+    
+    <div class="mb-2"><b>Reason</b></div>
+    <p class="mb-0">
       {{description}}
-      <mat-tree *ngIf="dataSource" [dataSource]="dataSource" [treeControl]="treeControl" class="fc-blue-grey">
+      <!-- <mat-tree *ngIf="dataSource" [dataSource]="dataSource" [treeControl]="treeControl" class="fc-blue-grey">
         <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle matTreeNodePadding>
           {{node.text}} <span *ngIf="node.value">: {{node.value}}</span>
         </mat-tree-node>
@@ -17,7 +19,8 @@
           </button>
           {{node.text}} <span *ngIf="node.value">: {{node.value}}</span>
         </mat-tree-node>
-      </mat-tree>
+      </mat-tree> -->
     </p>
+    <div class="p-3"></div>
   </ng-template>
 </div>

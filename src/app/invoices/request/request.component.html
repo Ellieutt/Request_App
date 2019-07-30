@@ -26,47 +26,25 @@
         </ng-template>
       </div>
       <ng-template #requestBlock>
-        <div class="col-lg-3 mb-5">
-          <input mat-button class="url-box fc-blue-grey fs-12 px-3 w-100" [value]="url" disabled>
-          <button mat-button class="w-100 fs-16 bor-accent my-3" style="height: 50px" color="accent" type="button" ngxClipboard [cbContent]="url" (cbOnSuccess)="copyToClipboard()">{{copyUrlTxt}}</button>
-          <hr style="border-top: 1px solid #617B9F; opacity: 0.2">
-          <div class="fc-blue-grey" *ngIf="request.events">
-            <p class="semi-bold mb-2 fs-14">History</p>
-            <div *ngIf="request && request.events && request.events.length > 0">
-              <div *ngFor="let e of request.events" class="fs-12 d-flex justify-content-between">
-                <span>{{ spaceBeforeCapital(e.name) }} </span>
-                <span>{{ utilService.getAgeFromTimeStamp(e._meta.timestamp) }}</span>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="ml-lg-auto col-lg-8">
+        <div class="mr-lg-auto col-lg-6">
           <mat-card class="p-0 br-7 sh-blue">
-            <div class="d-flex bg-primary p-4 btr-7">
+            <div class="d-flex p-4 btr-7">
               <img class="px-3" style="max-height: 75px;padding:0!important;" src="assets/img/request-logo.png">
-              <div class="ml-auto text-right px-3 fc-white">
+              <div class="ml-auto text-right px-3">
                 <h4 class="semi-bold fs-18">
-                  <ng-container *ngIf="request.requestId; else waitingTemplate">
-                    <span popover="{{request.requestId}}" popoverPlacement="bottom" [popoverOnHover]="true" [popoverCloseOnMouseOutside]="true">Request Id: {{request.requestId.substring(0, 5)}}...{{request.requestId.substring(56, 66)}}</span>
-                    <div *ngIf="isInvoiceRequest()">
-                      Invoice #{{this.request.data.data.invoiceNumber}}
-                      <div class="fs-14 font-weight-light font-italic" style="opacity:0.5">{{this.request.data.data.creationDate | date: 'fullDate' }}</div>
-                    </div>
-                  </ng-container>
                   <ng-template #waitingTemplate>
                     <span>
                       <i class="fa {{request.errorMsg ? 'fa-warning fc-warn' : 'fa-circle-o-notch fa-spin'}}"></i>&nbsp;{{ request.errorMsg || request.waitingMsg || 'searching for blockchain information...' }}</span>
                   </ng-template>
                 </h4>
-                <div *ngIf="request.data && request.data.data && request.data.data.date" class="fs-14" [style.opacity]="'0.5'">
-                  <i>{{request.data.data.date | date: 'fullDate'}}</i>
+                <div *ngIf="request.data && request.data.data && request.data.data.date" class="invoice-date fs-16">
+                  {{request.data.data.date | date: 'fullDate'}}
                 </div>
-                <div class="mt-1">
+                <!-- <div class="mt-1">
                   <a *ngIf="txHash" class="fs-14 pr-1" style="opacity: 0.8; color: #008c62 !important;" href="{{web3Service.etherscanUrl}}tx/{{txHash}}" target="_blank">
                     <i>{{ web3Service.etherscanUrl}}tx/{{txHash.substring(0, 10) }}...{{ txHash.substring(txHash.length-5, txHash.length) }}</i>
                   </a>
-                  <span *ngIf="request.status" class="status-{{request.status.replace(' ','-')}} fs-12">{{request.status}}</span>
-                </div>
+                </div> -->
               </div>
             </div>
             <app-rnf-invoice-request
@@ -76,6 +54,7 @@
                      else genericRequest'>
             </app-rnf-invoice-request>
             <ng-template #genericRequest>
+              <div *ngIf="request.status" class="status-banner status-{{request.status.replace(' ','-')}} fs-14">{{request.status}}</div>
               <request-addresses [request]="request"></request-addresses>
               <request-metadata *ngIf="request.data" [data]="request.data.data" title="Details"></request-metadata>
               <request-amount [amount]="amount" [currency]="currency"></request-amount>
@@ -136,7 +115,7 @@
                       <button type="button" class="fs-18 bg-grey-whiter fc-blue-grey no-focus-overlay" mat-raised-button [matMenuTriggerFor]="payeeActionsMenu">Actions&nbsp;
                         <mat-icon>expand_more</mat-icon>
                       </button>
-                      <button class="ml-auto fs-18 no-focus-overlay" mat-raised-button color="accent" (click)="subtractRequest()">Update the Request</button>
+                      <!-- <button class="ml-auto fs-18 no-focus-overlay" mat-raised-button color="accent" (click)="subtractRequest()">Update the Request</button> -->
                     </div>
                     <!-- PAYER -->
                     <mat-menu #payerActionsMenu="matMenu" [overlapTrigger]="false" class="actions-menu">
@@ -188,6 +167,20 @@
               </ng-template>
             </mat-toolbar>
           </mat-card>
+        </div>
+        <div class="col-lg-5 mb-5">
+          <input mat-button class="url-box fc-blue-grey fs-12 px-3 w-100" [value]="url" disabled>
+          <button mat-button class="w-100 fs-16 bor-accent my-3" style="height: 50px" color="accent" type="button" ngxClipboard [cbContent]="url" (cbOnSuccess)="copyToClipboard()">{{copyUrlTxt}}</button>
+          <hr style="border-top: 1px solid #617B9F; opacity: 0.2">
+          <div class="fc-blue-grey" *ngIf="request.events">
+            <p class="semi-bold mb-2 fs-14">History</p>
+            <div *ngIf="request && request.events && request.events.length > 0">
+              <div *ngFor="let e of request.events" class="fs-12 d-flex justify-content-between">
+                <span>{{ spaceBeforeCapital(e.name) }} </span>
+                <span>{{ utilService.getAgeFromTimeStamp(e._meta.timestamp) }}</span>
+              </div>
+            </div>
+          </div>
         </div>
       </ng-template>
     </ng-template>
