@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit, OnDestroy } from '@angular/core';
+import { Component, Inject, OnInit, AfterContentInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Web3Service } from '../../util/web3.service';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
@@ -14,7 +14,7 @@ import { DisplayPayDialogComponent } from '../../util/dialogs/display-pay-dialog
   templateUrl: './request.component.html',
   styleUrls: ['./request.component.scss'],
 })
-export class RequestComponent implements OnInit, OnDestroy {
+export class RequestComponent implements OnInit, OnDestroy, AfterContentInit {
   objectKeys = Object.keys;
   account: string;
   mode: string;
@@ -34,7 +34,7 @@ export class RequestComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private dialog: MatDialog,
     private utilService: UtilService
-  ) {}
+  ) { }
 
   get amount() {
     return this.web3Service.BNToAmount(
@@ -88,6 +88,29 @@ export class RequestComponent implements OnInit, OnDestroy {
       await this.setRequest(rd);
       this.requestObject.requestData = rd;
     }, 10000);
+
+    this.loadScript('../assets/js/receipt.js');
+  }
+
+  async ngAfterContentInit() {
+    const hasLoaded = false;
+    const that = this;
+    const loadAddThis = setInterval(function() {
+      if (document.getElementById('share-request-item')) {
+        that.loadScript('//platform-api.sharethis.com/js/sharethis.js#property=5d47e62e3387b20012d76862&product=inline-share-buttons');
+        clearInterval(loadAddThis);
+      }
+    }, 500);
+  }
+
+  loadScript(url: string) {
+    const body = <HTMLDivElement>document.body;
+    const script = document.createElement('script');
+    script.innerHTML = '';
+    script.src = url;
+    script.async = false;
+    script.defer = true;
+    body.appendChild(script);
   }
 
   async watchTxHash(txHash) {
@@ -189,7 +212,7 @@ export class RequestComponent implements OnInit, OnDestroy {
       );
       this.url = `${window.location.protocol}//${
         window.location.host
-      }/#/request/requestId/${request.requestId}`;
+        }/#/request/requestId/${request.requestId}`;
     }
     if (request && !request.status && request.state !== undefined) {
       this.web3Service.setRequestStatus(request);

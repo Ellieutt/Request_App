@@ -128,7 +128,8 @@ header {
   color: $primary;
   border-bottom: 2px solid $grey-light;
   .request-logo {
-    height: 36px;
+    height: 30px;
+    margin-top: 7px;
   }
 }
 
@@ -142,7 +143,7 @@ header {
 
 .status-cancelled {
   @extend .status;
-  background-color: #ed6852;
+  background-color: #333333;
 }
 
 .status-in-progress {
@@ -150,7 +151,7 @@ header {
   background-color: #8ab4fa;
 }
 
-.status-complete {
+.status-complete, .status-paid {
   @extend .status;
   background-color: $green;
 }
@@ -165,7 +166,7 @@ header {
   background-color: #406278;
 }
 
-.status-created, .status-awaiting-payment {
+.status-created, .status-awaiting-payment, .status-pending {
   @extend .status;
   background-color: $orange;
 }
@@ -225,6 +226,9 @@ mat-toolbar.cta-toolbar {
     box-shadow: none !important;
     height: 100%;
   }
+  &:empty {
+    display: none;
+  }
 }
 
 .actions-menu {
@@ -274,7 +278,7 @@ button.no-focus-overlay .mat-button-focus-overlay {
 }
 
 mat-toolbar.mat-toolbar {
-  background: $grey-whiter;
+  background: $white;
 }
 
 .img-fluid {
@@ -433,6 +437,10 @@ div.mat-input-prefix {
   color: $accent !important;
 }
 
+.fc-accent-secondary {
+  color: #3E82F7 !important;
+}
+
 .fc-white {
   color: #fff;
 }
@@ -479,6 +487,11 @@ div.mat-input-prefix {
   font-size: 18px !important;
 }
 
+.fs-22 {
+  font-size: 22px !important;
+}
+
+
 .fs-24 {
   font-size: 24px !important;
 }
@@ -501,6 +514,18 @@ div.mat-input-prefix {
 
 .lh-18 {
   line-height: 18px;
+}
+
+.lh-22 {
+  line-height: 22px !important;
+}
+
+.mt-6 {
+  margin-top: 6rem !important;
+}
+
+.mb-6 {
+  margin-bottom: 6rem !important;
 }
 
 // BORDERS & SHADOW
@@ -553,7 +578,7 @@ input[type='number'] {
 
 @media (min-width: 1200px) {
   .container {
-    max-width: 1400px !important;
+    max-width: 1500px !important;
   }
 }
 
@@ -614,4 +639,118 @@ ul li:after {
 
 .invoice-date {
   margin-top: 26px;
+}
+
+.cta-toolbar .void-request-button {
+  width: auto;
+  margin: 0 auto;
+  height: 46px;
+  border: 1px solid #FF3939;
+  border-radius: 3px !important;
+  margin-bottom: 14px;
+  padding: 0px 24px;
+  font-weight: 600;
+  font-size: 12px;
+  text-transform: uppercase;
+  color: #FF3939;
+  line-height: 44px;
+}
+
+.cta-toolbar .void-request-button:hover {
+  background: #FF3939 !important;
+  color: #fff;
+}
+
+.request-invoice-container:after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: -9%;
+  height: 100%;
+  width: 2px;
+  background: #EFEFEF;
+}
+
+#download-receipt {
+  cursor: pointer;
+}
+
+.mat-sort-header-button {
+  font-weight: 600 !important;
+}
+
+.mat-header-cell {
+  font-size: 16px !important;
+}
+.mat-cell {
+  font-size: 14px !important;
+}
+
+.mat-paginator-container {
+  font-size: 14px !important;
+  
+  .span.mat-select-value-text {
+    color: #000 !important;
+  }
+}
+
+.cdk-column-request-arrow {
+  flex: 0 0 105px !important;
+}
+
+.cdk-column-request-status {
+  flex: 0 0 125px !important;
+}
+
+.cdk-column-requestId, .cdk-column-payer {
+  flex: 0 0 150px !important;
+}
+
+.cdk-column-_meta-timestamp {
+  flex: 0 0 300px;
+}
+
+.gas-container {
+  flex: 250 0 auto;
+
+  svg {
+    margin-right: 8px;
+  }
+
+  .gas-price-label  {
+    font-weight: 600;
+  }
+}
+
+.sharethis-inline-share-buttons {
+  margin: 16px 0 24px 0;
+}
+
+.home-elements {
+  padding: 60px 30px;
+}
+
+.home-figures {
+  background: #00261B;
+  color: #fff;
+  text-align: center;
+  position: relative;
+
+  .home-item {
+    padding: 150px 0;
+  }
+
+  h1 {
+    color: #fff;
+  }
+
+  &:after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    height: 100%;
+    width: 2px; 
+    background: #fff;
+  }
 }

@@ -19,6 +19,7 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
   searchValue: string;
   subscription;
   displayedColumns = [
+    'request.arrow',
     'requestId',
     '_meta.timestamp',
     'request.payee.address',
