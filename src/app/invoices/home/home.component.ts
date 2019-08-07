@@ -224,6 +224,8 @@ export class HomeComponent implements OnInit {
       }
     };
 
+    console.log(this.payerAddressFormControl.value);
+
     this.web3Service
       .createRequest(
         'Payee',

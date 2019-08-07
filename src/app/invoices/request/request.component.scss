@@ -11,6 +11,6 @@
 
 .progress-bar-complete {
   ::ng-deep .mat-progress-bar-primary::after {
-      background-color: $green;
+      background-color: #000;
   }
 }

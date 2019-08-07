@@ -25,7 +25,6 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
     'request.payee.address',
     'request.payer',
     'request.payee.expectedAmount',
-    'request.payee.balance',
     'request.status',
   ];
   dataSource = new MatTableDataSource();

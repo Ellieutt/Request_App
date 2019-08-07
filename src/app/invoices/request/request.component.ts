@@ -89,16 +89,22 @@ export class RequestComponent implements OnInit, OnDestroy, AfterContentInit {
       this.requestObject.requestData = rd;
     }, 10000);
 
-    this.loadScript('../assets/js/receipt.js');
+    
   }
 
   async ngAfterContentInit() {
-    const hasLoaded = false;
     const that = this;
     const loadAddThis = setInterval(function() {
       if (document.getElementById('share-request-item')) {
         that.loadScript('//platform-api.sharethis.com/js/sharethis.js#property=5d47e62e3387b20012d76862&product=inline-share-buttons');
         clearInterval(loadAddThis);
+      }
+    }, 500);
+
+    const loadReceiptJs = setInterval(function() {
+      if (document.getElementById('download-receipt')) {
+        that.loadScript('../assets/js/receipt.js');
+        clearInterval(loadReceiptJs);
       }
     }, 500);
   }

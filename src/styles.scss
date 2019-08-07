@@ -82,7 +82,7 @@ a {
 }
 
 .flex-inf {
-  flex: 1000 0 auto;
+  flex: 500 0 auto;
 }
 
 // related to  expansion pannel on payment dialog
@@ -226,6 +226,12 @@ mat-toolbar.cta-toolbar {
     box-shadow: none !important;
     height: 100%;
   }
+  &:empty {
+    display: none;
+  }
+}
+
+#invoice-footer-outer {
   &:empty {
     display: none;
   }
@@ -496,6 +502,10 @@ div.mat-input-prefix {
   font-size: 24px !important;
 }
 
+.fs-28 {
+  font-size: 28px !important;
+}
+
 .semi-bold {
   font-weight: 500;
 }
@@ -578,6 +588,12 @@ input[type='number'] {
 
 @media (min-width: 1200px) {
   .container {
+    max-width: 1180px !important;
+  }
+}
+
+@media (min-width: 1500px) {
+  .container {
     max-width: 1500px !important;
   }
 }
@@ -647,7 +663,7 @@ ul li:after {
   height: 46px;
   border: 1px solid #FF3939;
   border-radius: 3px !important;
-  margin-bottom: 14px;
+  margin-bottom: 40px;
   padding: 0px 24px;
   font-weight: 600;
   font-size: 12px;
@@ -665,7 +681,7 @@ ul li:after {
   content: '';
   position: absolute;
   top: 0;
-  right: -9%;
+  right: -21%;
   height: 100%;
   width: 2px;
   background: #EFEFEF;
@@ -753,4 +769,35 @@ ul li:after {
     width: 2px; 
     background: #fff;
   }
+}
+
+ul {
+  padding-left: 30px;
+}
+
+.mat-progress-bar-fill::after {
+  background-color: #000 !important;
+}
+
+.mat-progress-bar-background {
+  background-color: #000 !important;
+}
+
+.mat-progress-bar .mat-progress-bar-buffer {
+  background-color: #fff !important;
+}
+
+.mat-progress-bar {
+  border: 1px solid #000;
+  height: 10px !important;
+}
+
+.hidden-if-empty {
+  &:empty {
+    display: none;
+  }
+}
+
+#invoice-footer-outer button {
+  height: 80px;
 }

@@ -89,15 +89,6 @@
             </ng-template>
           </mat-cell>
         </ng-container>
-        <!-- Amount Received Column -->
-        <ng-container matColumnDef="request.payee.balance">
-          <mat-header-cell *matHeaderCellDef mat-sort-header>Amount Received</mat-header-cell>
-          <mat-cell *matCellDef="let req">
-            <div *ngIf="req.request">
-              {{ this.web3Service.BNToAmount(req.request.payee.balance, req.request.currency) }}&nbsp;{{ req.request.currency }}
-            </div>
-          </mat-cell>
-        </ng-container>
         <!-- Status Column -->
         <ng-container matColumnDef="request.status">
           <mat-header-cell *matHeaderCellDef mat-sort-header>Status</mat-header-cell>

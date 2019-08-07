@@ -1,5 +1,9 @@
 .searchBar {
   @media (min-width: 768px) {
-    width: 610px;
+    width: 345px;
+  }
+
+  @media (min-width: 1200px) {
+    width: 500px;
   }
 }
