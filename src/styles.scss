@@ -660,7 +660,7 @@ ul li:after {
 .cta-toolbar .void-request-button {
   width: auto;
   margin: 0 auto;
-  height: 46px;
+  height: 46px !important;
   border: 1px solid #FF3939;
   border-radius: 3px !important;
   margin-bottom: 40px;
@@ -800,4 +800,28 @@ ul {
 
 #invoice-footer-outer button {
   height: 80px;
+}
+
+.request-invoice-container {
+  padding: 0 !important;
+}
+
+#request-invoice-right {
+  padding: 0;
+}
+
+@media (max-width: 1499px) {
+  .request-invoice-container {
+    flex: 0 0 50%;
+    max-width: 50%;
+  }
+
+  #request-invoice-right {
+    flex: 0 0 33%;
+    max-width: 33%;
+  }
+
+  .request-invoice-container:after {
+    right: -18%;
+  }
 }

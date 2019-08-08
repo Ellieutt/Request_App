@@ -28,7 +28,7 @@
         </ng-template>
       </div>
       <ng-template #requestBlock>
-        <div class="mr-lg-auto col-lg-5 request-invoice-container">
+        <div class="mr-lg-auto col-lg-6 col-xl-5 mr-xl-auto request-invoice-container">
           <mat-card class="p-0 br-7 sh-blue" id="request-invoice-outer">
             <div class="d-flex p-4 btr-7">
               <img class="px-3" style="max-height: 75px;padding:0!important;" src="assets/img/request-logo.png">
@@ -111,12 +111,12 @@
                   </button>
                 </mat-menu>
                 <div *ngSwitchCase="'payer'" class="d-flex h-100">
-                  <button type="button" *ngIf="request.state != 2" class="fs-18 bg-grey-whiter fc-blue-grey no-focus-overlay" mat-raised-button
+                  <button type="button" *ngIf="request.state != 2 && request.status != 'paid'" class="fs-18 bg-grey-whiter fc-blue-grey no-focus-overlay" mat-raised-button
                     [matMenuTriggerFor]="payerActionsMenu">Actions&nbsp;
                     <mat-icon>expand_more</mat-icon>
                   </button>
                   <button class="ml-auto fs-18 no-focus-overlay"
-                    *ngIf="request.status != 'complete' && request.status != 'overpaid' && request.state != 2" mat-raised-button
+                    *ngIf="request.status != 'complete' && request.status != 'overpaid' && request.state != 2 && request.status != 'paid'" mat-raised-button
                     color="accent" (click)="payRequest()">
                     <span>{{request.state != 1 && getBlockchainName() !== 'BTC' ? 'Accept & Pay': 'Pay'}}</span>
                   </button>
@@ -141,7 +141,7 @@
             </mat-toolbar>
           </mat-card>
         </div>
-        <div class="col-lg-5 mb-5">
+        <div id="request-invoice-right" class="col-lg-5 col-xl-5 mb-5">
           <!-- <div *ngIf -->
           <div *ngIf="request.status && mode == 'payee' && request.state != 2">
             <div class="fs-16 mb-4 lh-14">
