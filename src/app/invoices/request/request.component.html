@@ -22,7 +22,7 @@
         </div>
         <ng-template #errorRequestIdBlock>
           <p>Sorry, we couldn’t find any matches for this request Id.</p>
-          <p>Please try searching with another ID.</p>
+          <p>Please make sure you are connected to the correct network and then try searching with another ID.</p>
           <button mat-raised-button routerLink="/" style="text-decoration: none" class="px-5 my-5" color="accent">Back
             home</button>
         </ng-template>
@@ -96,10 +96,10 @@
 
                 <!-- PAYER -->
                 <mat-menu #payerActionsMenu="matMenu" [overlapTrigger]="false" class="actions-menu">
-                  <button (click)="cancelRequest()" mat-menu-item>
+                  <button (click)="cancelRequest()" *ngIf="request.state != 1" mat-menu-item>
                     Decline this Request
                   </button>
-                  <button (click)="acceptRequest()" mat-menu-item>
+                  <button (click)="acceptRequest()" *ngIf="request.state != 1" mat-menu-item>
                     <span>Accept & pay later</span>
                   </button>
                   <button (click)="additionalRequest()" mat-menu-item>
@@ -177,7 +177,7 @@
               <div id="share-request-item" class="semi-bold">
                 SHARE YOUR REQUEST
               </div>
-              <div class="sharethis-inline-share-buttons"></div>
+              <div class="sharethis-inline-share-buttons" title="You've received a request for payment for {{ amount }} {{ currency }} "></div>
             </div>
           </div>
           <div *ngIf="!request.status;" class="fs-16 mb-5 lh-14">
