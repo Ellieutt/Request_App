@@ -2,40 +2,36 @@
   <header class="d-flex flex-wrap justify-content-between align-items-center px-3 px-sm-5">
     <div class="py-3">
       <a routerLink="/" class="d-inline-flex align-items-center">
-        <img class="request-logo" src="assets/img/request-logo.png">
-        <div class="ml-3 semi-bold fc-primary hidden-md-down">
-          <span>Request&nbsp;</span>
-          <sup>
-            <small>
-              <small>BETA</small>
-            </small>
-          </sup>
-        </div>
+        <img class="request-logo" src="assets/img/request-banner-logo.png">
       </a>
     </div>
     <div class="flex-inf text-center">
       <app-search-bar></app-search-bar>
     </div>
-    <div class="flex-1 pull-right">
-      <app-gas-selector class="pull-right"></app-gas-selector>
+    <div class="flex-1 pull-right gas-container">
+      <app-gas-selector class="pull-left"></app-gas-selector>
     </div>
     <div class="flex-1">
-      <app-account class="pull-right ml-3"></app-account>
+      <app-account class="pull-right ml-4"></app-account>
     </div>
   </header>
   <div class="flex-1">
     <router-outlet></router-outlet>
   </div>
-  <footer class="d-flex flex-wrap justify-content-between p-3">
+  <footer class="d-flex flex-wrap justify-content-between p-3 py-4">
     <div class="d-flex flex-column m-3">
-      <a routerLink="/">
-        <img class="request-logo my-1 img-fluid" src="assets/img/request-logo.png">
-        <div class="semi-bold fc-white">Request</div>
-      </a>
+      <div class="d-flex justify-content-between footer-nav">
+        <a href="https://request.network/" target="_blank">Home</a>
+        <a href="https://request.network/en/technology/" target="_blank">About</a>
+        <a href="https://request.network/en/career/" target="_blank">Careers</a>
+        <a href="https://share.hsforms.com/19KvHsVAXTSacFl9WELTx-A2nz19" target="_blank">Contact</a>
+      </div>
       <span>
-        <small>© 2018 Request.Network</small>
+        <small>© 2019 Request.Network</small>
       </span>
-      <div class="d-flex justify-content-between">
+    </div>
+    <div class="ml-auto d-flex flex-wrap">
+      <div class="d-flex justify-content-between footer-icons">
         <a target="_blank" href="https://blog.request.network">
           <i class="fa fa-medium" aria-hidden="true"></i>
         </a>
@@ -57,26 +53,6 @@
         <a target="_blank" href="https://www.facebook.com/Request-Network-140279756554525/">
           <i class="fa fa-facebook" aria-hidden="true"></i>
         </a>
-      </div>
-    </div>
-    <div class="ml-auto d-flex flex-wrap">
-      <div class="footer-column">
-        <span class="my-3 semi-bold">Protocol</span>
-        <a href="https://github.com/RequestNetwork/" target="_blank">Github</a>
-        <a href="https://github.com/RequestNetwork/requestNetwork" target="_blank">Library</a>
-        <a href="https://blog.request.network/request-network-project-update-january-19th-2018-announcing-a-30-million-request-fund-6a6f87d27d43" target="_blank">Develop with Request</a>
-      </div>
-      <div class="footer-column">
-        <span class="my-3 semi-bold">Product</span>
-        <a target="_blank" href="https://request.network/assets/pdf/request_whitepaper.pdf">Whitepaper</a>
-        <a target="_blank" href="https://blog.request.network/why-use-request-b28c3e788261">Why use Request</a>
-        <a target="_blank" href="https://blog.request.network/request-colossus-launch-how-it-works-871464b361cf">How it works</a>
-        <a target="_blank" href="https://blog.request.network/colossuss-frequently-asked-questions-faq-c086231b88fa">FAQ</a>
-      </div>
-      <div class="footer-column">
-        <span class="my-3 semi-bold">Organization</span>
-        <a href="https://request.network/" target="_blank">About</a>
-        <a href="https://request.network/#/contact" target="_blank">Contact</a>
       </div>
     </div>
   </footer>

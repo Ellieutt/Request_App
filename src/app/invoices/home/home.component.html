@@ -1,28 +1,20 @@
 <div class="fc-primary container">
-  <div class="row my-5">
+  <div class="row mb-6 mt-6">
     <div class="col-md-5 py-3">
-      <h1>Send payment requests,
-        <br/>the right way</h1>
-      <p>A decentralized network to get paid in cryptocurrencies.</p>
-      <div class="info-card p-3 fs-14">
-        <div>What you can do with the BETA version Request:</div>
-        <ul>
-          <li>Connect to your Metamask or Ledger Nano S wallet</li>
-          <li>Create and send a request</li>
-          <li>Pay a request</li>
-          <li>Pay a request multiple times</li>
-          <li>Update a request (add a subtract as the payee or an additional as the payer)</li>
-          <li>Check your requests associated with an ETH address</li>
-        </ul>
-        <div>Please note that we will keep on improving this first version and continuously add new features in the coming months.</div>
-      </div>
-      <a routerLink="/invoice" class="d-inline-block mt-3 fs-14" style="color: #3E82F7">Create a new invoice Request</a>
+      <h1>Send cryptocurrency requests for payment.</h1>
+      <br />
+      <ul>
+        <li><b>Decentralized</b><br />An open network for transaction requests</li>
+        <li><b>Easy-to-use</b><br />No signup or personal information needed to get started</li>
+        <li><b>Multiple currency support</b><br />11+ currencies including ETH & DAI</li>
+      </ul>
+      <!-- <a routerLink="/invoice" class="d-inline-block mt-3 fs-14" style="color: #3E82F7">Create a new invoice Request</a> -->
     </div>
     <div class="col-md-6 ml-md-auto">
       <mat-card class="p-0 br-7 sh-blue">
-        <div class="d-flex bg-primary p-4 btr-7">
+        <div class="d-flex p-4 btr-7 home-invoice-header">
           <img class="px-3" [style.max-height]="'50px'" src="assets/img/request-logo.png">
-          <div class="fc-white ml-auto text-right">
+          <div class="ml-auto text-right">
             <h4 class="fs-18 semi-bold">New Request</h4>
             <div class="fs-14" [style.opacity]="'0.5'">
               <i>{{date | date: 'fullDate'}}</i>
@@ -31,8 +23,10 @@
         </div>
         <form [formGroup]="requestForm" (ngSubmit)="createRequest()">
           <div class="p-4 mb-5">
-            <mat-form-field class="w-100">
-              <input matInput type="text" name="ETHAddress" [placeholder]="'On which ' + getBlockchainSymbol() + ' address do you want to receive the funds?'" [formControl]="payeePaymentAddressFormControl">
+            <mat-form-field class="w-100 mb-1">
+              <input matInput type="text" name="ETHAddress"
+                [placeholder]="'On which ' + getBlockchainSymbol() + ' address do you want to receive the funds?'"
+                [formControl]="payeePaymentAddressFormControl">
               <mat-error *ngIf="payeePaymentAddressFormControl.hasError('required')">
                 Payment address is
                 <strong>required</strong>
@@ -41,9 +35,10 @@
                 <strong>Invalid</strong> {{ getBlockchainSymbol() }} address
               </mat-error>
             </mat-form-field>
-            <div class="d-flex w-100">
+            <div class="d-flex w-100 mb-1">
               <mat-form-field class="w-100">
-                <input matInput type="text" name="expectedAmount" placeholder="Request amount" [formControl]="expectedAmountFormControl">
+                <input matInput type="text" name="expectedAmount" placeholder="Request amount"
+                  [formControl]="expectedAmountFormControl">
                 <mat-error *ngIf="expectedAmountFormControl.hasError('required')">
                   amount is
                   <strong>required</strong>
@@ -51,24 +46,29 @@
                 <mat-error *ngIf="expectedAmountFormControl.hasError('pattern')">
                   amount must be a
                   <strong>positive number</strong> with maximum
-                  <strong>{{ this.web3Service.getDecimalsForCurrency(this.currencyFormControl.value) }} decimals</strong>
+                  <strong>{{ this.web3Service.getDecimalsForCurrency(this.currencyFormControl.value) }}
+                    decimals</strong>
                 </mat-error>
               </mat-form-field>
               <mat-form-field [style.width]="'80px'">
-                <app-currency-selector [formControl]="currencyFormControl" (selectionChange)="onCurrencyChange($event)"></app-currency-selector>
+                <app-currency-selector [formControl]="currencyFormControl" (selectionChange)="onCurrencyChange($event)">
+                </app-currency-selector>
               </mat-form-field>
             </div>
-            <mat-form-field class="w-100">
-              <input matInput type="text" name="payerETHAddress" placeholder="Payer's ETH address" [formControl]="payerAddressFormControl">
+            <mat-form-field class="w-100 mb-1">
+              <input matInput type="text" name="payerETHAddress" placeholder="Payer's ETH address"
+                [formControl]="payerAddressFormControl">
               <mat-error *ngIf="payerAddressFormControl.hasError('required')">
                 payer's address is
                 <strong>required</strong>
               </mat-error>
-              <mat-error *ngIf="!payerAddressFormControl.hasError('invalidAddress') && payerAddressFormControl.hasError('sameAddressAsPayeeAddress')">
+              <mat-error
+                *ngIf="!payerAddressFormControl.hasError('invalidAddress') && payerAddressFormControl.hasError('sameAddressAsPayeeAddress')">
                 payer's address must be
                 <strong>different from yours</strong>
               </mat-error>
-              <mat-error *ngIf="!payerAddressFormControl.hasError('invalidAddress') && payerAddressFormControl.hasError('sameAddressAsPaymentAddress')">
+              <mat-error
+                *ngIf="!payerAddressFormControl.hasError('invalidAddress') && payerAddressFormControl.hasError('sameAddressAsPaymentAddress')">
                 payer's address must be
                 <strong>different from payment address</strong>
               </mat-error>
@@ -76,8 +76,10 @@
                 <strong>Invalid</strong> ETH address
               </mat-error>
             </mat-form-field>
-            <mat-form-field class="w-100" [hidden]="currencyFormControl.value !== 'BTC'">
-              <input matInput type="text" [name]="getBlockchainSymbol() + 'RefundAddress'" [placeholder]="'On which ' + getBlockchainSymbol() + ' address do you wish to refund the payer?'" [formControl]="payerRefundAddressFormControl" [required]="currencyFormControl.value === 'BTC'">
+            <mat-form-field class="w-100 mb-1" [hidden]="currencyFormControl.value !== 'BTC'">
+              <input matInput type="text" [name]="getBlockchainSymbol() + 'RefundAddress'"
+                [placeholder]="'On which ' + getBlockchainSymbol() + ' address do you wish to refund the payer?'"
+                [formControl]="payerRefundAddressFormControl" [required]="currencyFormControl.value === 'BTC'">
               <mat-error *ngIf="payerRefundAddressFormControl.hasError('required')">
                 payer's refund address is
                 <strong>required</strong>
@@ -91,18 +93,68 @@
               </mat-error>
             </mat-form-field>
             <mat-form-field class="w-100" hintLabel="Max 256 characters">
-              <input matInput type="text" name="reason" placeholder="Reason (optional)" maxlength="256" [formControl]="reasonFormControl">
+              <input matInput type="text" name="reason" placeholder="Reason (optional)" maxlength="256"
+                [formControl]="reasonFormControl">
               <mat-hint align="end">{{ reasonFormControl?.value.length || 0 }}/256</mat-hint>
             </mat-form-field>
           </div>
-          <mat-toolbar class="p-0 bbr-7 cta-toolbar" [style.height]="'60px'">
+          <mat-toolbar class="p-0 bbr-7 cta-toolbar" [style.height]="'70px'">
             <div></div>
-            <button class="fs-18" id="create-request-button" mat-raised-button color="accent" type="submit" [disabled]="(requestForm.controls.expectedAmount.touched || requestForm.controls.payerAddress.touched) && !requestForm.valid">Create a Request&nbsp;
+            <button class="fs-18" id="create-request-button" mat-raised-button color="accent" type="submit"
+              [disabled]="(requestForm.controls.expectedAmount.touched || requestForm.controls.payerAddress.touched) && !requestForm.valid">Create
+              a Request&nbsp;
               <i *ngIf="createLoading" class="fa fa-circle-o-notch fa-spin"></i>
             </button>
           </mat-toolbar>
         </form>
       </mat-card>
+    </div>
+  </div>
+</div>
+
+<div class="bg-white home-elements">
+  <div class="container">
+    <div class="row my-5">
+      <div class="col-md-6">
+        <img style="width: 100%" src="assets/img/home-doc.png" />
+      </div>
+      <div class="col-md-5 ml-md-auto">
+        <h1>Documented transactions</h1>
+        <p>Complete records of your cryptocurrency payments to use in your accounting and other flows.</p>
+      </div>
+    </div>
+    <div class="row my-5 pt-4">
+      <div class="col-md-5">
+        <h1>Peer-to-peer payments</h1>
+        <p>The payment goes directly from the payer to your wallet, no middleman.</p>
+      </div>
+      <div class="col-md-6 ml-md-auto">
+        <img style="width: 100%" src="assets/img/home-p2p.png" />
+      </div>
+    </div>
+    <div class="row my-6 pt-4">
+      <div class="col-md-5">
+        <img style="width: 100%" src="assets/img/home-fees.png" />
+      </div>
+      <div class="col-md-5 ml-md-auto">
+        <h1>No added fees</h1>
+        <p>For transactions of any size from anywhere in the world.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="home-figures">
+  <div class="row py-6">
+    <div class="col-md-6 home-item">
+      <h1>$300,000+</h1>
+      <p>has already been transferred<br />
+        using the Request network</p>
+    </div>
+    <div class="col-md-6 home-item">
+      <h1>550+</h1>
+      <p>Requests for payment <br/>
+          already created</p>
     </div>
   </div>
 </div>

@@ -309,15 +309,15 @@ export class Web3Service {
       request.status = 'cancelled';
     } else {
       if (request.payee.balance.isZero()) {
-        request.status = request.state === 1 ? 'accepted' : 'created';
+        request.status = request.state === 1 ? 'accepted' : 'pending';
       } else if (request.payee.balance.lt(request.payee.expectedAmount)) {
         request.status = 'in progress';
       } else if (request.payee.balance.eq(request.payee.expectedAmount)) {
-        request.status = 'complete';
+        request.status = 'paid';
       } else if (request.payee.balance.gt(request.payee.expectedAmount)) {
         request.status = 'overpaid';
       } else {
-        request.status = 'created';
+        request.status = 'pending';
       }
     }
   }

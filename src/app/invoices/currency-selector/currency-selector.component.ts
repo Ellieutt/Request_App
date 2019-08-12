@@ -137,7 +137,6 @@ export class CurrencySelectorComponent
           this.currencies = [
             'ETH',
             'BAT',
-            'BNB',
             'DAI',
             'DGX',
             'KIN',

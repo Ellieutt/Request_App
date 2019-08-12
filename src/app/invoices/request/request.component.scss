@@ -6,10 +6,11 @@
   opacity: 0.5;
   height: 50px;
   font-weight: inherit;
+  padding: 26px !important;
 }
 
 .progress-bar-complete {
   ::ng-deep .mat-progress-bar-primary::after {
-      background-color: $green;
+      background-color: #000;
   }
 }

@@ -1,14 +1,14 @@
 @import 'variables';
 
 footer {
-  background: $primary;
-  color: #fff;
+  color: #000000;
+  background: #fff;
   .request-logo {
     height: 50px;
   }
 
   a .fa {
-    color: white;
+    color: #000000;
   }
 
   .footer-column {
@@ -17,9 +17,24 @@ footer {
     margin-left: 3rem;
     margin-right: 3rem;
     a {
-      color: white;
+      color: #000000;
       font-size: 14px;
       margin-bottom: 0.5rem;
+    }
+  }
+
+  .footer-nav {
+    a {
+      margin-right: 50px;
+      margin-bottom: 10px;
+    }
+  }
+
+  .footer-icons {
+    a {
+      padding: 10px;
+      font-size: 26px;
+      margin-top: 16px;
     }
   }
 }

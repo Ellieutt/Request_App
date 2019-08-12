@@ -1,4 +1,10 @@
-import { Component, Inject, OnInit, OnDestroy } from '@angular/core';
+import {
+  Component,
+  Inject,
+  OnInit,
+  AfterContentInit,
+  OnDestroy,
+} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Web3Service } from '../../util/web3.service';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
@@ -14,7 +20,7 @@ import { DisplayPayDialogComponent } from '../../util/dialogs/display-pay-dialog
   templateUrl: './request.component.html',
   styleUrls: ['./request.component.scss'],
 })
-export class RequestComponent implements OnInit, OnDestroy {
+export class RequestComponent implements OnInit, OnDestroy, AfterContentInit {
   objectKeys = Object.keys;
   account: string;
   mode: string;
@@ -22,7 +28,7 @@ export class RequestComponent implements OnInit, OnDestroy {
   request: any;
   progress: number;
   url = window.location.href;
-  copyUrlTxt = 'Copy url';
+  copyUrlTxt = 'Copy URL';
   txHash: string;
   searchValueSubscription: any;
   timerInterval: any;
@@ -90,6 +96,35 @@ export class RequestComponent implements OnInit, OnDestroy {
     }, 10000);
   }
 
+  async ngAfterContentInit() {
+    const that = this;
+    const loadAddThis = setInterval(function() {
+      if (document.getElementById('share-request-item')) {
+        that.loadScript(
+          '//platform-api.sharethis.com/js/sharethis.js#property=5d47e62e3387b20012d76862&product=inline-share-buttons'
+        );
+        clearInterval(loadAddThis);
+      }
+    }, 500);
+
+    const loadReceiptJs = setInterval(function() {
+      if (document.getElementById('download-receipt')) {
+        that.loadScript('../assets/js/receipt.js');
+        clearInterval(loadReceiptJs);
+      }
+    }, 500);
+  }
+
+  loadScript(url: string) {
+    const body = <HTMLDivElement>document.body;
+    const script = document.createElement('script');
+    script.innerHTML = '';
+    script.src = url;
+    script.async = false;
+    script.defer = true;
+    body.appendChild(script);
+  }
+
   async watchTxHash(txHash) {
     const result = await this.web3Service.getRequestByTransactionHash(txHash);
     if (result.request && result.request.requestId) {
@@ -121,11 +156,8 @@ export class RequestComponent implements OnInit, OnDestroy {
     if (result.request && result.request.requestId) {
       const blockNumber = await this.web3Service.getBlockNumber();
 
-      // if not on local network, wait 1 block confirmation
-      if (
-        this.web3Service.networkIdObservable.value > 4 ||
-        blockNumber - result.transaction.blockNumber > 0
-      ) {
+      // wait 1 block confirmation
+      if (blockNumber - result.transaction.blockNumber > 0) {
         return this.utilService.setSearchValue(result.request.requestId);
       }
     } else if (result.message === 'Contract is not supported by request') {
