@@ -1,4 +1,10 @@
-import { Component, Inject, OnInit, AfterContentInit, OnDestroy } from '@angular/core';
+import {
+  Component,
+  Inject,
+  OnInit,
+  AfterContentInit,
+  OnDestroy,
+} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Web3Service } from '../../util/web3.service';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
@@ -34,7 +40,7 @@ export class RequestComponent implements OnInit, OnDestroy, AfterContentInit {
     private route: ActivatedRoute,
     private dialog: MatDialog,
     private utilService: UtilService
-  ) { }
+  ) {}
 
   get amount() {
     return this.web3Service.BNToAmount(
@@ -88,15 +94,15 @@ export class RequestComponent implements OnInit, OnDestroy, AfterContentInit {
       await this.setRequest(rd);
       this.requestObject.requestData = rd;
     }, 10000);
-
-    
   }
 
   async ngAfterContentInit() {
     const that = this;
     const loadAddThis = setInterval(function() {
       if (document.getElementById('share-request-item')) {
-        that.loadScript('//platform-api.sharethis.com/js/sharethis.js#property=5d47e62e3387b20012d76862&product=inline-share-buttons');
+        that.loadScript(
+          '//platform-api.sharethis.com/js/sharethis.js#property=5d47e62e3387b20012d76862&product=inline-share-buttons'
+        );
         clearInterval(loadAddThis);
       }
     }, 500);
@@ -151,9 +157,7 @@ export class RequestComponent implements OnInit, OnDestroy, AfterContentInit {
       const blockNumber = await this.web3Service.getBlockNumber();
 
       // wait 1 block confirmation
-      if (
-        blockNumber - result.transaction.blockNumber > 0
-      ) {
+      if (blockNumber - result.transaction.blockNumber > 0) {
         return this.utilService.setSearchValue(result.request.requestId);
       }
     } else if (result.message === 'Contract is not supported by request') {
@@ -218,7 +222,7 @@ export class RequestComponent implements OnInit, OnDestroy, AfterContentInit {
       );
       this.url = `${window.location.protocol}//${
         window.location.host
-        }/#/request/requestId/${request.requestId}`;
+      }/#/request/requestId/${request.requestId}`;
     }
     if (request && !request.status && request.state !== undefined) {
       this.web3Service.setRequestStatus(request);
