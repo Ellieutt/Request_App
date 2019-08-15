@@ -95,7 +95,7 @@ export class PayDialogComponent implements OnInit {
       .on('broadcasted', response => {
         this.callbackTx(
           response,
-          'Payment is being done. Please wait a few moments for it to appear on the Blockchain.'
+          'Your payment is being processed. Please wait a few moments for it to appear on the Blockchain.'
         );
         this.dialogRef.close();
       })

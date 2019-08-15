@@ -122,7 +122,7 @@ export class PayWithRequestComponent implements OnInit {
         return;
       } else if (err.message.startsWith('_from must be different')) {
         this.utilService.openSnackBar(
-          `You can't create a request for yourself`
+          `You can't create a request to yourself. Please specify a different Payer.`
         );
       } else if (err.message.startsWith('balance of token is too low')) {
         this.utilService.openSnackBar(

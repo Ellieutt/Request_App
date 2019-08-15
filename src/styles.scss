@@ -810,7 +810,10 @@ ul {
   padding: 0;
 }
 
-@media (max-width: 1499px) {
+@media (max-width: 1649px) {
+  .request-container {
+    max-width: 1180px !important;
+  }
   .request-invoice-container {
     flex: 0 0 50%;
     max-width: 50%;

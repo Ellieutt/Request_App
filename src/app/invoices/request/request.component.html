@@ -1,4 +1,4 @@
-<div class="container fc-primary">
+<div class="container fc-primary request-container">
   <div class="row my-5 mt-6">
     <div class="col-12" *ngIf="!request; else resultBlock">
       <mat-spinner class="mx-auto"></mat-spinner>
@@ -74,6 +74,18 @@
                 </div>
               </div>
             </div>
+            <div class="hidden-if-empty p-4 my-3">
+              <div *ngIf="!request.status">
+                  <div class="h-100 w-100 fs-18 mb-3">
+                      <div class="text-center fs-12 lh-14 h-100">
+                        <mat-spinner class="mx-auto mt-3" [diameter]="20"></mat-spinner>
+                        <div class="fc-primary semi-bold">
+                          <i>Posting your request to the blockchain.</i>
+                        </div>
+                      </div>
+                    </div>
+              </div>
+            </div>
             <mat-toolbar class="p-0 bbr-7 cta-toolbar" [style.height]="'auto'">
               <!-- STATE == CANCELED -->
               <!-- <div *ngIf="request.state == 2; else ctaBlock" class="text-center fs-12 lh-14 h-100">
@@ -102,16 +114,13 @@
                   <button (click)="acceptRequest()" *ngIf="request.state != 1" mat-menu-item>
                     <span>Accept & pay later</span>
                   </button>
-                  <button (click)="additionalRequest()" mat-menu-item>
-                    <span>Update the Request</span>
-                  </button>
                   <button (click)="payRequest()" *ngIf="request.status == 'complete' || request.status == 'overpaid'"
                     mat-menu-item>
                     <span>Pay more</span>
                   </button>
                 </mat-menu>
                 <div *ngSwitchCase="'payer'" class="d-flex h-100">
-                  <button type="button" *ngIf="request.state != 2 && request.status != 'paid'" class="fs-18 bg-grey-whiter fc-blue-grey no-focus-overlay" mat-raised-button
+                  <button type="button" *ngIf="request.state != 2 && request.state != 1 && request.status != 'paid'" class="fs-18 bg-grey-whiter fc-blue-grey no-focus-overlay" mat-raised-button
                     [matMenuTriggerFor]="payerActionsMenu">Actions&nbsp;
                     <mat-icon>expand_more</mat-icon>
                   </button>
@@ -143,7 +152,7 @@
         </div>
         <div id="request-invoice-right" class="col-lg-5 col-xl-5 mb-5">
           <!-- <div *ngIf -->
-          <div *ngIf="request.status && mode == 'payee' && request.state != 2">
+          <div *ngIf="request.status && request.state == 1">
             <div class="fs-16 mb-4 lh-14">
               <div class="semi-bold">
                 DOWNLOAD YOUR RECEIPT
@@ -172,12 +181,12 @@
                 fill="#CAD1D8" />
             </svg>
           </div>
-          <div *ngIf="request.status && mode == 'payer' && request.state != 2">
+          <div *ngIf="request.status && request.state != 2">
             <div class="fs-16 mb-4 lh-14">
               <div id="share-request-item" class="semi-bold">
-                SHARE YOUR REQUEST
+                SHARE THIS REQUEST
               </div>
-              <div class="sharethis-inline-share-buttons" title="You've received a request for payment for {{ amount }} {{ currency }} "></div>
+              <div class="sharethis-inline-share-buttons" title="You've received a request for payment for {{ amount }} {{ currency }}. To pay or decline, follow this link."></div>
             </div>
           </div>
           <div *ngIf="!request.status;" class="fs-16 mb-5 lh-14">
