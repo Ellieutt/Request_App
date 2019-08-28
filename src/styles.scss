@@ -828,3 +828,71 @@ ul {
     right: -18%;
   }
 }
+
+.show-mobile {
+  display: none !important;
+}
+
+@media (max-width: 767px) {
+  .home-figures:after {
+    height: 2px;
+    width: 100%;
+    left: 0;
+    top: 50%;
+  }
+
+  .home-figures .home-item {
+    padding: 70px 0;
+  }
+
+  .request-invoice-container, #request-invoice-right {
+    flex: 0 0 100%;
+    max-width: 100%;
+    padding-left: 30px !important;
+    padding-right: 30px !important;
+  }
+
+  #request-invoice-right {
+    margin-bottom: 0 !important;
+  }
+
+  .request-container > .row, .fc-primary > .row {
+    margin-top: 22px !important;
+  }
+
+  .request-invoice-right-inner {
+    padding: 40px 2rem;
+    background: #fff;
+    margin-top: 40px;
+    box-shadow: 2px 2px 18px 0px rgba(212, 227, 255, 0.5) !important;
+  }
+
+  .show-mobile {
+    display: block !important;
+  }
+
+  .hide-mobile {
+    display: none !important;
+  }
+
+  .app-search-container {
+    flex: 100% 0 0 !important;
+
+    .searchBar {
+      width: 100%;
+    }
+  }
+
+  .mobile-account {
+    .network, #wallet-type, .material-icons {
+      display: none !important;
+    }
+    .flex-column {
+      border-right: 0 !important;
+    }
+  }
+
+  .footer-outer {
+    margin-left: 0 !important;
+  }
+}

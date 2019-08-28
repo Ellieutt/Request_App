@@ -151,84 +151,86 @@
           </mat-card>
         </div>
         <div id="request-invoice-right" class="col-lg-5 col-xl-5 mb-5">
+          <div class="request-invoice-right-inner">
           <!-- <div *ngIf -->
-          <div *ngIf="request.status && request.state == 1">
-            <div class="fs-16 mb-4 lh-14">
-              <div class="semi-bold">
-                DOWNLOAD YOUR RECEIPT
+            <div *ngIf="request.status && request.state == 1">
+              <div class="fs-16 mb-4 lh-14">
+                <div class="semi-bold">
+                  DOWNLOAD YOUR RECEIPT
+                </div>
+              </div>
+              <svg id="download-receipt" class="mb-5" width="57" height="66" viewBox="0 0 43 49" fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M9.08333 0C7.3875 0 6 1.37812 6 3.0625V45.9375C6 47.6219 7.3875 49 9.08333 49H39.9167C41.6125 49 43 47.6219 43 45.9375V12.25L30.6667 0H9.08333Z"
+                  fill="#E2E5E7" />
+                <path d="M34 12H43L31 0V9C31 10.65 32.35 12 34 12Z" fill="#B0B7BD" />
+                <path d="M43 21L34 12H43V21Z" fill="#CAD1D8" />
+                <path
+                  d="M37 39.5C37 40.325 36.3062 41 35.4583 41H1.54167C0.69375 41 0 40.325 0 39.5V24.5C0 23.675 0.69375 23 1.54167 23H35.4583C36.3062 23 37 23.675 37 24.5V39.5Z"
+                  fill="#F15642" />
+                <path fill-rule="evenodd" clip-rule="evenodd"
+                  d="M7.90534 28.032C7.39078 28.032 7.07129 28.4928 7.07129 28.9152V36.1184C7.07129 36.6816 7.49983 37 7.90534 37C8.34771 37 8.69177 36.6816 8.69177 36.1184V34.4288H10.7423C12.3398 34.4288 13.7775 33.3024 13.7775 31.28C13.7775 29.1456 12.3398 28.032 10.7423 28.032H7.90534ZM8.69177 32.8304V29.6432H10.7423C11.5656 29.6432 12.2169 30.3856 12.2169 31.28C12.2169 32.0736 11.5656 32.8304 10.7423 32.8304H8.69177Z"
+                  fill="white" />
+                <path fill-rule="evenodd" clip-rule="evenodd"
+                  d="M15.335 36.208C15.335 36.7696 15.7773 37 16.1828 37H19.1058C24.4849 37 24.6078 28.1472 18.9952 28.1472H16.1828C15.7773 28.1472 15.335 28.4816 15.335 28.9408V36.208ZM16.957 35.44V29.7088H18.9952C22.4589 29.7088 22.3115 35.44 18.9952 35.44H16.957Z"
+                  fill="white" />
+                <path
+                  d="M26.4758 29.8112V31.8448H29.6077C30.0501 31.8448 30.4924 32.3056 30.4924 32.752C30.4924 33.1744 30.0501 33.52 29.6077 33.52H26.4758V36.2064C26.4758 36.6544 26.1701 36.9984 25.7401 36.9984C25.1994 36.9984 24.8691 36.6544 24.8691 36.2064V28.9392C24.8691 28.48 25.2009 28.1456 25.7401 28.1456H30.0516C30.5923 28.1456 30.9118 28.48 30.9118 28.9392C30.9118 29.3488 30.5923 29.8096 30.0516 29.8096H26.4758V29.8112Z"
+                  fill="white" />
+                <path d="M35.45 41.5H6V43H35.45C36.3025 43 37 42.325 37 41.5V40C37 40.825 36.3025 41.5 35.45 41.5Z"
+                  fill="#CAD1D8" />
+              </svg>
+            </div>
+            <div *ngIf="request.status && request.state != 2">
+              <div class="fs-16 mb-4 lh-14">
+                <div id="share-request-item" class="semi-bold">
+                  SHARE THIS REQUEST
+                </div>
+                <div class="sharethis-inline-share-buttons" title="You've received a request for payment for {{ amount }} {{ currency }}. To pay or decline, follow this link."></div>
               </div>
             </div>
-            <svg id="download-receipt" class="mb-5" width="57" height="66" viewBox="0 0 43 49" fill="none"
-              xmlns="http://www.w3.org/2000/svg">
-              <path
-                d="M9.08333 0C7.3875 0 6 1.37812 6 3.0625V45.9375C6 47.6219 7.3875 49 9.08333 49H39.9167C41.6125 49 43 47.6219 43 45.9375V12.25L30.6667 0H9.08333Z"
-                fill="#E2E5E7" />
-              <path d="M34 12H43L31 0V9C31 10.65 32.35 12 34 12Z" fill="#B0B7BD" />
-              <path d="M43 21L34 12H43V21Z" fill="#CAD1D8" />
-              <path
-                d="M37 39.5C37 40.325 36.3062 41 35.4583 41H1.54167C0.69375 41 0 40.325 0 39.5V24.5C0 23.675 0.69375 23 1.54167 23H35.4583C36.3062 23 37 23.675 37 24.5V39.5Z"
-                fill="#F15642" />
-              <path fill-rule="evenodd" clip-rule="evenodd"
-                d="M7.90534 28.032C7.39078 28.032 7.07129 28.4928 7.07129 28.9152V36.1184C7.07129 36.6816 7.49983 37 7.90534 37C8.34771 37 8.69177 36.6816 8.69177 36.1184V34.4288H10.7423C12.3398 34.4288 13.7775 33.3024 13.7775 31.28C13.7775 29.1456 12.3398 28.032 10.7423 28.032H7.90534ZM8.69177 32.8304V29.6432H10.7423C11.5656 29.6432 12.2169 30.3856 12.2169 31.28C12.2169 32.0736 11.5656 32.8304 10.7423 32.8304H8.69177Z"
-                fill="white" />
-              <path fill-rule="evenodd" clip-rule="evenodd"
-                d="M15.335 36.208C15.335 36.7696 15.7773 37 16.1828 37H19.1058C24.4849 37 24.6078 28.1472 18.9952 28.1472H16.1828C15.7773 28.1472 15.335 28.4816 15.335 28.9408V36.208ZM16.957 35.44V29.7088H18.9952C22.4589 29.7088 22.3115 35.44 18.9952 35.44H16.957Z"
-                fill="white" />
-              <path
-                d="M26.4758 29.8112V31.8448H29.6077C30.0501 31.8448 30.4924 32.3056 30.4924 32.752C30.4924 33.1744 30.0501 33.52 29.6077 33.52H26.4758V36.2064C26.4758 36.6544 26.1701 36.9984 25.7401 36.9984C25.1994 36.9984 24.8691 36.6544 24.8691 36.2064V28.9392C24.8691 28.48 25.2009 28.1456 25.7401 28.1456H30.0516C30.5923 28.1456 30.9118 28.48 30.9118 28.9392C30.9118 29.3488 30.5923 29.8096 30.0516 29.8096H26.4758V29.8112Z"
-                fill="white" />
-              <path d="M35.45 41.5H6V43H35.45C36.3025 43 37 42.325 37 41.5V40C37 40.825 36.3025 41.5 35.45 41.5Z"
-                fill="#CAD1D8" />
-            </svg>
-          </div>
-          <div *ngIf="request.status && request.state != 2">
-            <div class="fs-16 mb-4 lh-14">
-              <div id="share-request-item" class="semi-bold">
-                SHARE THIS REQUEST
+            <div *ngIf="!request.status;" class="fs-16 mb-5 lh-14">
+              <div *ngIf="!request.errorMsg; else errorBlock">
+                <div class="semi-bold">
+                  YOU ARE IN VIEW MODE
+                </div>
               </div>
-              <div class="sharethis-inline-share-buttons" title="You've received a request for payment for {{ amount }} {{ currency }}. To pay or decline, follow this link."></div>
+              <ng-template #errorBlock>
+                <i class="mx-auto my-3 fa fa-warning fa-2x fc-warn"></i>
+                <div class="fc-primary semi-bold">
+                  <i>Sorry, we are unable to locate this Transaction Hash. Try refreshing the page.</i>
+                </div>
+              </ng-template>
             </div>
-          </div>
-          <div *ngIf="!request.status;" class="fs-16 mb-5 lh-14">
-            <div *ngIf="!request.errorMsg; else errorBlock">
-              <div class="semi-bold">
-                YOU ARE IN VIEW MODE
+            <div *ngIf="request.state == 2; else defaultBlock">
+              <div class="fs-16 mb-5 lh-14">
+                <div class="semi-bold">
+                  THIS REQUEST HAS BEEN CANCELLED.
+                </div>
               </div>
             </div>
-            <ng-template #errorBlock>
-              <i class="mx-auto my-3 fa fa-warning fa-2x fc-warn"></i>
-              <div class="fc-primary semi-bold">
-                <i>Sorry, we are unable to locate this Transaction Hash. Try refreshing the page.</i>
+            <ng-template #defaultBlock *ngIf="request.status;">
+              <div class="fs-16 mb-5 lh-14">
+                <div class="semi-bold">
+                  YOU ARE IN VIEW-ONLY MODE.
+                </div>
+                <p class="fs-16 mt-3 lh-22">Connect your Metamask account as the payer or the payee to interact with this
+                  request.</p>
               </div>
             </ng-template>
-          </div>
-          <div *ngIf="request.state == 2; else defaultBlock">
-            <div class="fs-16 mb-5 lh-14">
-              <div class="semi-bold">
-                THIS REQUEST HAS BEEN CANCELLED.
-              </div>
-            </div>
-          </div>
-          <ng-template #defaultBlock *ngIf="request.status;">
-            <div class="fs-16 mb-5 lh-14">
-              <div class="semi-bold">
-                YOU ARE IN VIEW-ONLY MODE.
-              </div>
-              <p class="fs-16 mt-3 lh-22">Connect your Metamask account as the payer or the payee to interact with this
-                request.</p>
-            </div>
-          </ng-template>
 
-          <input mat-button class="url-box fc-blue-grey fs-14 px-3 w-100" [value]="url" disabled>
-          <button mat-button class="w-100 fs-16 bor-accent my-3" style="height: 50px" color="accent" type="button"
-            ngxClipboard [cbContent]="url" (cbOnSuccess)="copyToClipboard()">{{copyUrlTxt}}</button>
-          <hr class="my-4" style="border-top: 2px solid #EFEFEF;">
-          <div *ngIf="request.events">
-            <p class="semi-bold mb-2 fs-16">History</p>
-            <div *ngIf="request && request.events && request.events.length > 0">
-              <div *ngFor="let e of request.events" class="fs-14 d-flex mb-1 justify-content-between">
-                <span>{{ spaceBeforeCapital(e.name) }} </span>
-                <span>{{ utilService.getAgeFromTimeStamp(e._meta.timestamp) }}</span>
+            <input mat-button class="url-box fc-blue-grey fs-14 px-3 w-100" [value]="url" disabled>
+            <button mat-button class="w-100 fs-16 bor-accent my-3" style="height: 50px" color="accent" type="button"
+              ngxClipboard [cbContent]="url" (cbOnSuccess)="copyToClipboard()">{{copyUrlTxt}}</button>
+            <hr class="my-4" style="border-top: 2px solid #EFEFEF;">
+            <div *ngIf="request.events">
+              <p class="semi-bold mb-2 fs-16">History</p>
+              <div *ngIf="request && request.events && request.events.length > 0">
+                <div *ngFor="let e of request.events" class="fs-14 d-flex mb-1 justify-content-between">
+                  <span>{{ spaceBeforeCapital(e.name) }} </span>
+                  <span>{{ utilService.getAgeFromTimeStamp(e._meta.timestamp) }}</span>
+                </div>
               </div>
             </div>
           </div>
