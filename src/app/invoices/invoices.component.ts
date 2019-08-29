@@ -6,6 +6,13 @@ import { Router } from '@angular/router';
   templateUrl: './invoices.component.html',
   styleUrls: ['./invoices.component.scss'],
 })
-export class InvoicesComponent {
+export class InvoicesComponent implements OnInit {
+
+  public baseUrl = '';
+
   constructor(public router: Router) {}
+
+  ngOnInit() {
+      this.baseUrl = window.location.href;
+  }
 }

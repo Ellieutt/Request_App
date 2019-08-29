@@ -895,4 +895,74 @@ ul {
   .footer-outer {
     margin-left: 0 !important;
   }
+
+  header .request-logo {
+    height: 24px;
+  }
+
+  footer > .m-3 {
+    margin: 0 !important;
+  }
+
+  .progress-bar-pending {
+    width: 80% !important;
+  }
+
+  .mat-simple-snackbar {
+    max-height: 100%;
+  }
+}
+
+// Mobile Popup
+
+.mobile-popup {
+  position: relative;
+  display: none;
+  z-index: 9999999;
+  text-align: center;
+  background: #3e82f7;
+
+  &.show {
+    display: block;
+  }
+
+  .mobile-popup-inner {
+    margin: 0 auto;
+    padding: 20px 20px;
+    display: inline-block;
+  }
+
+  p {
+    color: #fff;
+    margin-bottom: 8px;
+  }
+  
+  .close-icon {
+    font-style: normal;
+    position: absolute;
+    top: 0;
+    right: 0;
+    font-size: 36px;
+    color: #fff;
+    padding: 20px;
+    line-height: 16px;
+    cursor: pointer;
+  }
+
+  .btn {
+    padding: 12px 30px;
+    display: inline-block;
+    color: #fff;
+    margin-left: 8px;
+    margin-right: 8px;
+    text-decoration: underline;
+  }
+
+  .metamask-btn {
+    background: #F79220;
+  }
+
+  .trust-btn {
+    background: #3375BB;
+  } 
 }

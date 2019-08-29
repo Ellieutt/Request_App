@@ -16,9 +16,9 @@
         </span>
       </div>
       <ng-template #singlePayee>
-        <div class="mb-2" [style.marginLeft]="'2rem'" ><i>From</i></div>
+        <div class="mb-2 address-title" [style.marginLeft]="'1rem'" ><i>From</i></div>
       </ng-template>
-      <div class="container" *ngFor="let payee of payees | slice:min:[max || 1]; let i=index;">
+      <div class="address-container" *ngFor="let payee of payees | slice:min:[max || 1]; let i=index;">
         <div class="d-flex semi-bold" [style.marginLeft]="'4rem'" [style.fontStyle]="'italic'" *ngIf="payees.length>1">{{i === 0 ? 'Main Payee': 'Payee #'+i }} </div>
         <request-address class="d-flex mt-2" [address]="payee.id"></request-address>
         <request-address class="d-flex" *ngIf="payee.payment" [address]="payee.payment" title="ETH Payment address" ></request-address>
@@ -28,7 +28,7 @@
   </div>
   <div class="d-flex" style="flex: 1" *ngIf="payer">
     <div class="fs-14 lh-18">
-      <div class="mb-2" [style.marginLeft]="'1rem'"><i>To</i></div>
+      <div class="mb-2 address-title" [style.marginLeft]="'1rem'"><i>To</i></div>
       <request-address [address]="payer" class="d-flex"></request-address>
     </div>
   </div>
