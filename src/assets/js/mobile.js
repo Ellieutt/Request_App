@@ -10,7 +10,6 @@ const MOBILE_OVERLAY_COOKIE_NAME = 'mobile-wallet-overlay-dismissed';
 
 function init() {
     $('.mobile-popup .close-icon').click(function(e) {
-        console.log("HERE");
         $('.mobile-popup').slideUp();
         setCookie(MOBILE_OVERLAY_COOKIE_NAME, true, 30);
     });
