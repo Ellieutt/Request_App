@@ -16,7 +16,9 @@ function init() {
     });
 
     if (isMobile() && !$('#wallet-type-mobile').data('connected')) {
-        if (!getCookie(MOBILE_OVERLAY_COOKIE_NAME)) {
+        const isTrust = typeof web3 !== 'undefined' && web3.currentProvider.isTrust;
+
+        if (!getCookie(MOBILE_OVERLAY_COOKIE_NAME) && !isTrust) {
             $('.mobile-popup').slideDown();
         }
     }
