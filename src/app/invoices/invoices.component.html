@@ -1,3 +1,13 @@
+<div id="mobile-popup" class="mobile-popup">
+  <div class="mobile-popup-inner">
+    <i class="close-icon">×</i>
+    <h2></h2>
+    <p>We have detected you are on mobile. <br/> Request is compatable with:</p>
+    <a class="btn" href="dapp:{{ this.baseUrl }}">Metamask Mobile</a>
+    <a class="btn" href="https://link.trustwallet.com/open_url?coin_id=60&url={{ this.baseUrl }}">Trust Wallet</a>
+  </div>
+</div>
+
 <div class="wrapper bg-grey-white">
   <header class="d-flex flex-wrap justify-content-between align-items-center px-3 px-sm-5">
     <div class="py-3">
@@ -5,13 +15,16 @@
         <img class="request-logo" src="assets/img/request-banner-logo.png">
       </a>
     </div>
-    <div class="flex-inf text-center">
+    <div class="mobile-account show-mobile">
+      <app-account class="pull-right ml-4"></app-account>
+    </div>
+    <div class="app-search-container flex-inf text-center">
       <app-search-bar></app-search-bar>
     </div>
-    <div class="flex-1 pull-right gas-container">
+    <div class="flex-1 pull-right gas-container hide-mobile">
       <app-gas-selector class="pull-left"></app-gas-selector>
     </div>
-    <div class="flex-1">
+    <div class="flex-1 hide-mobile">
       <app-account class="pull-right ml-4"></app-account>
     </div>
   </header>
@@ -30,7 +43,7 @@
         <small>© 2019 Request.Network</small>
       </span>
     </div>
-    <div class="ml-auto d-flex flex-wrap">
+    <div class="footer-outer ml-auto d-flex flex-wrap">
       <div class="d-flex justify-content-between footer-icons">
         <a target="_blank" href="https://blog.request.network">
           <i class="fa fa-medium" aria-hidden="true"></i>

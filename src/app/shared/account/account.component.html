@@ -3,6 +3,7 @@
   <div *ngIf="web3Service.accountObservable | async as account; else accountLocked" class="d-flex justify-content-between align-items-center">
     <angular-blockies [options]="{ seed: account.toLowerCase() }" class="blockies"></angular-blockies>
     <div class="d-flex flex-column align-items-start px-2" [style.lineHeight]="'14px'" [style.borderRight]="'1px solid #617B9F'">
+      <span class="hidden" id="wallet-type-mobile" attr.data-connected="{{ web3Service.ledgerConnected ? true : web3Service.metamask ? true : false }}"></span>
       <span class="fc-accent fs-12" id="wallet-type">{{ web3Service.ledgerConnected ? 'Ledger Nano S' : web3Service.metamask ? 'Metamask' : 'Connect a wallet' }}</span>
       <span class="fs-14">{{ account.substring(0,10) }}...{{ account.substring(37,42) }}</span>
     </div>
@@ -16,7 +17,8 @@
     <div class="d-flex justify-content-between align-items-center">
       <mat-icon>account_circle</mat-icon>
       <div class="d-flex flex-column align-items-start px-2" [style.lineHeight]="'14px'" [style.borderRight]="'1px solid #617B9F'">
-        <span class="fc-accent fs-12">{{ web3Service.ledgerConnected ? 'Ledger Nano S' : web3Service.metamask ? 'Metamask' : 'Connect a wallet' }}</span>
+        <span class="hidden" id="wallet-type-mobile" attr.data-connected="{{ web3Service.ledgerConnected ? true : web3Service.metamask ? true : false }}"></span>
+        <span class="fc-accent fs-12" id="wallet-type">{{ web3Service.ledgerConnected ? 'Ledger Nano S' : web3Service.metamask ? 'Metamask' : 'Connect a wallet' }}</span>
         <span class="fs-14">{{ web3Service.metamask ? 'Account locked' : 'no account' }}</span>
       </div>
       <div class="fs-14 d-flex align-items-center network network-{{ web3Service.networkIdObservable | async }}">
