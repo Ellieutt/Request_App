@@ -3,9 +3,13 @@ $('#download-receipt').click(function () {
         copyurl: $('.url-box').val()
     });
 
-    let doc = new jsPDF('p', 'pt', 'a5');
+    const pdfElement = document.getElementById('request-invoice-outer');
 
-    doc.addHTML($('#request-invoice-outer'), function () {
-        doc.save('RequestInvoice.pdf');
+    html2pdf(pdfElement, {
+        margin: 0,
+        filename: 'RequestInvoice.pdf',
+        image: { type: 'jpeg', quality: 1 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'in', format: 'a5', orientation: 'p' }
     });
 });

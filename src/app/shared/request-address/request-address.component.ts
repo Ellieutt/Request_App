@@ -9,6 +9,8 @@ export class RequestAddressComponent implements OnInit {
   @Input()
   address: string;
   @Input()
+  showLongAddress: boolean;
+  @Input()
   title: string;
   constructor() {}
 
