@@ -13,6 +13,9 @@ export class InvoicesComponent implements OnInit {
   constructor(public router: Router) {}
 
   ngOnInit() {
-      this.baseUrl = window.location.href;
+      const urlFull = window.location.href;
+      const url = urlFull.substr(0, urlFull.length - 2); // remove trailing #/
+      // Remove protocol as it's not supported on Metamask Mobile
+      this.baseUrl = url.replace(/https?:\/\//i, '');
   }
 }

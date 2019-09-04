@@ -53,6 +53,11 @@ export class RequestComponent implements OnInit, OnDestroy, AfterContentInit {
   }
 
   async ngOnInit() {
+    window.analytics.page({
+      name: '/request/requestId/' + this.route.snapshot.params['requestId'],
+      path: window.location.href
+    });
+
     if (!this.web3Service || !this.web3Service.web3Ready) {
       await new Promise(resolve =>
         this.timeOuts.push(setTimeout(resolve, 1000))
@@ -102,6 +107,9 @@ export class RequestComponent implements OnInit, OnDestroy, AfterContentInit {
       if (document.getElementById('share-request-item')) {
         that.loadScript(
           '//platform-api.sharethis.com/js/sharethis.js#property=5d47e62e3387b20012d76862&product=inline-share-buttons'
+        );        
+        that.loadScript(
+          '../assets/js/tracking.js'
         );
         clearInterval(loadAddThis);
       }

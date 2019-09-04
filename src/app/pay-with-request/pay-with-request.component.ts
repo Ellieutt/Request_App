@@ -34,6 +34,12 @@ export class PayWithRequestComponent implements OnInit {
   ) {}
 
   async ngOnInit() {
+
+    window.analytics.page({
+      name: '/request/requestId/signedRequest',
+      path: window.location.href
+    });
+
     if (!this.web3Service || !this.web3Service.web3Ready) {
       await new Promise(resolve => setTimeout(resolve, 1000));
       return this.ngOnInit();

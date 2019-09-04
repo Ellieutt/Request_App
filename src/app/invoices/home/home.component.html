@@ -100,8 +100,7 @@
           </div>
           <mat-toolbar class="p-0 bbr-7 cta-toolbar" [style.height]="'70px'">
             <div></div>
-            <button class="fs-18" id="create-request-button" mat-raised-button color="accent" type="submit"
-              [disabled]="(requestForm.controls.expectedAmount.touched || requestForm.controls.payerAddress.touched) && !requestForm.valid">Create
+            <button class="fs-18" id="create-request-button" mat-raised-button color="accent" type="submit">Create
               a Request&nbsp;
               <i *ngIf="createLoading" class="fa fa-circle-o-notch fa-spin"></i>
             </button>

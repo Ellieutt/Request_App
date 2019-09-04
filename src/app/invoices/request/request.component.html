@@ -187,7 +187,9 @@
                 <div id="share-request-item" class="semi-bold">
                   SHARE THIS REQUEST
                 </div>
-                <div class="sharethis-inline-share-buttons" title="You've received a request for payment for {{ amount }} {{ currency }}. To pay or decline, follow this link."></div>
+                <div class="sharethis-inline-share-buttons" 
+                    title="You've received a request for payment for {{ amount }} {{ currency }}. To pay or decline, follow this link."
+                    attr.data-subject="You've received a request for payment for {{ amount }} {{ currency }}. To pay or decline, follow this link."></div>
               </div>
             </div>
             <div *ngIf="!request.status;" class="fs-16 mb-5 lh-14">
@@ -220,7 +222,7 @@
               </div>
             </ng-template>
 
-            <input mat-button class="url-box fc-blue-grey fs-14 px-3 w-100" [value]="url" disabled>
+            <input mat-button class="url-box fc-blue-grey fs-14 px-3 w-100" [value]="url" disabled >
             <button mat-button class="w-100 fs-16 bor-accent my-3" style="height: 50px" color="accent" type="button"
               ngxClipboard [cbContent]="url" (cbOnSuccess)="copyToClipboard()">{{copyUrlTxt}}</button>
             <hr class="my-4" style="border-top: 2px solid #EFEFEF;">
