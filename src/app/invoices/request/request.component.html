@@ -30,129 +30,133 @@
       <ng-template #requestBlock>
         <div class="mr-lg-auto col-lg-6 col-xl-5 mr-xl-auto request-invoice-container">
           <mat-card class="p-0 br-7 sh-blue" id="request-invoice-outer">
-            <div class="d-flex p-4 btr-7">
-              <img class="px-3" style="max-height: 75px;padding:0!important;" src="assets/img/request-logo.png">
-              <div class="ml-auto text-right px-3">
-                <h4 class="semi-bold fs-18">
-                  <ng-template #waitingTemplate>
-                    <span>
-                      <i
-                        class="fa {{request.errorMsg ? 'fa-warning fc-warn' : 'fa-circle-o-notch fa-spin'}}"></i>&nbsp;{{ request.errorMsg || request.waitingMsg || 'searching for blockchain information...' }}</span>
-                  </ng-template>
-                </h4>
-                <div *ngIf="request.data && request.data.data && request.data.data.date" class="invoice-date fs-16">
-                  {{request.data.data.date | date: 'fullDate'}}
-                </div>
-                <!-- <div class="mt-1">
+            <div class="request-invoice-inner-pdf">
+              <div class="d-flex p-4 btr-7">
+                <img class="px-3" style="max-height: 75px;padding:0!important;" src="assets/img/request-logo.png">
+                <div class="ml-auto text-right px-3">
+                  <h4 class="semi-bold fs-18">
+                    <ng-template #waitingTemplate>
+                      <span>
+                        <i
+                          class="fa {{request.errorMsg ? 'fa-warning fc-warn' : 'fa-circle-o-notch fa-spin'}}"></i>&nbsp;{{ request.errorMsg || request.waitingMsg || 'searching for blockchain information...' }}</span>
+                    </ng-template>
+                  </h4>
+                  <div *ngIf="request.data && request.data.data && request.data.data.date" class="invoice-date fs-16">
+                    {{request.data.data.date | date: 'fullDate'}}
+                  </div>
+                  <!-- <div class="mt-1">
                   <a *ngIf="txHash" class="fs-14 pr-1" style="opacity: 0.8; color: #008c62 !important;" href="{{web3Service.etherscanUrl}}tx/{{txHash}}" target="_blank">
                     <i>{{ web3Service.etherscanUrl}}tx/{{txHash.substring(0, 10) }}...{{ txHash.substring(txHash.length-5, txHash.length) }}</i>
                   </a>
                 </div> -->
-              </div>
-            </div>
-            <app-rnf-invoice-request [request]='request' [blockchainName]='getBlockchainName()' *ngIf='isInvoiceRequest()
-                     else genericRequest'>
-            </app-rnf-invoice-request>
-            <ng-template #genericRequest>
-              <div *ngIf="request.status" class="status-banner status-{{request.status.replace(' ','-')}} fs-16">
-                {{request.status}}</div>
-              <request-addresses [request]="request"></request-addresses>
-              <request-metadata *ngIf="request.data" [data]="request.data.data" title="Details"></request-metadata>
-              <request-amount [amount]="amount" [currency]="currency"></request-amount>
-            </ng-template>
-            <div class="hidden-if-empty p-4 my-3">
-              <div *ngIf="request.status && request.state != 2"
-                class="fs-14 mx-auto w-50 text-center progress-bar-{{request.status.replace(' ','-')}}">
-                <div>
-                  <i><strong>{{progress | number: '1.0-2'}}%</strong> of the request has been paid</i></div>
-                <mat-progress-bar class="my-1 mt-2" mode="determinate" [value]="progress"></mat-progress-bar>
-                <div [ngSwitch]="request.status">
-                  <span *ngSwitchCase="'overpaid'">
-                    <strong>{{ web3Service.BNToAmount(request.payee.expectedAmount.sub(request.payee.balance).abs(), request.currency) }}
-                      {{ request.currency }}</strong> overpaid</span>
-                  <span *ngSwitchCase="'complete'">&nbsp;</span>
                 </div>
               </div>
-            </div>
-            <div class="hidden-if-empty p-4 my-3">
-              <div *ngIf="!request.status">
+              <app-rnf-invoice-request [request]='request' [blockchainName]='getBlockchainName()' *ngIf='isInvoiceRequest()
+                     else genericRequest'>
+              </app-rnf-invoice-request>
+              <ng-template #genericRequest>
+                <div *ngIf="request.status" class="status-banner status-{{request.status.replace(' ','-')}} fs-16">
+                  {{request.status}}</div>
+                <request-addresses [request]="request"></request-addresses>
+                <request-metadata *ngIf="request.data" [data]="request.data.data" title="Details"></request-metadata>
+                <request-amount [amount]="amount" [currency]="currency"></request-amount>
+              </ng-template>
+              <div class="hidden-if-empty p-4 my-3 progress-container">
+                <div *ngIf="request.status && request.state != 2"
+                  class="fs-14 mx-auto w-50 text-center progress-bar-{{request.status.replace(' ','-')}}">
+                  <div>
+                    <i><strong>{{progress | number: '1.0-2'}}%</strong> of the request has been paid</i></div>
+                  <mat-progress-bar class="my-1 mt-2" mode="determinate" [value]="progress"></mat-progress-bar>
+                  <div [ngSwitch]="request.status">
+                    <span *ngSwitchCase="'overpaid'">
+                      <strong>{{ web3Service.BNToAmount(request.payee.expectedAmount.sub(request.payee.balance).abs(), request.currency) }}
+                        {{ request.currency }}</strong> overpaid</span>
+                    <span *ngSwitchCase="'complete'">&nbsp;</span>
+                  </div>
+                </div>
+              </div>
+              <div class="hidden-if-empty p-4 my-3">
+                <div *ngIf="!request.status">
                   <div class="h-100 w-100 fs-18 mb-3">
-                      <div class="text-center fs-12 lh-14 h-100">
-                        <mat-spinner class="mx-auto mt-3" [diameter]="20"></mat-spinner>
-                        <div class="fc-primary semi-bold">
-                          <i>Posting your request to the blockchain.</i>
-                        </div>
+                    <div class="text-center fs-12 lh-14 h-100">
+                      <mat-spinner class="mx-auto mt-3" [diameter]="20"></mat-spinner>
+                      <div class="fc-primary semi-bold">
+                        <i>Posting your request to the blockchain.</i>
                       </div>
                     </div>
+                  </div>
+                </div>
               </div>
-            </div>
-            <mat-toolbar class="p-0 bbr-7 cta-toolbar" [style.height]="'auto'">
-              <!-- STATE == CANCELED -->
-              <!-- <div *ngIf="request.state == 2; else ctaBlock" class="text-center fs-12 lh-14 h-100">
+              <mat-toolbar class="p-0 bbr-7 cta-toolbar" [style.height]="'auto'">
+                <!-- STATE == CANCELED -->
+                <!-- <div *ngIf="request.state == 2; else ctaBlock" class="text-center fs-12 lh-14 h-100">
                   <mat-icon class="mx-auto mt-3" color="warn">lock</mat-icon>
                   <div class="semi-bold fc-warn">
                     <i>This request has been cancelled.
                       <br />You can’t interact with it anymore.</i>
                   </div>
                 </div> -->
-              <!-- NORMAL STATES -->
+                <!-- NORMAL STATES -->
 
-              <div *ngIf="!loading; else loadingMode" id="invoice-footer-outer" class="h-100 w-100 fs-18" [ngSwitch]="mode">
-                <!-- PAYEE -->
-                <div *ngSwitchCase="'payee'">
-                  <button *ngIf="request.state == 0" class="void-request-button" (click)="cancelRequest()"
-                    [disabled]="request.payee.balance > 0" mat-menu-item>
-                    Void Request
-                  </button>
-                </div>
+                <div *ngIf="!loading; else loadingMode" id="invoice-footer-outer" class="h-100 w-100 fs-18"
+                  [ngSwitch]="mode">
+                  <!-- PAYEE -->
+                  <div *ngSwitchCase="'payee'">
+                    <button *ngIf="request.state == 0" class="void-request-button" (click)="cancelRequest()"
+                      [disabled]="request.payee.balance > 0" mat-menu-item>
+                      Void Request
+                    </button>
+                  </div>
 
-                <!-- PAYER -->
-                <mat-menu #payerActionsMenu="matMenu" [overlapTrigger]="false" class="actions-menu">
-                  <button (click)="cancelRequest()" *ngIf="request.state != 1" mat-menu-item>
-                    Decline this Request
-                  </button>
-                  <button (click)="acceptRequest()" *ngIf="request.state != 1" mat-menu-item>
-                    <span>Accept & pay later</span>
-                  </button>
-                  <button (click)="payRequest()" *ngIf="request.status == 'complete' || request.status == 'overpaid'"
-                    mat-menu-item>
-                    <span>Pay more</span>
-                  </button>
-                </mat-menu>
-                <div *ngSwitchCase="'payer'" class="d-flex h-100">
-                  <button type="button" *ngIf="request.state != 2 && request.state != 1 && request.status != 'paid'" class="fs-18 bg-grey-whiter fc-blue-grey no-focus-overlay" mat-raised-button
-                    [matMenuTriggerFor]="payerActionsMenu">Actions&nbsp;
-                    <mat-icon>expand_more</mat-icon>
-                  </button>
-                  <button class="ml-auto fs-18 no-focus-overlay"
-                    *ngIf="request.status != 'complete' && request.status != 'overpaid' && request.state != 2 && request.status != 'paid'" mat-raised-button
-                    color="accent" (click)="payRequest()">
-                    <span>{{request.state != 1 && getBlockchainName() !== 'BTC' ? 'Accept & Pay': 'Pay'}}</span>
-                  </button>
-                </div>
-              </div>
-              <ng-template #loadingMode>
-                <!-- LOADING -->
-                <div class="h-100 w-100 fs-18 mb-3">
-                  <div class="text-center fs-12 lh-14 h-100">
-                    <mat-spinner class="mx-auto mt-3" [diameter]="20"></mat-spinner>
-                    <div class="fc-primary semi-bold">
-                      <i>Waiting for the transaction to be mined...
-                        <br />
-                        <a style="opacity: 0.8; color: #008c62 !important;"
-                          href="{{web3Service.etherscanUrl}}tx/{{loading}}"
-                          target="_blank">{{ web3Service.etherscanUrl}}tx/{{loading.substring(0, 10) }}...{{ loading.substring(loading.length-5, loading.length) }}</a>
-                      </i>
-                    </div>
+                  <!-- PAYER -->
+                  <mat-menu #payerActionsMenu="matMenu" [overlapTrigger]="false" class="actions-menu">
+                    <button (click)="cancelRequest()" *ngIf="request.state != 1" mat-menu-item>
+                      Decline this Request
+                    </button>
+                    <button (click)="acceptRequest()" *ngIf="request.state != 1" mat-menu-item>
+                      <span>Accept & pay later</span>
+                    </button>
+                    <button (click)="payRequest()" *ngIf="request.status == 'complete' || request.status == 'overpaid'"
+                      mat-menu-item>
+                      <span>Pay more</span>
+                    </button>
+                  </mat-menu>
+                  <div *ngSwitchCase="'payer'" class="d-flex h-100">
+                    <button type="button" *ngIf="request.state != 2 && request.state != 1 && request.status != 'paid'"
+                      class="fs-18 bg-grey-whiter fc-blue-grey no-focus-overlay" mat-raised-button
+                      [matMenuTriggerFor]="payerActionsMenu">Actions&nbsp;
+                      <mat-icon>expand_more</mat-icon>
+                    </button>
+                    <button class="ml-auto fs-18 no-focus-overlay"
+                      *ngIf="request.status != 'complete' && request.status != 'overpaid' && request.state != 2 && request.status != 'paid'"
+                      mat-raised-button color="accent" (click)="payRequest()">
+                      <span>{{request.state != 1 && getBlockchainName() !== 'BTC' ? 'Accept & Pay': 'Pay'}}</span>
+                    </button>
                   </div>
                 </div>
-              </ng-template>
-            </mat-toolbar>
+                <ng-template #loadingMode>
+                  <!-- LOADING -->
+                  <div class="h-100 w-100 fs-18 mb-3">
+                    <div class="text-center fs-12 lh-14 h-100">
+                      <mat-spinner class="mx-auto mt-3" [diameter]="20"></mat-spinner>
+                      <div class="fc-primary semi-bold">
+                        <i>Waiting for the transaction to be mined...
+                          <br />
+                          <a style="opacity: 0.8; color: #008c62 !important;"
+                            href="{{web3Service.etherscanUrl}}tx/{{loading}}"
+                            target="_blank">{{ web3Service.etherscanUrl}}tx/{{loading.substring(0, 10) }}...{{ loading.substring(loading.length-5, loading.length) }}</a>
+                        </i>
+                      </div>
+                    </div>
+                  </div>
+                </ng-template>
+              </mat-toolbar>
+            </div>
           </mat-card>
         </div>
         <div id="request-invoice-right" class="col-lg-5 col-xl-5 mb-5">
           <div class="request-invoice-right-inner">
-          <!-- <div *ngIf -->
+            <!-- <div *ngIf -->
             <div *ngIf="request.status && request.state == 1">
               <div class="fs-16 mb-4 lh-14">
                 <div class="semi-bold">
@@ -187,7 +191,10 @@
                 <div id="share-request-item" class="semi-bold">
                   SHARE THIS REQUEST
                 </div>
-                <div class="sharethis-inline-share-buttons" title="You've received a request for payment for {{ amount }} {{ currency }}. To pay or decline, follow this link."></div>
+                <div class="sharethis-inline-share-buttons"
+                  title="You've received a request for payment for {{ amount }} {{ currency }}. To pay or decline, follow this link."
+                  attr.data-subject="You've received a request for payment for {{ amount }} {{ currency }}. To pay or decline, follow this link.">
+                </div>
               </div>
             </div>
             <div *ngIf="!request.status;" class="fs-16 mb-5 lh-14">
@@ -215,7 +222,8 @@
                 <div class="semi-bold">
                   YOU ARE IN VIEW-ONLY MODE.
                 </div>
-                <p class="fs-16 mt-3 lh-22">Connect your Metamask account as the payer or the payee to interact with this
+                <p class="fs-16 mt-3 lh-22">Connect your Metamask account as the payer or the payee to interact with
+                  this
                   request.</p>
               </div>
             </ng-template>

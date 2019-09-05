@@ -43,6 +43,11 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
   ) {}
 
   async ngOnInit() {
+    window.analytics.page({
+      name: 'Search',
+      path: window.location.href
+    });
+
     if (!this.web3Service || !this.web3Service.web3Ready) {
       await new Promise(resolve => setTimeout(resolve, 1000));
       return this.ngOnInit();

@@ -1,9 +1,14 @@
-<div class="px-3" [style.width]="'64px'">
+<div class="px-3 hide-for-pdf" [style.width]="'64px'">
   <app-blockies [address]="address"></app-blockies>
 </div>
 <div>
   <div class="semi-bold">{{ title }}</div>
-  <div class="mt-2" [popover]="address" popoverPlacement="bottom" [popoverOnHover]="true" [popoverCloseOnMouseOutside]="true">
+  <div *ngIf="showLongAddress" class="mt-2" [popover]="address" popoverPlacement="bottom" [popoverOnHover]="true"
+    [popoverCloseOnMouseOutside]="true">
+    {{address}}
+  </div>
+  <div *ngIf="!showLongAddress" class="mt-2" [popover]="address" popoverPlacement="bottom" [popoverOnHover]="true"
+    [popoverCloseOnMouseOutside]="true">
     {{address | shortAddress}}
   </div>
 </div>

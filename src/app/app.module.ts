@@ -18,6 +18,10 @@ import { SharedModule } from './shared/shared.module';
 import { UtilModule } from './util/util.module';
 import { AppRoutingModule } from './app-routing.module';
 
+declare global {
+  interface Window { analytics: any; }
+}
+
 @NgModule({
   imports: [
     BrowserModule,

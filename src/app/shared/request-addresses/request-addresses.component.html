@@ -1,5 +1,5 @@
 <div class="d-flex flex-wrap p-4">
-  <div class="d-flex mb-3 m-lg-0" style="flex: 1">
+  <div class="d-flex mb-3 m-lg-0 request-address-container" style="flex: 1">
     <div class="fs-14 lh-18" >
       <div *ngIf="payees.length > 1;else singlePayee" class="mb-1" [style.marginLeft]="'5rem'" [style.opacity]="'0.5'">PAYEES -
         <span [style.textDecoration]="'underline'">
@@ -18,7 +18,14 @@
       <ng-template #singlePayee>
         <div class="mb-2 address-title" [style.marginLeft]="'1rem'" ><i>From</i></div>
       </ng-template>
-      <div class="address-container" *ngFor="let payee of payees | slice:min:[max || 1]; let i=index;">
+      
+      <div class="address-container show-for-pdf" *ngFor="let payee of payees | slice:min:[max || 1]; let i=index;">
+        <div class="d-flex semi-bold" [style.marginLeft]="'4rem'" [style.fontStyle]="'italic'" *ngIf="payees.length>1">{{i === 0 ? 'Main Payee': 'Payee #'+i }} </div>
+        <request-address class="d-flex mt-2" [address]="payee.id" [showLongAddress]="true"></request-address>
+        <div *ngIf="i<payees.length-1" class="p-1"></div>
+      </div>
+
+      <div class="address-container hide-for-pdf" *ngFor="let payee of payees | slice:min:[max || 1]; let i=index;">
         <div class="d-flex semi-bold" [style.marginLeft]="'4rem'" [style.fontStyle]="'italic'" *ngIf="payees.length>1">{{i === 0 ? 'Main Payee': 'Payee #'+i }} </div>
         <request-address class="d-flex mt-2" [address]="payee.id"></request-address>
         <request-address class="d-flex" *ngIf="payee.payment" [address]="payee.payment" title="ETH Payment address" ></request-address>
@@ -29,7 +36,8 @@
   <div class="d-flex" style="flex: 1" *ngIf="payer">
     <div class="fs-14 lh-18">
       <div class="mb-2 address-title" [style.marginLeft]="'1rem'"><i>To</i></div>
-      <request-address [address]="payer" class="d-flex"></request-address>
+      <request-address [address]="payer" class="d-flex hide-for-pdf"></request-address>
+      <request-address [address]="payer" class="d-flex show-for-pdf" [showLongAddress]="true"></request-address>
     </div>
   </div>
 </div>
