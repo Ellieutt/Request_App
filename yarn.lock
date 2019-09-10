@@ -552,16 +552,16 @@
     tree-kill "^1.0.0"
     webpack-sources "^1.1.0"
 
-"@requestnetwork/request-network.js@0.9.0":
-  version "0.9.0"
-  resolved "https://registry.yarnpkg.com/@requestnetwork/request-network.js/-/request-network.js-0.9.0.tgz#2cdd179e76028ffb8b6f073718af4082edf3522c"
-  integrity sha512-7qVkpf4OBhzlE5nyzbh9JQ69AnDYqDYJ70alfs5xfL0UKLkimo52w9G3KI7v1EYlK+YWBJ/w+oPSBYhTs8jxjQ==
+"@requestnetwork/request-network.js@0.11.3":
+  version "0.11.3"
+  resolved "https://registry.yarnpkg.com/@requestnetwork/request-network.js/-/request-network.js-0.11.3.tgz#d2907026e848f55a5f3fbdb55784e3afa30022b8"
+  integrity sha512-ECj4rztX5+j9j11tURukUxtmMEjxBQt75qe5l98Y23g04Ht+oVAoMITjChWjS6Pa1EHqodHW4AOdoW3vlBWNTw==
   dependencies:
     bn.js "4.11.8"
     cross-fetch "2.2.2"
     ethereumjs-util "5.2.0"
     ipfs-api "git://github.com/RequestNetwork/js-ipfs-api.git#9a99b08313e623c14a17357bb9655814dbe1d018"
-    requestnetworkartifacts "^1.6.0"
+    requestnetworkartifacts "1.7.1"
     tslib "1.9.3"
     typescript "2.9.2"
     wallet-address-validator "0.1.7"
@@ -10540,10 +10540,10 @@ requestnetwork-data-format@^0.1.2:
     tslib "1.9.0"
     typescript "2.8.1"
 
-requestnetworkartifacts@^1.6.0:
-  version "1.6.0"
-  resolved "https://registry.yarnpkg.com/requestnetworkartifacts/-/requestnetworkartifacts-1.6.0.tgz#d49f65793529136454fd0162b3652ff7146f1520"
-  integrity sha512-a9AzB93QHLWEd341g8LDR1CdiYgpg1Fihh0Vzo+b5CShTq4HTcuvuYdG9WyXPXXS6huNI9GaZeCf+VdRy6IRgA==
+requestnetworkartifacts@1.7.1:
+  version "1.7.1"
+  resolved "https://registry.yarnpkg.com/requestnetworkartifacts/-/requestnetworkartifacts-1.7.1.tgz#743698c5299afe18e562dcfde74b9364ed34b734"
+  integrity sha512-wTO1KqltnJIrG/zpMOlxXJad/NgLEgiH9Qo2a+0fH3fnHjxx+tdEZWrw9lljl0Uq1F/WUqnstksu0w7uik0kdw==
 
 requestretry@^1.2.2:
   version "1.13.0"

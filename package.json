@@ -18,7 +18,7 @@
     "dev:e2e": "ng serve --configuration=e2e",
     "e2e": "node e2e/run.js",
     "e2e:ci": "concurrently -k --success first 'yarn serve' 'yarn e2e'",
-    "serve":"http-server ./dist -p 4200 --silent"
+    "serve": "http-server ./dist -p 4200 --silent"
   },
   "prettier": {
     "singleQuote": true,
@@ -46,7 +46,7 @@
     "@angular/platform-browser-dynamic": "^6.1.4",
     "@angular/platform-server": "^6.1.4",
     "@angular/router": "^6.1.4",
-    "@requestnetwork/request-network.js": "0.9.0",
+    "@requestnetwork/request-network.js": "0.11.3",
     "angular-blockies": "1.1.1",
     "angularx-qrcode": "^1.2.2",
     "bootstrap": "^4.1.3",
