@@ -95,7 +95,7 @@ export class PayWithRequestComponent implements OnInit {
   }
 
   async loadIpfsData(data: any) {
-    if (!data) return;
+    if (!data) { return; }
     this.ipfsData = await this.web3Service.getIpfsData(data);
   }
 

@@ -28,8 +28,8 @@ export class Web3Service {
   private LedgerEthereumClientFactoryAsync = ledgerEthereumClientFactoryAsync;
   private requestNetwork;
   public infuraNodeUrl = {
-    1: 'https://mainnet.infura.io/BQBjfSi5EKSCQQpXebO',
-    4: 'https://rinkeby.infura.io/BQBjfSi5EKSCQQpXebO',
+    1: 'https://mainnet.infura.io/v3/668e4d8faa134850bcbc64f7ca03c837',
+    4: 'https://rinkeby.infura.io/v3/668e4d8faa134850bcbc64f7ca03c837',
   };
 
   public metamask = false;
@@ -231,7 +231,7 @@ export class Web3Service {
         ethNetworkId: this.networkIdObservable.value,
         useIpfsPublic: environment.usePublicIpfs,
         ipfsCustomNode: environment.ipfsCustomNode,
-        bitcoinNetworkId: this.networkIdObservable.value === 1 ? 0 : 3,
+        bitcoinNetworkId: this.networkIdObservable.value === 1 ? 0 : 3
       });
     } catch (err) {
       this.utilService.openSnackBar(this.requestNetworkNotReadyMsg);
@@ -533,6 +533,7 @@ export class Web3Service {
     try {
       const request = await this.requestNetwork.fromRequestId(requestId);
       request.requestData = await request.getData();
+
       request.requestData.currency = Types.Currency[request.currency];
       this.setRequestStatus(request.requestData);
       return request;
