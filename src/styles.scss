@@ -203,10 +203,8 @@ header {
 
 .mat-simple-snackbar {
   overflow: hidden;
-  max-height: 52px;
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
-  max-height: 52px;
   button {
     color: #fff;
   }
@@ -904,7 +902,7 @@ ul {
     margin: 0 !important;
   }
 
-  .progress-bar-pending {
+  .progress-bar-created, .progress-bar-pending {
     width: 80% !important;
   }
 
