@@ -89,8 +89,8 @@ export class RequestComponent implements OnInit, OnDestroy, AfterContentInit {
     // watch Request in background
     this.timerInterval = setInterval(async () => {
       if (
-        !this.requestObject ||
-        !this.requestObject.requestId ||
+        !this.requestObject &&
+        !this.requestObject.requestId &&
         this.loading
       ) {
         return;

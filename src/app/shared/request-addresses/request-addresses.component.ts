@@ -38,7 +38,6 @@ export class RequestAddressesComponent implements OnInit {
       this.payer = this.request.payer;
     }
     this.currency = this.request.currency;
-    console.log(this.payees);
   }
 
   getNextPayees(init) {
