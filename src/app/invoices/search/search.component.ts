@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Web3Service } from '../../util/web3.service';
-import { MatPaginator, MatTableDataSource, MatSort } from '@angular/material';
+import { MatPaginator, MatTableDataSource, MatSort, PageEvent } from '@angular/material';
 import { UtilService } from '../../util/util.service';
 
 @Component({
@@ -17,6 +17,7 @@ import { UtilService } from '../../util/util.service';
 })
 export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
   searchValue: string;
+  pageEvent: PageEvent;
   subscription;
   displayedColumns = [
     'request.arrow',
@@ -29,6 +30,7 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
   ];
   dataSource = new MatTableDataSource();
   loading = true;
+  preLoadAmount = 10; // default page is 10, so we load the next page
 
   @ViewChild(MatPaginator)
   paginator: MatPaginator;
@@ -42,16 +44,27 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
     private utilService: UtilService
   ) {}
 
-  async ngOnInit() {
-    window.analytics.page({
-      name: 'Search',
-      path: window.location.href
-    });
+  // on page change we preload the next page to ensure a smooth UX
+  handlePageChange(e) {
+    const pageIndex = e.pageIndex;
+    const pageSize = e.pageSize;
+    const start = (pageIndex * pageSize) + this.preLoadAmount;
+    const end = (start + pageSize) + this.preLoadAmount;
 
+    this.getRequestsFromIds(this.dataSource.data.slice(start, end));
+    return pageIndex;
+  }
+
+  async ngOnInit() {
     if (!this.web3Service || !this.web3Service.web3Ready) {
       await new Promise(resolve => setTimeout(resolve, 1000));
       return this.ngOnInit();
     }
+
+    window.analytics.page({
+      name: 'Search',
+      path: window.location.href
+    });
 
     this.subscription = this.utilService.searchValue.subscribe(
       async searchValue => {
@@ -71,7 +84,10 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
         resultsList = resultsList.sort(
           (a, b) => b._meta.timestamp - a._meta.timestamp
         );
-        this.getRequestsFromIds(resultsList);
+        // We load the first 10 requests (default page of 10, immediately after we pre-load the next page)
+        this.getRequestsFromIds(resultsList.slice(this.paginator.pageIndex * this.paginator.pageSize, this.paginator.pageSize)).then(() => {
+          this.getRequestsFromIds(resultsList.slice(this.preLoadAmount, this.paginator.pageSize + this.preLoadAmount));
+        });
         this.dataSource.data = resultsList;
         this.loading = false;
       }
@@ -89,13 +105,15 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
   getRequestsFromIds(resultsList) {
     const promises = [];
     for (const result of resultsList) {
-      promises.push(
-        this.web3Service
-          .getRequestByRequestId(result.requestId)
-          .then(requestObject => {
-            result.request = requestObject.requestData;
-          })
-      );
+      if (!result.request) {
+        promises.push(
+          this.web3Service
+            .getRequestByRequestId(result.requestId)
+            .then(requestObject => {
+              result.request = requestObject.requestData;
+            })
+        );
+      }
     }
     return Promise.all(promises);
   }

@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
-  selector: 'request-address',
+selector: 'request-address',
   templateUrl: './request-address.component.html',
   styleUrls: ['./request-address.component.scss'],
 })

@@ -110,11 +110,11 @@ export class HomeComponent implements OnInit {
   }
 
   async ngOnInit() {
-    window.analytics.page('/');
     if (!this.web3Service || !this.web3Service.web3Ready) {
       await new Promise(resolve => setTimeout(resolve, 1000));
       return this.ngOnInit();
     }
+    window.analytics.page('/');
     this.watchAccount();
   }
 

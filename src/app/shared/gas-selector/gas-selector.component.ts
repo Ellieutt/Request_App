@@ -9,7 +9,7 @@ import { MatSliderChange } from '@angular/material/slider';
 })
 export class GasSelectorComponent implements OnInit {
   public noGasPrices = false;
-  public currentGasCategory = 'average';
+  public currentGasCategory = 'fast';
 
   public gasCategoryLabels = {
     safeLow: 'Low',
@@ -24,7 +24,7 @@ export class GasSelectorComponent implements OnInit {
   ngOnInit() {
     this.gasService.gasPricesObservable.subscribe({
       next: prices => {
-        this.gasService.gasPrice = prices.average;
+        this.gasService.gasPrice = prices[this.currentGasCategory];
       },
       error: _ => {
         this.noGasPrices = true;
