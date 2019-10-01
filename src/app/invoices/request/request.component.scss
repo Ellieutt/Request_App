@@ -1,12 +1,20 @@
 @import 'variables';
 
-.url-box {
+.url-box, .share-box-mail {
   border: 1px solid #DBE1E8;
   background: #fff !important;
   opacity: 0.5;
   height: 50px;
   font-weight: inherit;
   padding: 26px !important;
+}
+
+.share-box-mail {
+  opacity: 1;
+}
+
+#share-request-item {
+  margin-bottom: 12px;
 }
 
 .progress-bar-complete {

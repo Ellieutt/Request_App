@@ -191,10 +191,8 @@
                 <div id="share-request-item" class="semi-bold">
                   SHARE THIS REQUEST
                 </div>
-                <div class="sharethis-inline-share-buttons"
-                  title="You've received a request for payment for {{ amount }} {{ currency }}. To pay or decline, follow this link."
-                  attr.data-subject="You've received a request for payment for {{ amount }} {{ currency }}. To pay or decline, follow this link.">
-                </div>
+                <input mat-button class="share-box-mail fc-blue-grey fs-14 px-3 w-100" [(ngModel)]="sendToEmail" placeholder="enter email address" required email>
+                <button mat-button class="w-100 fs-16 bor-accent my-3" [disabled]="!sendToEmail" style="height: 50px" color="accent" type="button" (click)="openEmailDialog(sendToEmail)">Notify the payer</button>
               </div>
             </div>
             <div *ngIf="!request.status;" class="fs-16 mb-5 lh-14">

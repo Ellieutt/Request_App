@@ -1,0 +1,25 @@
+<div class="fc-primary email-dialog-popup">
+
+    <div class="d-flex align-items-center justify-content-between email-popup-title">
+        <img [style.max-height]="'50px'" src="assets/img/request-logo.png">
+        <span class="fs-14 semi-bold">SEND BY EMAIL</span>
+    </div>
+    <mat-dialog-content>
+
+        <input mat-button class="px-3 w-100" value="{{email}}" disabled>
+        <input mat-button class="px-3 w-100" value="You have a new invoice for {{amount}} {{currency}}" disabled>
+        <div class="email-body" disabled>Hello {{email}}, you have a new invoice<br/>
+            {{ reason }}<br/>
+            This invoice is for:<br/>
+            {{amount}} {{currency}}
+        </div>
+    </mat-dialog-content>
+    <div class="d-flex h-100 button-container">
+        <button type="button" class="fs-18 bg-grey-whiter fc-blue-grey no-focus-overlay"
+            mat-raised-button mat-dialog-close><span>Close</span>
+        </button>
+        <button class="ml-auto fs-18 no-focus-overlay" mat-raised-button color="accent" (click)="sendMail()">
+            <span>Notify the payer</span>
+        </button>
+    </div>
+</div>
