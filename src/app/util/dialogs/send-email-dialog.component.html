@@ -4,11 +4,10 @@
         <img [style.max-height]="'50px'" src="assets/img/request-logo.png">
         <span class="fs-14 semi-bold">SEND BY EMAIL</span>
     </div>
-    <mat-dialog-content>
-
-        <input mat-button class="px-3 w-100" value="{{email}}" disabled>
+    <mat-dialog-content>        
+        <input mat-button class="px-3 w-100" [(ngModel)]="sendToEmail" placeholder="enter email address" required email>
         <input mat-button class="px-3 w-100" value="You have a new invoice for {{amount}} {{currency}}" disabled>
-        <div class="email-body" disabled>Hello {{email}}, you have a new invoice<br/>
+        <div class="email-body" disabled>Hello {{sendToEmail}}, you have a new invoice<br/>
             {{ reason }}<br/>
             This invoice is for:<br/>
             {{amount}} {{currency}}
@@ -18,7 +17,7 @@
         <button type="button" class="fs-18 bg-grey-whiter fc-blue-grey no-focus-overlay"
             mat-raised-button mat-dialog-close><span>Close</span>
         </button>
-        <button class="ml-auto fs-18 no-focus-overlay" mat-raised-button color="accent" (click)="sendMail()">
+        <button class="ml-auto fs-18 no-focus-overlay" mat-raised-button color="accent" (click)="sendMail(sendToEmail)">
             <span>Notify the payer</span>
         </button>
     </div>

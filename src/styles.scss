@@ -858,6 +858,10 @@ ul {
     background: #fff;
     margin-top: 40px;
     box-shadow: 2px 2px 18px 0px rgba(212, 227, 255, 0.5) !important;
+
+    button {
+      cursor: pointer;
+    }
   }
 
   .show-mobile {
@@ -1005,4 +1009,14 @@ ul {
 
 .mat-button.mat-accent:disabled {
   opacity: 0.5;
+}
+
+#request-invoice-right {
+  button {
+    background: transparent;
+    border: 0 !important;
+    color: #111111;
+    margin: 0 !important;
+    cursor: pointer;
+  }
 }
