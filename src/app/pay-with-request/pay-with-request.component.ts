@@ -34,10 +34,9 @@ export class PayWithRequestComponent implements OnInit {
   ) {}
 
   async ngOnInit() {
-
     window.analytics.page({
       name: '/request/requestId/signedRequest',
-      path: window.location.href
+      path: window.location.href,
     });
 
     if (!this.web3Service || !this.web3Service.web3Ready) {
@@ -95,7 +94,9 @@ export class PayWithRequestComponent implements OnInit {
   }
 
   async loadIpfsData(data: any) {
-    if (!data) { return; }
+    if (!data) {
+      return;
+    }
     this.ipfsData = await this.web3Service.getIpfsData(data);
   }
 

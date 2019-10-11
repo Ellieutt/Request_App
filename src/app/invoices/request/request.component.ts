@@ -22,7 +22,6 @@ import { SendEmailDialogComponent } from '../../util/dialogs/send-email-dialog.c
   templateUrl: './request.component.html',
   styleUrls: ['./request.component.scss'],
 })
-
 export class RequestComponent implements OnInit, OnDestroy, AfterContentInit {
   objectKeys = Object.keys;
   account: string;
@@ -45,7 +44,7 @@ export class RequestComponent implements OnInit, OnDestroy, AfterContentInit {
     private dialog: MatDialog,
     private utilService: UtilService,
     private emailService: EmailService
-  ) { }
+  ) {}
 
   get amount() {
     return this.web3Service.BNToAmount(
@@ -66,7 +65,7 @@ export class RequestComponent implements OnInit, OnDestroy, AfterContentInit {
     }
     window.analytics.page({
       name: '/request/requestId/' + this.route.snapshot.params['requestId'],
-      path: window.location.href
+      path: window.location.href,
     });
 
     this.watchAccount();
@@ -111,7 +110,7 @@ export class RequestComponent implements OnInit, OnDestroy, AfterContentInit {
   async ngAfterContentInit() {
     const that = this;
 
-    const loadReceiptJs = setInterval(function () {
+    const loadReceiptJs = setInterval(function() {
       if (document.getElementById('download-receipt')) {
         that.loadScript('../assets/js/receipt.js');
         clearInterval(loadReceiptJs);
@@ -208,7 +207,9 @@ export class RequestComponent implements OnInit, OnDestroy, AfterContentInit {
   }
 
   async loadIpfsData(data: any) {
-    if (!data) { return; }
+    if (!data) {
+      return;
+    }
     this.ipfsData = await this.web3Service.getIpfsData(data);
   }
 
@@ -231,7 +232,7 @@ export class RequestComponent implements OnInit, OnDestroy, AfterContentInit {
       );
       this.url = `${window.location.protocol}//${
         window.location.host
-        }/#/request/requestId/${request.requestId}`;
+      }/#/request/requestId/${request.requestId}`;
     }
     if (request && !request.status && request.state !== undefined) {
       this.web3Service.setRequestStatus(request);
@@ -297,7 +298,8 @@ export class RequestComponent implements OnInit, OnDestroy, AfterContentInit {
 
   openEmailDialog(sendToEmail) {
     const currency = this.request.currency;
-    const reason = this.ipfsData && this.ipfsData.reason ? this.ipfsData.reason : 'N/A';
+    const reason =
+      this.ipfsData && this.ipfsData.reason ? this.ipfsData.reason : 'N/A';
     const amount = this.amount;
     const url = this.url;
 
@@ -308,8 +310,9 @@ export class RequestComponent implements OnInit, OnDestroy, AfterContentInit {
         currency,
         reason,
         amount,
-        url
-      }
+        url,
+        from_address: this.request.payee.address,
+      },
     });
   }
 

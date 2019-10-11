@@ -20,7 +20,9 @@ import { UtilModule } from './util/util.module';
 import { AppRoutingModule } from './app-routing.module';
 
 declare global {
-  interface Window { analytics: any; }
+  interface Window {
+    analytics: any;
+  }
 }
 
 @NgModule({

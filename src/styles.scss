@@ -994,6 +994,14 @@ ul {
     font-size: 16px !important;
     color: #000 !important;
   }
+  .mat-form-field-infix {
+    margin-top: 20px;
+    input {
+      padding: 0 !important;
+      margin-bottom: 14px;
+      border-bottom: 0;
+    }
+  }
   .email-body {
     width: 100%;
     height: auto;
@@ -1002,7 +1010,7 @@ ul {
     background: transparent;
     color: #000;
     margin-top: 22px;
-    line-height: 1.4em;
+    line-height: 1.6em;
     font-size: 18px;
   }
 }
