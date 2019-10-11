@@ -2,8 +2,9 @@
     <div class="w-100 text-center fc-primary py-4 request-amount">
         <div class="fs-14" style="font-style: italic;">AMOUNT</div>
         <div class="fs-28 semi-bold" id="request-expected-amount">{{ amount }} {{ currency }}</div>
-        <div *ngIf="convertTo" class="fs-8" style="font-style: italic;text-align: right">
-            <currency-converter *ngIf="amount" [from]="currency" [to]="convertTo" [amount]="amount"></currency-converter>
-          </div>
+        <div *ngIf="convertTo" class="fs-8" style="font-style: italic;text-align: center;">
+            <currency-converter *ngIf="amount" [from]="currency" [to]="convertTo" [amount]="amount">
+            </currency-converter>
+        </div>
     </div>
 </div>
