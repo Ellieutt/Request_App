@@ -735,11 +735,6 @@ ul li:after {
     font-weight: 600;
   }
 }
-
-.sharethis-inline-share-buttons {
-  margin: 16px 0 24px 0;
-}
-
 .home-elements {
   padding: 60px 30px;
 }
@@ -863,6 +858,10 @@ ul {
     background: #fff;
     margin-top: 40px;
     box-shadow: 2px 2px 18px 0px rgba(212, 227, 255, 0.5) !important;
+
+    button {
+      cursor: pointer;
+    }
   }
 
   .show-mobile {
@@ -967,4 +966,65 @@ ul {
   .trust-btn {
     background: #3375BB;
   } 
+}
+
+.email-popup-title {
+  margin: 0px -24px;
+  border-bottom: 1px solid red;
+  padding: 0 24px 20px 24px;
+  border-bottom: 1px solid #dfe5ec;
+}
+
+.email-dialog-popup {
+  button {
+    flex: 1;
+    height: 80px;
+  }
+  .button-container {
+    margin: -24px;
+    margin-top: 46px;
+  }
+  input {
+    background: transparent;
+    outline: 0;
+    border: 0;
+    border-bottom: 1px solid #dfe5ec;
+    padding: 14px 0 !important;
+    margin-top: 14px;
+    font-size: 16px !important;
+    color: #000 !important;
+  }
+  .mat-form-field-infix {
+    margin-top: 20px;
+    input {
+      padding: 0 !important;
+      margin-bottom: 14px;
+      border-bottom: 0;
+    }
+  }
+  .email-body {
+    width: 100%;
+    height: auto;
+    overflow: hidden;
+    border: 0;
+    background: transparent;
+    color: #000;
+    margin-top: 22px;
+    line-height: 1.6em;
+    font-size: 18px;
+  }
+}
+
+.mat-button.mat-accent:disabled {
+  opacity: 0.5;
+}
+
+#request-invoice-right {
+  button {
+    background: transparent;
+    border: 0 !important;
+    color: #111111;
+    margin: 0 !important;
+    cursor: pointer;
+  }
 }

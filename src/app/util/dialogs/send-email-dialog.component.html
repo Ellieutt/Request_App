@@ -1,0 +1,32 @@
+<div class="fc-primary email-dialog-popup">
+
+    <form [formGroup]="emailForm" (ngSubmit)="sendMail(sendToEmail)">
+        <div class="d-flex align-items-center justify-content-between email-popup-title">
+            <img [style.max-height]="'50px'" src="assets/img/request-logo.png">
+            <span class="fs-14 semi-bold">SEND BY EMAIL</span>
+        </div>
+        <mat-dialog-content>
+            <mat-form-field class="w-100">
+                <input matInput type="email" class="px-3 w-100" [(ngModel)]="sendToEmail"
+                    placeholder="enter email address" required email [formControl]="toEmailFormControl">
+                <mat-error *ngIf="toEmailFormControl.hasError('required')">email is <strong>required</strong>
+                </mat-error>
+                <mat-error *ngIf="toEmailFormControl.hasError('email')">
+                        <strong>Invalid</strong> email
+                      </mat-error>
+            </mat-form-field>
+            <input matInput class="px-3 w-100" value="You have a new Request for Payment for {{amount}} {{currency}}" disabled>
+            <div class="email-body" disabled>Hello {{sendToEmail}},<br /><br />
+                {{ from_address }} is requesting {{amount}} {{currency}} for {{ reason }}<br />
+            </div>
+        </mat-dialog-content>
+        <div class="d-flex h-100 button-container">
+            <button type="button" class="fs-18 bg-grey-whiter fc-blue-grey no-focus-overlay" mat-raised-button
+                mat-dialog-close><span>Close</span>
+            </button>
+            <button type="submit" class="ml-auto fs-18 no-focus-overlay" mat-raised-button color="accent">
+                <span>Notify the payer</span>
+            </button>
+        </div>
+    </form>
+</div>

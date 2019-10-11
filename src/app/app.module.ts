@@ -7,6 +7,7 @@ import { AppComponent } from './app.component';
 import { PayWithRequestComponent } from './pay-with-request/pay-with-request.component';
 
 import { LedgerDialogComponent } from './util/dialogs/ledger-dialog.component';
+import { SendEmailDialogComponent } from './util/dialogs/send-email-dialog.component';
 import { PayDialogComponent } from './util/dialogs/pay-dialog.component';
 import { DisplayPayDialogComponent } from './util/dialogs/display-pay-dialog.component';
 import { BroadcastDialogComponent } from './util/dialogs/broadcast-dialog.component';
@@ -19,7 +20,9 @@ import { UtilModule } from './util/util.module';
 import { AppRoutingModule } from './app-routing.module';
 
 declare global {
-  interface Window { analytics: any; }
+  interface Window {
+    analytics: any;
+  }
 }
 
 @NgModule({
@@ -36,7 +39,7 @@ declare global {
   declarations: [
     AppComponent,
     PayWithRequestComponent,
-
+    SendEmailDialogComponent,
     LedgerDialogComponent,
     PayDialogComponent,
     DisplayPayDialogComponent,
@@ -47,6 +50,7 @@ declare global {
   ],
   entryComponents: [
     LedgerDialogComponent,
+    SendEmailDialogComponent,
     PayDialogComponent,
     DisplayPayDialogComponent,
     BroadcastDialogComponent,

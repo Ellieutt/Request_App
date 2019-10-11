@@ -7,7 +7,12 @@ import {
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Web3Service } from '../../util/web3.service';
-import { MatPaginator, MatTableDataSource, MatSort, PageEvent } from '@angular/material';
+import {
+  MatPaginator,
+  MatTableDataSource,
+  MatSort,
+  PageEvent,
+} from '@angular/material';
 import { UtilService } from '../../util/util.service';
 
 @Component({
@@ -48,8 +53,8 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
   handlePageChange(e) {
     const pageIndex = e.pageIndex;
     const pageSize = e.pageSize;
-    const start = (pageIndex * pageSize) + this.preLoadAmount;
-    const end = (start + pageSize) + this.preLoadAmount;
+    const start = pageIndex * pageSize + this.preLoadAmount;
+    const end = start + pageSize + this.preLoadAmount;
 
     this.getRequestsFromIds(this.dataSource.data.slice(start, end));
     return pageIndex;
@@ -63,7 +68,7 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
 
     window.analytics.page({
       name: 'Search',
-      path: window.location.href
+      path: window.location.href,
     });
 
     this.subscription = this.utilService.searchValue.subscribe(
@@ -85,8 +90,18 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
           (a, b) => b._meta.timestamp - a._meta.timestamp
         );
         // We load the first 10 requests (default page of 10, immediately after we pre-load the next page)
-        this.getRequestsFromIds(resultsList.slice(this.paginator.pageIndex * this.paginator.pageSize, this.paginator.pageSize)).then(() => {
-          this.getRequestsFromIds(resultsList.slice(this.preLoadAmount, this.paginator.pageSize + this.preLoadAmount));
+        this.getRequestsFromIds(
+          resultsList.slice(
+            this.paginator.pageIndex * this.paginator.pageSize,
+            this.paginator.pageSize
+          )
+        ).then(() => {
+          this.getRequestsFromIds(
+            resultsList.slice(
+              this.preLoadAmount,
+              this.paginator.pageSize + this.preLoadAmount
+            )
+          );
         });
         this.dataSource.data = resultsList;
         this.loading = false;

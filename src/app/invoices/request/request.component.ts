@@ -14,6 +14,8 @@ import { SubtractDialogComponent } from '../../util/dialogs/subtract-dialog.comp
 import { AdditionalDialogComponent } from '../../util/dialogs/additional-dialog.component';
 import { RefundDialogComponent } from '../../util/dialogs/refund-dialog.component';
 import { DisplayPayDialogComponent } from '../../util/dialogs/display-pay-dialog.component';
+import { EmailService } from '../../util/email.service';
+import { SendEmailDialogComponent } from '../../util/dialogs/send-email-dialog.component';
 
 @Component({
   selector: 'app-request',
@@ -34,12 +36,14 @@ export class RequestComponent implements OnInit, OnDestroy, AfterContentInit {
   timerInterval: any;
   timeOuts = [];
   loading = false;
+  ipfsData: any;
 
   constructor(
     public web3Service: Web3Service,
     private route: ActivatedRoute,
     private dialog: MatDialog,
-    private utilService: UtilService
+    private utilService: UtilService,
+    private emailService: EmailService
   ) {}
 
   get amount() {
@@ -61,7 +65,7 @@ export class RequestComponent implements OnInit, OnDestroy, AfterContentInit {
     }
     window.analytics.page({
       name: '/request/requestId/' + this.route.snapshot.params['requestId'],
-      path: window.location.href
+      path: window.location.href,
     });
 
     this.watchAccount();
@@ -74,7 +78,9 @@ export class RequestComponent implements OnInit, OnDestroy, AfterContentInit {
             searchValue
           );
           await this.setRequest(this.requestObject.requestData || {});
+          this.loadIpfsData(this.request.data.hash);
           this.loading = false;
+          console.log(this.request.data);
         }
       }
     );
@@ -103,17 +109,6 @@ export class RequestComponent implements OnInit, OnDestroy, AfterContentInit {
 
   async ngAfterContentInit() {
     const that = this;
-    const loadAddThis = setInterval(function() {
-      if (document.getElementById('share-request-item')) {
-        that.loadScript(
-          '//platform-api.sharethis.com/js/sharethis.js#property=5d47e62e3387b20012d76862&product=inline-share-buttons'
-        );
-        that.loadScript(
-          '../assets/js/tracking.js'
-        );
-        clearInterval(loadAddThis);
-      }
-    }, 500);
 
     const loadReceiptJs = setInterval(function() {
       if (document.getElementById('download-receipt')) {
@@ -211,6 +206,13 @@ export class RequestComponent implements OnInit, OnDestroy, AfterContentInit {
     this.watchRequestByTxHash();
   }
 
+  async loadIpfsData(data: any) {
+    if (!data) {
+      return;
+    }
+    this.ipfsData = await this.web3Service.getIpfsData(data);
+  }
+
   async setRequest(request) {
     // if new search
     if (
@@ -292,6 +294,26 @@ export class RequestComponent implements OnInit, OnDestroy, AfterContentInit {
 
   getBlockchainName() {
     return this.request.currency === 'BTC' ? 'BTC' : 'ETH';
+  }
+
+  openEmailDialog(sendToEmail) {
+    const currency = this.request.currency;
+    const reason =
+      this.ipfsData && this.ipfsData.reason ? this.ipfsData.reason : 'N/A';
+    const amount = this.amount;
+    const url = this.url;
+
+    this.dialog.open(SendEmailDialogComponent, {
+      width: '600px',
+      data: {
+        email: sendToEmail,
+        currency,
+        reason,
+        amount,
+        url,
+        from_address: this.request.payee.address,
+      },
+    });
   }
 
   callbackTx(response, msg?) {
