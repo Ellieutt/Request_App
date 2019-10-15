@@ -16,3 +16,7 @@
   min-width: 0;
   width: 180px;
 }
+
+.mat-option:nth-child(n+4) {
+  display: none;
+}
