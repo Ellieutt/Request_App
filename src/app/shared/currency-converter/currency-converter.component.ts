@@ -11,6 +11,8 @@ export class CurrencyConverterComponent implements OnInit {
   @Input()
   public to: string;
   @Input()
+  public timestamp: string;
+  @Input()
   public amount: number;
   public rate: number;
   public get value(): number {
@@ -26,13 +28,24 @@ export class CurrencyConverterComponent implements OnInit {
       this.rate = null;
       return;
     }
-    const response = await fetch(
-      `https://min-api.cryptocompare.com/data/price?fsym=${this.from}&tsyms=${
-        this.to
-      }`
-    );
-    const result = (await response.json())[this.to];
-    this.rate = result;
+
+    if (this.timestamp) {
+      const response = await fetch(
+        `https://min-api.cryptocompare.com/data/dayAvg?fsym=${this.from}&tsym=${
+          this.to
+        }&toTs=${this.timestamp}`
+      );
+      const result = (await response.json())[this.to];
+      this.rate = result;
+    } else {
+      const response = await fetch(
+        `https://min-api.cryptocompare.com/data/price?fsym=${this.from}&tsyms=${
+          this.to
+        }`
+      );
+      const result = (await response.json())[this.to];
+      this.rate = result;
+    }
   }
 
   constructor() {}
