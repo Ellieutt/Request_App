@@ -1040,3 +1040,13 @@ ul {
   background: #FAFAFA;
 }
 
+.outline-button {
+  border: 1px solid #00E6A0;
+  border-radius: 4px;
+  padding: 18px 42px;
+  color: #00E6A0;
+}
+
+.outline-button:hover {
+  background: #00E6A0;
+}
