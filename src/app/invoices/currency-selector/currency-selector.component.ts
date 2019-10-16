@@ -108,6 +108,7 @@ export class CurrencySelectorComponent
   public controlType = 'currency-selector';
   public stateChanges = new Subject<void>();
   public focused: boolean;
+  public showAllCurrencies = false;
   public ngControl: NgControl;
   public onChange = () => {};
   public onTouched = () => {};
@@ -126,6 +127,10 @@ export class CurrencySelectorComponent
     });
   }
 
+  public showAllCurrenciesTrigger() {
+    this.showAllCurrencies = true;
+  }
+
   public onCurrencyChange(event) {
     this.selectionChange.emit(event);
   }
@@ -135,15 +140,15 @@ export class CurrencySelectorComponent
       switch (networkId) {
         case 1:
           this.currencies = [
-            'ETH',
-            'BAT',
             'DAI',
+            'ETH',
+            'REQ',
+            'BAT',
             'DGX',
             'KIN',
             'KNC',
             'LINK',
             'OMG',
-            'REQ',
             'ZRX',
           ];
           break;
