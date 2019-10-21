@@ -140,8 +140,8 @@ export class CurrencySelectorComponent
       switch (networkId) {
         case 1:
           this.currencies = [
-            'DAI',
             'ETH',
+            'DAI',
             'REQ',
             'BAT',
             'DGX',
