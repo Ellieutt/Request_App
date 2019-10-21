@@ -4,13 +4,16 @@ $('#download-receipt').click(function () {
     });
 
     var reason = $('#reasonPdf').html(),
+        createdDate = $('#invoice-date-created').html(),
+        paidDate = $('#invoice-date-paid').html(),
         payeeAddress = $('#payeeAddressPdf').html(),
         payerAddress = $('#payerAddressPdf').html(),
-        amount = $('#request-expected-amount').html();
+        amount = $('#request-expected-amount').html(),
+        amountUSD = $('#amount-usd div').html();
 
     var doc = new jsPDF({
         unit: 'pt',
-        format: [500, 500]
+        format: [500, 520]
     });
 
     var centeredText = function (text, y) {
@@ -26,6 +29,20 @@ $('#download-receipt').click(function () {
 
     var logoData = 'data:image/png;base64,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';
     doc.addImage(logoData, 'PNG', 20, 16, 36, 40, undefined, 'FAST');
+
+    doc.setTextColor('#000');
+    doc.setFontSize(8);
+    doc.text(300, 15, 'Created');
+    if (paidDate) {
+        doc.text(300, 45, 'Paid');
+    }
+    
+
+    doc.setFontSize(12);
+    doc.text(297, 30, createdDate);
+    if (paidDate) {
+        doc.text(300, 60, paidDate);
+    }
 
     doc.setFillColor('#3CA2F3');
     doc.rect(0, 75, pageWidth, 38, "F");
@@ -52,6 +69,8 @@ $('#download-receipt').click(function () {
     doc.addImage(payerImage, 'PNG', 20, 235, 26, 26, undefined, 'FAST');
 
     if (reason) {
+        
+
         doc.setFillColor(233, 229, 236);
         doc.rect(0, 295, pageWidth, 1, "F");
 
@@ -59,30 +78,41 @@ $('#download-receipt').click(function () {
         centeredText("Reason", 345);
 
         doc.setTextColor('#000');
-        doc.setFontSize(14);
-        centeredText(reason, 370);
+        doc.setFontSize(12);
+        if (reason.length > 66) {
+            var splitReason = doc.splitTextToSize(reason, 460);
+                doc.text(20, 370, splitReason);
+        }
+        else {
+            centeredText(reason, 370);
+        }
     }
 
     // These are the heights for when there is a reason
     var amountContainerY = 415,
         amountTitleY = 450,
         amountValueY = 475;
+        amountUsdValueY = 495;
 
     // If there isn't a reason offset by the reason height
     if (!reason) {
         amountContainerY -= 110;
         amountTitleY -= 110;
         amountValueY -= 110;
+        amountUsdValueY -= 110;
     }
 
     doc.setFontSize(10);
     doc.setFillColor(240, 240, 240);
-    doc.rect(0, amountContainerY, pageWidth, 90, "F");
+    doc.rect(0, amountContainerY, pageWidth, 130, "F");
 
     centeredText("Amount", amountTitleY);
 
     doc.setFontSize(22);
     centeredText(amount, amountValueY);
+
+    doc.setFontSize(14);
+    centeredText(amountUSD, amountUsdValueY);
 
     doc.save('RequestInvoice');
 
