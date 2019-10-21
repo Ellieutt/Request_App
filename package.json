@@ -18,7 +18,7 @@
     "dev:e2e": "ng serve --configuration=e2e",
     "e2e": "node e2e/run.js",
     "e2e:ci": "concurrently -k --success first 'yarn serve' 'yarn e2e'",
-    "serve":"http-server ./dist -p 4200 --silent"
+    "serve": "http-server ./dist -p 4200 --silent"
   },
   "prettier": {
     "singleQuote": true,
@@ -68,6 +68,7 @@
     "@angular-devkit/build-angular": "^0.7.1",
     "@angular/compiler-cli": "^6.1.4",
     "@angular/language-service": "^6.1.4",
+    "@babel/runtime": "^7.4.3",
     "@commitlint/cli": "^7.2.0",
     "@commitlint/config-conventional": "^7.1.2",
     "@types/jasmine": "^2.8.8",
