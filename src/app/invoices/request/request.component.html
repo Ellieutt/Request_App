@@ -41,7 +41,7 @@
                           class="fa {{request.errorMsg ? 'fa-warning fc-warn' : 'fa-circle-o-notch fa-spin'}}"></i>&nbsp;{{ request.errorMsg || request.waitingMsg || 'searching for blockchain information...' }}</span>
                     </ng-template>
                   </h4>
-                  <div *ngIf="request.data && request.data.data && request.data.data.date" class="invoice-date fs-16">
+                  <div *ngIf="request.data && request.data.data && request.data.data.date" id="invoice-date-created" class="invoice-date fs-16">
                     {{request.data.data.date | date: 'fullDate'}}
                   </div>
                   <!-- <div class="mt-1">
@@ -65,7 +65,8 @@
                       <div class="fs-28 semi-bold" id="request-expected-amount">{{ amount }} {{ currency }}</div>
                       <div *ngIf="request.status == 'paid'">
                         <div *ngFor="let e of request.events">
-                          <div *ngIf="e.name == 'UpdateBalance'" style="text-align: center;">
+                          <div *ngIf="e.name == 'UpdateBalance'" id="amount-usd" style="text-align: center;">
+                            <span class="hidden" id="invoice-date-paid">{{e._meta.timestamp + '000' | date: 'EEEE, MMMM d, y'}}</span>
                             <currency-converter *ngIf="amount" [from]="currency" [to]="'USD'" [amount]="amount"
                               [timestamp]="e._meta.timestamp">
                             </currency-converter>
