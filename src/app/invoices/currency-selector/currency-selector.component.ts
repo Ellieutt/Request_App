@@ -143,6 +143,7 @@ export class CurrencySelectorComponent
             'ETH',
             'DAI',
             'REQ',
+            'RSR',
             'BAT',
             'DGX',
             'KIN',
