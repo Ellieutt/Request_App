@@ -42,7 +42,7 @@
                     </ng-template>
                   </h4>
                   <div *ngIf="request.data && request.data.data && request.data.data.date" id="invoice-date-created" class="invoice-date fs-16">
-                    {{request.data.data.date | date: 'fullDate'}}
+                    {{request.data.data.date | date: 'dd/MM/yyyy'}}
                   </div>
                   <!-- <div class="mt-1">
                   <a *ngIf="txHash" class="fs-14 pr-1" style="opacity: 0.8; color: #008c62 !important;" href="{{web3Service.etherscanUrl}}tx/{{txHash}}" target="_blank">
