@@ -42,7 +42,7 @@
                     </ng-template>
                   </h4>
                   <div *ngIf="request.data && request.data.data && request.data.data.date" id="invoice-date-created" class="invoice-date fs-16">
-                    {{request.data.data.date | date: 'dd/MM/yyyy'}}
+                    {{request.data.data.date | date: 'MMMM d, y'}}
                   </div>
                   <!-- <div class="mt-1">
                   <a *ngIf="txHash" class="fs-14 pr-1" style="opacity: 0.8; color: #008c62 !important;" href="{{web3Service.etherscanUrl}}tx/{{txHash}}" target="_blank">
@@ -66,7 +66,7 @@
                       <div *ngIf="request.status == 'paid'">
                         <div *ngFor="let e of request.events">
                           <div *ngIf="e.name == 'UpdateBalance'" id="amount-usd" style="text-align: center;">
-                            <span class="hidden" id="invoice-date-paid">{{e._meta.timestamp + '000' | date: 'EEEE, MMMM d, y'}}</span>
+                            <span class="hidden" id="invoice-date-paid">{{e._meta.timestamp + '000' | date: 'MMMM d, y'}}</span>
                             <currency-converter *ngIf="amount" [from]="currency" [to]="'USD'" [amount]="amount"
                               [timestamp]="e._meta.timestamp">
                             </currency-converter>
