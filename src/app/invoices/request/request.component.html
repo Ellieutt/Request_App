@@ -63,22 +63,14 @@
                   <div class="w-100 text-center fc-primary py-4 request-amount">
                     <div class="fs-14" style="font-style: italic;">AMOUNT</div>
                     <div class="fs-28 semi-bold" id="request-expected-amount">{{ amount }} {{ currency }}</div>
-                    <div *ngFor="let e of request.events">
-                      <div *ngIf="request.status == 'paid'; else creationConversion">
-                        <div *ngIf="e.name == 'UpdateBalance'" id="amount-usd" style="text-align: center;">
-                          <span class="hidden" id="invoice-date-paid">{{e._meta.timestamp + '000' | date: 'MMMM d, y'}}</span>
-                          <currency-converter *ngIf="amount" [from]="currency" [to]="'USD'" [amount]="amount"
-                            [timestamp]="e._meta.timestamp">
-                          </currency-converter>
-                        </div>
-                      </div>
-                      <ng-template #creationConversion>
-                        <div *ngIf="e.name == 'Created'" id="amount-usd" style="text-align: center;">
-                          <currency-converter *ngIf="amount" [from]="currency" [to]="'USD'" [amount]="amount"
-                            [timestamp]="e._meta.timestamp">
-                          </currency-converter>
-                        </div>
-                      </ng-template>
+                    <currency-converter *ngIf="amount && paymentTimestamp" [from]="currency" [to]="'USD'" [amount]="amount"
+                            [timestamp]="paymentTimestamp">
+                    </currency-converter>
+                    <currency-converter *ngIf="amount && !paymentTimestamp" [from]="currency" [to]="'USD'" [amount]="amount"
+                      [timestamp]="createdTimestamp">
+                    </currency-converter>
+                    <div *ngIf="request.status == 'paid'">
+                        <span class="hidden" id="invoice-date-paid">{{paymentTimestamp}}</span>
                     </div>
                   </div>
                 </div>

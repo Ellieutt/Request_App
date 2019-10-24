@@ -247,6 +247,17 @@ export class RequestComponent implements OnInit, OnDestroy, AfterContentInit {
         request.requestId
       );
     }
+    request.events.forEach(event => {
+      if (event.name == 'Created') {
+        request.createdTimestamp = event._meta.timestamp;
+      }
+      if (event.name == 'UpdateBalance') {
+        if (request.status == 'paid') {
+          request.paymentTimestamp = event._meta.timestamp;
+        }
+      }
+    });
+
     this.request = request;
     this.getRequestMode();
     if (request && request.payee) {
