@@ -249,7 +249,7 @@
               <div *ngIf="request && request.events && request.events.length > 0">
                 <div *ngFor="let e of request.events" class="fs-14 d-flex mb-1 justify-content-between">
                   <span>{{ spaceBeforeCapital(e.name) }} </span>
-                  <span>{{ e._meta.timestamp * 1000 | date: 'MMMM d, y' }}</span>
+                  <span>{{ e._meta.timestamp * 1000 | date: 'MMMM d, y hh:mm:ss' }}</span>
                 </div>
               </div>
             </div>
