@@ -70,7 +70,7 @@
                       [timestamp]="createdTimestamp">
                     </currency-converter>
                     <div *ngIf="request.status == 'paid'">
-                        <span class="hidden" id="invoice-date-paid">{{paymentTimestamp}}</span>
+                        <span class="hidden" id="invoice-date-paid">{{paymentTimestamp + '000' | date: 'MMMM d, y'}}</span>
                     </div>
                   </div>
                 </div>
