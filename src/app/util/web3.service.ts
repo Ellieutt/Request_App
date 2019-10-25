@@ -4,6 +4,7 @@ import { BehaviorSubject } from 'rxjs';
 import { UtilService } from './util.service';
 import { GasService } from './gas.service';
 import { environment } from '../../environments/environment';
+import { CookieService } from 'ngx-cookie-service';
 import RequestNetwork, {
   Types,
   utils,
@@ -53,7 +54,8 @@ export class Web3Service {
 
   constructor(
     private utilService: UtilService,
-    private gasService: GasService
+    private gasService: GasService,
+    private cookieService: CookieService
   ) {
     this.networkIdObservable.subscribe(_ => {
       this.setEtherscanUrl();
@@ -64,11 +66,58 @@ export class Web3Service {
       console.log('web3service instantiate web3');
       await this.checkAndInstantiateWeb3();
       setInterval(async () => await this.refreshAccounts(), 1000);
+      setInterval(async () => await this.checkCookies(), 10000);
       this.web3Ready = true;
     });
     window.addEventListener('load', () => {
       window.dispatchEvent(new Event('web3.ready'));
     });
+  }
+
+  public async checkCookies() {
+    if (this.cookieService.get('processing_requests')) {
+      const cookieList = JSON.parse(
+        this.cookieService.get('processing_requests')
+      );
+      let hasChanged = false;
+      const updatedCookieList = [];
+      await this.asyncForEach(cookieList, async element => {
+        if (element.status !== 'broadcasted') {
+          const result = await this.getRequestByTransactionHash(element.txid);
+          if (result.request && result.request.requestId) {
+            const blockNumber = await this.getBlockNumber();
+            // wait 1 block confirmation
+            if (blockNumber - result.transaction.blockNumber > 0) {
+              const updatedElement = element;
+              updatedElement.status = 'broadcasted';
+              updatedCookieList.push(updatedElement);
+              hasChanged = true;
+            }
+          } else if (
+            result.message === 'Contract is not supported by request'
+          ) {
+            const updatedElement = element;
+            updatedElement.status = 'failed';
+            updatedCookieList.push(updatedElement);
+            hasChanged = true;
+          }
+          console.log(result);
+        } else {
+          updatedCookieList.push(element);
+        }
+      });
+      if (hasChanged) {
+        // console.log("HERE");
+        // this.cookieService.set('processing_requests', JSON.stringify(updatedCookieList));
+        // console.log(this.cookieService.get('processing_requests'));
+      }
+    }
+  }
+
+  private async asyncForEach(array, callback) {
+    for (let index = 0; index < array.length; index++) {
+      await callback(array[index], index, array);
+    }
   }
 
   public getGasPrice() {

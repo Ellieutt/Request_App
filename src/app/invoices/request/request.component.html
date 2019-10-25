@@ -41,8 +41,9 @@
                           class="fa {{request.errorMsg ? 'fa-warning fc-warn' : 'fa-circle-o-notch fa-spin'}}"></i>&nbsp;{{ request.errorMsg || request.waitingMsg || 'searching for blockchain information...' }}</span>
                     </ng-template>
                   </h4>
-                  <div *ngIf="request.data && request.data.data && request.data.data.date" id="invoice-date-created" class="invoice-date fs-16">
-                    {{request.data.data.date | date: 'fullDate'}}
+                  <div *ngIf="request.data && request.data.data && request.data.data.date" id="invoice-date-created"
+                    class="invoice-date fs-16">
+                    {{ request.data.data.date | date: 'MMMM d, y' }}
                   </div>
                   <!-- <div class="mt-1">
                   <a *ngIf="txHash" class="fs-14 pr-1" style="opacity: 0.8; color: #008c62 !important;" href="{{web3Service.etherscanUrl}}tx/{{txHash}}" target="_blank">
@@ -55,26 +56,32 @@
                      else genericRequest'>
               </app-rnf-invoice-request>
               <ng-template #genericRequest>
-                <div *ngIf="request.status" class="status-banner status-{{request.status.replace(' ','-')}} fs-16">
+                <div *ngIf="request.status; else broadcastingMode"
+                  class="status-banner status-{{request.status.replace(' ','-')}} fs-16">
                   {{request.status}}</div>
+                <ng-template #broadcastingMode>
+                  <div class="status-banner status-broadcasting fs-16">
+                    broadcasting</div>
+                </ng-template>
                 <request-addresses [request]="request"></request-addresses>
                 <request-metadata *ngIf="request.data" [data]="request.data.data" title="Details"></request-metadata>
                 <div class="d-flex">
-                    <div class="w-100 text-center fc-primary py-4 request-amount">
-                      <div class="fs-14" style="font-style: italic;">AMOUNT</div>
-                      <div class="fs-28 semi-bold" id="request-expected-amount">{{ amount }} {{ currency }}</div>
-                      <div *ngIf="request.status == 'paid'">
-                        <div *ngFor="let e of request.events">
-                          <div *ngIf="e.name == 'UpdateBalance'" id="amount-usd" style="text-align: center;">
-                            <span class="hidden" id="invoice-date-paid">{{e._meta.timestamp + '000' | date: 'EEEE, MMMM d, y'}}</span>
-                            <currency-converter *ngIf="amount" [from]="currency" [to]="'USD'" [amount]="amount"
-                              [timestamp]="e._meta.timestamp">
-                            </currency-converter>
-                          </div>
+                  <div class="w-100 text-center fc-primary py-4 request-amount">
+                    <div class="fs-14" style="font-style: italic;">AMOUNT</div>
+                    <div class="fs-28 semi-bold" id="request-expected-amount">{{ amount }} {{ currency }}</div>
+                    <div *ngIf="request.status == 'paid'">
+                      <div *ngFor="let e of request.events">
+                        <div *ngIf="e.name == 'UpdateBalance'" id="amount-usd" style="text-align: center;">
+                          <span class="hidden"
+                            id="invoice-date-paid">{{e._meta.timestamp + '000' | date: 'EEEE, MMMM d, y'}}</span>
+                          <currency-converter *ngIf="amount" [from]="currency" [to]="'USD'" [amount]="amount"
+                            [timestamp]="e._meta.timestamp">
+                          </currency-converter>
                         </div>
                       </div>
                     </div>
                   </div>
+                </div>
               </ng-template>
               <div class="hidden-if-empty p-4 my-3 progress-container">
                 <div *ngIf="request.status && request.state != 2"
@@ -87,18 +94,6 @@
                       <strong>{{ web3Service.BNToAmount(request.payee.expectedAmount.sub(request.payee.balance).abs(), request.currency) }}
                         {{ request.currency }}</strong> overpaid</span>
                     <span *ngSwitchCase="'complete'">&nbsp;</span>
-                  </div>
-                </div>
-              </div>
-              <div class="hidden-if-empty p-4 my-3">
-                <div *ngIf="!request.status">
-                  <div class="h-100 w-100 fs-18 mb-3">
-                    <div class="text-center fs-12 lh-14 h-100">
-                      <mat-spinner class="mx-auto mt-3" [diameter]="20"></mat-spinner>
-                      <div class="fc-primary semi-bold">
-                        <i>Posting your request to the blockchain.</i>
-                      </div>
-                    </div>
                   </div>
                 </div>
               </div>
@@ -206,19 +201,58 @@
                 <div id="share-request-item" class="semi-bold">
                   SHARE THIS REQUEST
                 </div>
-                <button class="fs-16 bor-accent my-3" style="height: 50px" color="accent" type="button" (click)="openEmailDialog(sendToEmail)"><img src="assets/img/email.svg" style="width: 24px; margin-right: 12px;">Notify the payer</button>
+                <button class="fs-16 bor-accent my-3" style="height: 50px" color="accent" type="button"
+                  (click)="openEmailDialog(sendToEmail)"><img src="assets/img/email.svg"
+                    style="width: 24px; margin-right: 12px;">Notify the payer</button>
               </div>
             </div>
             <div *ngIf="!request.status;" class="fs-16 mb-5 lh-14">
-              <div *ngIf="!request.errorMsg; else errorBlock">
-                <div class="semi-bold">
-                  YOU ARE IN VIEW MODE
+              <div *ngIf="!request.errorMsg; else errorBlock" class="broadcasting-message-container">
+                <div class="request-spinner">
+                  <div class="request-spinner1 request-spinner-child"></div>
+                  <div class="request-spinner2 request-spinner-child"></div>
+                  <div class="request-spinner3 request-spinner-child"></div>
+                  <div class="request-spinner4 request-spinner-child"></div>
+                  <div class="request-spinner5 request-spinner-child"></div>
+                  <div class="request-spinner6 request-spinner-child"></div>
+                  <div class="request-spinner7 request-spinner-child"></div>
+                  <div class="request-spinner8 request-spinner-child"></div>
+                  <div class="request-spinner9 request-spinner-child"></div>
+                  <div class="request-spinner10 request-spinner-child"></div>
+                  <div class="request-spinner11 request-spinner-child"></div>
+                  <div class="request-spinner12 request-spinner-child"></div>
+                </div>
+                <p>
+                  The request is being broadcasted. We will notify you when it has posted successfully.
+                </p>
+                <hr _ngcontent-c11="" class="my-4" style="border-top: 2px solid #EFEFEF;">
+                <div class="fs-16 lh-14">
+                  <div class="semi-bold">
+                    Other Actions
+                  </div>
+                  <button routerLink="/" class="fs-16 bor-accent my-3" style="height: 50px" color="accent" type="button">
+                    <i class="dash"></i>
+                    Create a new request
+                  </button>
+                  <button routerLink="/search/{{ account }}" (click)="utilService.setSearchValue(account)" class="fs-16 bor-accent my-3" style="height: 50px" color="accent" type="button">
+                    <i class="dash"></i>
+                    Go to your dashboard
+                  </button>
                 </div>
               </div>
               <ng-template #errorBlock>
-                <i class="mx-auto my-3 fa fa-warning fa-2x fc-warn"></i>
-                <div class="fc-primary semi-bold">
-                  <i>Sorry, we are unable to locate this Transaction Hash. Try refreshing the page.</i>
+                <div class="fs-16 lh-14">
+                  <div class="semi-bold">
+                    Other Actions
+                  </div>
+                  <button class="fs-16 bor-accent my-3" style="height: 50px" color="accent" type="button">
+                    <i class="dash"></i>
+                    Retry the request
+                  </button>
+                  <button class="fs-16 bor-accent my-3" style="height: 50px" color="accent" type="button">
+                    <i class="dash"></i>
+                    Create a new request
+                  </button>
                 </div>
               </ng-template>
             </div>
@@ -239,17 +273,20 @@
                   request.</p>
               </div>
             </ng-template>
-
-            <input mat-button class="url-box fc-blue-grey fs-14 px-3 w-100 hidden" [value]="url" disabled>
-            <button class="fs-16 bor-accent my-3" style="height: 50px" type="button"
-              ngxClipboard [cbContent]="url" (cbOnSuccess)="copyToClipboard()"><img src="assets/img/link.svg" style="width: 24px; margin-right: 12px;">{{copyUrlTxt}}</button>
-            <hr class="my-4" style="border-top: 2px solid #EFEFEF;">
-            <div *ngIf="request.events">
-              <p class="semi-bold mb-2 fs-16">History</p>
-              <div *ngIf="request && request.events && request.events.length > 0">
-                <div *ngFor="let e of request.events" class="fs-14 d-flex mb-1 justify-content-between">
-                  <span>{{ spaceBeforeCapital(e.name) }} </span>
-                  <span>{{ utilService.getAgeFromTimeStamp(e._meta.timestamp) }}</span>
+            
+            <div *ngIf="request.status;">
+              <input mat-button class="url-box fc-blue-grey fs-14 px-3 w-100 hidden" [value]="url" disabled>
+              <button class="fs-16 bor-accent my-3" style="height: 50px" type="button" ngxClipboard [cbContent]="url"
+                (cbOnSuccess)="copyToClipboard()"><img src="assets/img/link.svg"
+                  style="width: 24px; margin-right: 12px;">{{copyUrlTxt}}</button>
+              <hr class="my-4" style="border-top: 2px solid #EFEFEF;">
+              <div *ngIf="request.events">
+                <p class="semi-bold mb-2 fs-16">History</p>
+                <div *ngIf="request && request.events && request.events.length > 0">
+                  <div *ngFor="let e of request.events" class="fs-14 d-flex mb-1 justify-content-between">
+                    <span>{{ spaceBeforeCapital(e.name) }} </span>
+                    <span>{{ utilService.getAgeFromTimeStamp(e._meta.timestamp) }}</span>
+                  </div>
                 </div>
               </div>
             </div>

@@ -1,15 +1,21 @@
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material';
+import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 
 @Injectable()
 export class UtilService {
   public searchValue = new Subject<string>();
 
-  constructor(private snackBar: MatSnackBar) {}
+  constructor(private snackBar: MatSnackBar, private router: Router) {}
 
   public setSearchValue(searchValue: string) {
     this.searchValue.next(searchValue);
+  }
+
+  // routerLink encodes the request info in the URL so we need to navigate by URL instead
+  public redirectToTxidPage(txidPageUrl: string) {
+    this.router.navigateByUrl(txidPageUrl);
   }
 
   getAgeFromTimeStamp(timestamp) {

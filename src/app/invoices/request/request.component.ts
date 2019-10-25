@@ -93,18 +93,18 @@ export class RequestComponent implements OnInit, OnDestroy, AfterContentInit {
     }
 
     // watch Request in background
-    this.timerInterval = setInterval(async () => {
-      if (
-        !this.requestObject &&
-        !this.requestObject.requestId &&
-        this.loading
-      ) {
-        return;
-      }
-      const rd = await this.requestObject.getData();
-      await this.setRequest(rd);
-      this.requestObject.requestData = rd;
-    }, 10000);
+    // this.timerInterval = setInterval(async () => {
+    //   if (
+    //     !this.requestObject &&
+    //     !this.requestObject.requestId &&
+    //     this.loading
+    //   ) {
+    //     return;
+    //   }
+    //   const rd = await this.requestObject.getData();
+    //   await this.setRequest(rd);
+    //   this.requestObject.requestData = rd;
+    // }, 10000);
   }
 
   async ngAfterContentInit() {
@@ -225,14 +225,14 @@ export class RequestComponent implements OnInit, OnDestroy, AfterContentInit {
           this.request.requestId !== request.requestId))
     ) {
       // this.request = null;
-      history.pushState(
-        null,
-        null,
-        `/#/request/requestId/${request.requestId}`
-      );
-      this.url = `${window.location.protocol}//${
-        window.location.host
-      }/#/request/requestId/${request.requestId}`;
+      // history.pushState(
+      //   null,
+      //   null,
+      //   `/#/request/requestId/${request.requestId}`
+      // );
+      // this.url = `${window.location.protocol}//${
+      //   window.location.host
+      // }/#/request/requestId/${request.requestId}`;
     }
     if (request && !request.status && request.state !== undefined) {
       this.web3Service.setRequestStatus(request);

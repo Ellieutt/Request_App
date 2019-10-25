@@ -171,11 +171,6 @@ export class HomeComponent implements OnInit {
       this.createLoading = false;
 
       if (response.transaction) {
-        this.utilService.openSnackBar(
-          'The request is being created. Please wait a few moments for it to appear on the Blockchain.',
-          'Ok',
-          'info-snackbar'
-        );
         const request = {
           payee: {
             address: this.payeeIdAddressFormControl.value,
