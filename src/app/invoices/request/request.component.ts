@@ -16,6 +16,7 @@ import { RefundDialogComponent } from '../../util/dialogs/refund-dialog.componen
 import { DisplayPayDialogComponent } from '../../util/dialogs/display-pay-dialog.component';
 import { EmailService } from '../../util/email.service';
 import { SendEmailDialogComponent } from '../../util/dialogs/send-email-dialog.component';
+import { CookieService } from 'ngx-cookie-service';
 
 @Component({
   selector: 'app-request',
@@ -43,8 +44,9 @@ export class RequestComponent implements OnInit, OnDestroy, AfterContentInit {
     private route: ActivatedRoute,
     private dialog: MatDialog,
     private utilService: UtilService,
-    private emailService: EmailService
-  ) {}
+    private emailService: EmailService,
+    private cookieService: CookieService
+  ) { }
 
   get amount() {
     return this.web3Service.BNToAmount(
@@ -107,10 +109,40 @@ export class RequestComponent implements OnInit, OnDestroy, AfterContentInit {
     // }, 10000);
   }
 
+  addPendingRequestToCookie(request) {
+    let cookieList = [];
+    if (this.cookieService.get('processing_requests')) {
+      cookieList = JSON.parse(
+        this.cookieService.get('processing_requests')
+      );
+    }
+    let isNewRequest = true;
+    const that = this;
+    cookieList.forEach(element => {
+      if (element.txid.split('&')[0] !== that.txHash) {
+        isNewRequest = false;
+      }
+    });
+    if (isNewRequest) {
+      cookieList.push({
+        'txid': that.txHash + '?request=' + this.route.snapshot.queryParams.request,
+        'timestamp': request.data.data.date,
+        'payee': request.payee.address,
+        'payer': request.payer,
+        'amount': this.web3Service.BNToAmount(request.payee.expectedAmount, request.currency),
+        'currency': request.currency,
+        'network': 4,
+        'status': 'broadcasting',
+        'unread': true
+      });
+      this.cookieService.set('processing_requests', JSON.stringify(cookieList));
+    }
+  }
+
   async ngAfterContentInit() {
     const that = this;
 
-    const loadReceiptJs = setInterval(function() {
+    const loadReceiptJs = setInterval(function () {
       if (document.getElementById('download-receipt')) {
         that.loadScript('../assets/js/receipt.js');
         clearInterval(loadReceiptJs);
@@ -195,6 +227,7 @@ export class RequestComponent implements OnInit, OnDestroy, AfterContentInit {
             queryParamRequest.currency
           );
           await this.setRequest(request);
+          this.addPendingRequestToCookie(request);
         }
       }
     } else {

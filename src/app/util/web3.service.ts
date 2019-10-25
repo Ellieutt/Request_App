@@ -82,14 +82,16 @@ export class Web3Service {
       let hasChanged = false;
       const updatedCookieList = [];
       await this.asyncForEach(cookieList, async element => {
-        if (element.status !== 'broadcasted') {
-          const result = await this.getRequestByTransactionHash(element.txid);
+        if (element.status !== 'created') {
+          // The txid ID is stored as txid&request="requestMeta". So we spli
+          const txidToCheck = element.txid.split('?')[0];
+          const result = await this.getRequestByTransactionHash(txidToCheck);
           if (result.request && result.request.requestId) {
             const blockNumber = await this.getBlockNumber();
             // wait 1 block confirmation
             if (blockNumber - result.transaction.blockNumber > 0) {
               const updatedElement = element;
-              updatedElement.status = 'broadcasted';
+              updatedElement.status = 'created';
               updatedCookieList.push(updatedElement);
               hasChanged = true;
             }
@@ -101,14 +103,13 @@ export class Web3Service {
             updatedCookieList.push(updatedElement);
             hasChanged = true;
           }
-          console.log(result);
         } else {
           updatedCookieList.push(element);
         }
       });
       if (hasChanged) {
         // console.log("HERE");
-        // this.cookieService.set('processing_requests', JSON.stringify(updatedCookieList));
+        this.cookieService.set('processing_requests', JSON.stringify(updatedCookieList));
         // console.log(this.cookieService.get('processing_requests'));
       }
     }
@@ -599,7 +600,7 @@ export class Web3Service {
       );
       return response;
     } catch (err) {
-      console.log('Error: ', err.message);
+      // console.log('Error: ', err.message);
       return err;
     }
   }

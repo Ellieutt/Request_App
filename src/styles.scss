@@ -1170,3 +1170,15 @@ i.dash:after {
   font-style: inherit;
   font-weight: 600;
 }
+
+.pending-request-popup {
+  position: fixed;
+  right: 100px;
+  top: 100px;
+  width: 600px;
+  background: white;
+  border: 6px solid black;
+  z-index: 10;
+  text-align: center;
+  padding: 30px;
+}
