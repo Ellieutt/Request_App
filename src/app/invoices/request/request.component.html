@@ -60,21 +60,20 @@
                 <request-addresses [request]="request"></request-addresses>
                 <request-metadata *ngIf="request.data" [data]="request.data.data" title="Details"></request-metadata>
                 <div class="d-flex">
-                    <div class="w-100 text-center fc-primary py-4 request-amount">
-                      <div class="fs-14" style="font-style: italic;">AMOUNT</div>
-                      <div class="fs-28 semi-bold" id="request-expected-amount">{{ amount }} {{ currency }}</div>
-                      <div *ngIf="request.status == 'paid'">
-                        <div *ngFor="let e of request.events">
-                          <div *ngIf="e.name == 'UpdateBalance'" id="amount-usd" style="text-align: center;">
-                            <span class="hidden" id="invoice-date-paid">{{e._meta.timestamp + '000' | date: 'MMMM d, y'}}</span>
-                            <currency-converter *ngIf="amount" [from]="currency" [to]="'USD'" [amount]="amount"
-                              [timestamp]="e._meta.timestamp">
-                            </currency-converter>
-                          </div>
-                        </div>
-                      </div>
+                  <div class="w-100 text-center fc-primary py-4 request-amount">
+                    <div class="fs-14" style="font-style: italic;">AMOUNT</div>
+                    <div class="fs-28 semi-bold" id="request-expected-amount">{{ amount }} {{ currency }}</div>
+                    <currency-converter *ngIf="amount && request.paymentTimestamp" [from]="currency" [to]="'USD'" [amount]="amount"
+                            [timestamp]="request.paymentTimestamp">
+                    </currency-converter>
+                    <currency-converter *ngIf="amount && request.createdTimestamp && !request.paymentTimestamp" [from]="currency" [to]="'USD'" [amount]="amount"
+                      [timestamp]="createdTimestamp">
+                    </currency-converter>
+                    <div *ngIf="request.status == 'paid'">
+                        <span class="hidden" id="invoice-date-paid">{{request.paymentTimestamp + '000' | date: 'MMMM d, y'}}</span>
                     </div>
                   </div>
+                </div>
               </ng-template>
               <div class="hidden-if-empty p-4 my-3 progress-container">
                 <div *ngIf="request.status && request.state != 2"
