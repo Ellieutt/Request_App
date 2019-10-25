@@ -63,14 +63,14 @@
                   <div class="w-100 text-center fc-primary py-4 request-amount">
                     <div class="fs-14" style="font-style: italic;">AMOUNT</div>
                     <div class="fs-28 semi-bold" id="request-expected-amount">{{ amount }} {{ currency }}</div>
-                    <currency-converter *ngIf="amount && paymentTimestamp" [from]="currency" [to]="'USD'" [amount]="amount"
-                            [timestamp]="paymentTimestamp">
+                    <currency-converter *ngIf="amount && request.paymentTimestamp" [from]="currency" [to]="'USD'" [amount]="amount"
+                            [timestamp]="request.paymentTimestamp">
                     </currency-converter>
-                    <currency-converter *ngIf="amount && createdTimestamp && !paymentTimestamp" [from]="currency" [to]="'USD'" [amount]="amount"
+                    <currency-converter *ngIf="amount && request.createdTimestamp && !request.paymentTimestamp" [from]="currency" [to]="'USD'" [amount]="amount"
                       [timestamp]="createdTimestamp">
                     </currency-converter>
                     <div *ngIf="request.status == 'paid'">
-                        <span class="hidden" id="invoice-date-paid">{{paymentTimestamp + '000' | date: 'MMMM d, y'}}</span>
+                        <span class="hidden" id="invoice-date-paid">{{request.paymentTimestamp + '000' | date: 'MMMM d, y'}}</span>
                     </div>
                   </div>
                 </div>
