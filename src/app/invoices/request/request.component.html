@@ -66,7 +66,7 @@
                     <currency-converter *ngIf="amount && paymentTimestamp" [from]="currency" [to]="'USD'" [amount]="amount"
                             [timestamp]="paymentTimestamp">
                     </currency-converter>
-                    <currency-converter *ngIf="amount && !paymentTimestamp" [from]="currency" [to]="'USD'" [amount]="amount"
+                    <currency-converter *ngIf="amount && createdTimestamp && !paymentTimestamp" [from]="currency" [to]="'USD'" [amount]="amount"
                       [timestamp]="createdTimestamp">
                     </currency-converter>
                     <div *ngIf="request.status == 'paid'">
