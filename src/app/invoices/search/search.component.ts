@@ -124,27 +124,6 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
       }
     );
 
-    setInterval(async () => {
-      const resultsList = this.dataSource.data;
-      let hasChanged = false;
-      const updatedCookieList = [];
-      resultsList.forEach(element => {
-        if (element['status'] === 'broadcasting') {
-          // hasChanged = true;
-          // Loop through cookies, check against the TXID to see if the status has changed
-          // element['status'] = 'created';
-          // updatedCookieList.push(element);
-        }
-      });
-      if (hasChanged) {
-        this.dataSource.data = resultsList;
-        this.cookieService.set(
-          'processing_requests',
-          JSON.stringify(updatedCookieList)
-        );
-      }
-    }, 10000);
-
     if (this.route.snapshot.params['searchValue']) {
       setTimeout(() =>
         this.utilService.setSearchValue(

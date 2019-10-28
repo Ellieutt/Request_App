@@ -51,8 +51,11 @@ export class PendingRequestsComponent implements OnInit {
           newCookieList.push(element);
         }
       });
-      this.cookieService.set('processing_requests', JSON.stringify(newCookieList));
+      this.cookieService.set('processing_requests', JSON.stringify(newCookieList), 1);
       this.requestList = newCookieList;
+      if (newCookieList.length === 0) {
+        this.broadcastingRequestCount = 0;
+      }
     }
   }
 
@@ -85,7 +88,7 @@ export class PendingRequestsComponent implements OnInit {
         }
         updatedCookieList.push(element);
       });
-      this.cookieService.set('processing_requests', JSON.stringify(updatedCookieList));
+      this.cookieService.set('processing_requests', JSON.stringify(updatedCookieList), 1);
     }
     this.showPendingPopup = !this.showPendingPopup;
   }

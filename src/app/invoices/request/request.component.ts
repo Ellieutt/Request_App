@@ -95,17 +95,17 @@ export class RequestComponent implements OnInit, OnDestroy, AfterContentInit {
     }
 
     // watch Request in background
-    // this.timerInterval = setInterval(async () => {
-    //   if (
-    //     !this.requestObject &&
-    //     this.loading
-    //   ) {
-    //     return;
-    //   }
-    //   const rd = await this.requestObject.getData();
-    //   await this.setRequest(rd);
-    //   this.requestObject.requestData = rd;
-    // }, 10000);
+    this.timerInterval = setInterval(async () => {
+      if (
+        !this.requestObject &&
+        this.loading
+      ) {
+        return;
+      }
+      const rd = await this.requestObject.getData();
+      await this.setRequest(rd);
+      this.requestObject.requestData = rd;
+    }, 10000);
   }
 
   addPendingRequestToCookie(request) {
@@ -134,7 +134,7 @@ export class RequestComponent implements OnInit, OnDestroy, AfterContentInit {
         'status': 'broadcasting',
         'unread': true
       });
-      this.cookieService.set('processing_requests', JSON.stringify(cookieList));
+      this.cookieService.set('processing_requests', JSON.stringify(cookieList), 1);
     }
   }
 
@@ -256,15 +256,15 @@ export class RequestComponent implements OnInit, OnDestroy, AfterContentInit {
           this.request.requestId &&
           this.request.requestId !== request.requestId))
     ) {
-      // this.request = null;
-      // history.pushState(
-      //   null,
-      //   null,
-      //   `/#/request/requestId/${request.requestId}`
-      // );
-      // this.url = `${window.location.protocol}//${
-      //   window.location.host
-      // }/#/request/requestId/${request.requestId}`;
+      this.request = null;
+      history.pushState(
+        null,
+        null,
+        `/#/request/requestId/${request.requestId}`
+      );
+      this.url = `${window.location.protocol}//${
+        window.location.host
+      }/#/request/requestId/${request.requestId}`;
     }
     if (request && !request.status && request.state !== undefined) {
       this.web3Service.setRequestStatus(request);

@@ -110,9 +110,7 @@ export class Web3Service {
         }
       });
       if (hasChanged) {
-        // console.log("HERE");
-        this.cookieService.set('processing_requests', JSON.stringify(updatedCookieList));
-        // console.log(this.cookieService.get('processing_requests'));
+        this.cookieService.set('processing_requests', JSON.stringify(updatedCookieList), 1);
       }
     }
   }
