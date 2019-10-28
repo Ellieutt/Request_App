@@ -98,7 +98,6 @@ export class RequestComponent implements OnInit, OnDestroy, AfterContentInit {
     // this.timerInterval = setInterval(async () => {
     //   if (
     //     !this.requestObject &&
-    //     !this.requestObject.requestId &&
     //     this.loading
     //   ) {
     //     return;
@@ -280,6 +279,20 @@ export class RequestComponent implements OnInit, OnDestroy, AfterContentInit {
         request.requestId
       );
     }
+    if (request.events) {
+      request.events.forEach(event => {
+        if (event.name == 'Created') {
+          request.createdTimestamp = event._meta.timestamp;
+        }
+        if (event.name == 'UpdateBalance') {
+          if (request.status == 'paid') {
+            request.paymentTimestamp = event._meta.timestamp;
+          }
+        }
+      });
+  
+    }
+    
     this.request = request;
     this.getRequestMode();
     if (request && request.payee) {
