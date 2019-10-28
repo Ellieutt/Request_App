@@ -1,7 +1,14 @@
-<div *ngIf="broadcastingRequestCount != 0 || notificationCount != 0" (click)="clickPendingRequestsTab()" class="pending-requests-float">YOUR PENDING REQUESTS<i class="pending-notifications">{{notificationCount}}</i></div>
+<div *ngIf="broadcastingRequestCount != 0 || notificationCount != 0 || requestList.length > 0" (click)="clickPendingRequestsTab()" class="pending-requests-float">YOUR PENDING REQUESTS<i class="pending-notifications">{{notificationCount}}</i></div>
 
 <div *ngIf="showPendingPopup && requestList.length > 0" class="pending-request-popup">
-    <div *ngFor="let pendingRequest of requestList">
-        {{ pendingRequest.txid.substring(0,5) }}...{{ pendingRequest.txid.substring(61,66) }} ### {{pendingRequest.status}}<br/>
-    </div>
+    <h3>Your pending requests</h3>
+    <ul class="pending-request-list" *ngFor="let pendingRequest of requestList">
+        <li>
+            <a (click)="utilService.redirectToTxidPage('/request/txHash/' + pendingRequest.txid)">view</a>
+            <span class="amount">{{pendingRequest.amount}} {{pendingRequest.currency}}</span>
+            <span class="status-{{ pendingRequest.status.replace(' ','-') }}">{{pendingRequest.status}}</span>
+            <i class="remove" (click)="removeRequestFromCookie(pendingRequest.txid)">&times;</i>
+        </li>
+        
+    </ul>
 </div>

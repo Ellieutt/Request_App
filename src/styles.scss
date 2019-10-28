@@ -1175,10 +1175,50 @@ i.dash:after {
   position: fixed;
   right: 100px;
   top: 100px;
-  width: 600px;
+  width: auto;
   background: white;
-  border: 6px solid black;
   z-index: 10;
   text-align: center;
-  padding: 30px;
+  padding: 30px 90px;
+  box-shadow: 2px 2px 18px 0px rgba(212, 227, 255, 0.5) !important;
+}
+
+.pending-request-list {
+	padding: 0;
+
+  li {
+    display: inline-block;
+    margin-bottom: 0;
+    margin-top: 16px;
+
+    &:before {
+      content: 'o';
+      position: absolute;
+      top: 0;
+      left: -26px;
+      font-weight: bold;
+    }
+    
+    &:after {
+      display: none;
+    }
+  }
+  a {
+    text-decoration: underline !important;
+  }
+  .amount {
+    margin: 0 40px;
+  }
+
+  .remove {
+    font-size: 24px;
+    position: absolute;
+    right: -30px;
+    font-style: initial;
+    opacity: 0.4;
+    cursor: pointer;
+    width: 24px;
+    height: 24px;
+    line-height: 24px;
+  }
 }

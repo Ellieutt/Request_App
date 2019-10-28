@@ -92,6 +92,7 @@ export class Web3Service {
             if (blockNumber - result.transaction.blockNumber > 0) {
               const updatedElement = element;
               updatedElement.status = 'created';
+              updatedElement.unread = true;
               updatedCookieList.push(updatedElement);
               hasChanged = true;
             }
@@ -100,6 +101,7 @@ export class Web3Service {
           ) {
             const updatedElement = element;
             updatedElement.status = 'failed';
+            updatedElement.unread = true;
             updatedCookieList.push(updatedElement);
             hasChanged = true;
           }
