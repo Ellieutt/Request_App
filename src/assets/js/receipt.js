@@ -112,7 +112,9 @@ $('#download-receipt').click(function () {
     centeredText(amount, amountValueY);
 
     doc.setFontSize(14);
-    centeredText(amountUSD, amountUsdValueY);
+    if (amountUSD) {
+        centeredText(amountUSD, amountUsdValueY);
+    }
 
     doc.save('RequestInvoice');
 
