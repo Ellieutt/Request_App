@@ -1,0 +1,101 @@
+@import 'variables';
+
+.copy-button {
+    position: absolute;
+    width: 17.03px;
+    height: 21.25px;
+    left: 802px;
+    top: 201px;
+}
+
+.address-book-new-body-title {
+    position: absolute;
+    height: 20px;
+    left: 42.31%;
+    right: 42.05%;
+    top: calc(50% - 20px/2 - 56.5px);
+
+    font-family: Beatrice;
+    font-size: 14px;
+    line-height: 20px;
+
+    text-align: center;
+
+    color: #000000;
+}
+
+.address-book-float {
+    position: absolute;
+    width: 510px;
+    height: 213px;
+    left: 385px;
+    top: 100px;
+
+    background: #FFFFFF;
+    box-shadow: 0px 20px 20px rgba(199, 199, 199, 0.5);
+    border-radius: 4px;
+    z-index: 2;
+}
+
+.address-book-new-address {
+    position: absolute;
+    left: 0%;
+    right: 0%;
+    width: 100%;
+    z-index: 3;
+
+    background: #F3F3F3;
+}
+
+.address-book-new-user {
+    position: absolute;
+    left: 0%;
+    right: 0%;
+    width: 390px;
+    height: 40px;
+    top: 39.1%;
+    bottom: 30.83%;
+}
+
+.address-book-new-blockie {
+    position: absolute;
+    left: 0%;
+    right: 89.74%;
+    top: 0%;
+    z-index: 4
+}
+
+.right-link {
+    position: absolute;
+    height: 21px;
+    left: 70.51%;
+    right: 0%;
+    top: calc(50% - 21px/2 + 56px);
+
+    font-family: Beatrice;
+    font-size: 14px;
+    line-height: 21px;
+    /* identical to box height */
+
+
+    color: #00E6A0;
+}
+
+.left-link {
+    /* Add custom label */
+
+
+    position: absolute;
+    height: 21px;
+    left: 7.95%;
+    right: 57.69%;
+    top: calc(50% - 21px/2 + 56px);
+
+    font-family: Beatrice;
+    font-size: 14px;
+    line-height: 21px;
+    /* identical to box height */
+
+
+    color: #00E6A0;
+}

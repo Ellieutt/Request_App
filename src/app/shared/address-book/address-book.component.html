@@ -1,0 +1,16 @@
+<div *ngIf="showAddressBook" class="address-book-float">
+    <div class="address-book-new-user">
+        <div class="address-book-new-body-title">Address</div>
+        <angular-blockies *ngIf="blockchainName.toLowerCase() === 'eth'" [options]="{ seed: addressToAdd.toLowerCase() }" class="address-book-new-blockie"></angular-blockies>
+        <input class="address-book-new-address" value="{{addressToAdd}}">
+    </div>
+    
+    <a href="#" class="left-link">    
+        <svg width="21" height="14" viewBox="0 0 21 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M16.3817 1.09246L19.8402 5.81021C20.329 6.47708 20.329 7.52086 19.8402 8.18359L16.3817 12.9013C15.9302 13.5226 15.0065 13.9907 14.2361 13.9907H1.62367C0.728994 13.9907 0 13.2617 0 12.367V1.62678C0 0.732107 0.728994 0.00311279 1.62367 0.00311279H14.2361C15.0024 0.00311279 15.926 0.47116 16.3817 1.09246ZM15.4787 12.2469L18.9373 7.52915C19.1402 7.25163 19.1402 6.74631 18.9414 6.46879L15.4828 1.75104C15.2385 1.42382 14.6462 1.12146 14.2361 1.12146H1.62367C1.34615 1.12146 1.11834 1.34927 1.11834 1.62678V12.3712C1.11834 12.6487 1.34615 12.8765 1.62367 12.8765H14.232C14.642 12.8765 15.2385 12.5783 15.4787 12.2469Z" 
+                fill="#00E6A0"/>
+        </svg>   
+        Add a custom name
+    </a>
+    <a href="#" class="right-link">See on Request</a>
+</div>
