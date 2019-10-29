@@ -328,6 +328,12 @@
   dependencies:
     tslib "^1.9.0"
 
+"@babel/runtime@^7.4.3":
+  version "7.6.3"
+  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.6.3.tgz#935122c74c73d2240cafd32ddb5fc2a6cd35cf1f"
+  dependencies:
+    regenerator-runtime "^0.13.2"
+
 "@commitlint/cli@^7.2.0":
   version "7.2.1"
   resolved "https://registry.yarnpkg.com/@commitlint/cli/-/cli-7.2.1.tgz#dbb9eeb1f5015a129bb0801fbc1115eb1dcd513b"
@@ -497,15 +503,15 @@
     tree-kill "^1.0.0"
     webpack-sources "^1.1.0"
 
-"@requestnetwork/request-network.js@0.11.3":
-  version "0.11.3"
-  resolved "https://registry.yarnpkg.com/@requestnetwork/request-network.js/-/request-network.js-0.11.3.tgz#d2907026e848f55a5f3fbdb55784e3afa30022b8"
+"@requestnetwork/request-network.js@0.12.0":
+  version "0.12.0"
+  resolved "https://registry.yarnpkg.com/@requestnetwork/request-network.js/-/request-network.js-0.12.0.tgz#64cfacb64b138ac47767a7897375f26c3bfd72ac"
   dependencies:
     bn.js "4.11.8"
     cross-fetch "2.2.2"
     ethereumjs-util "5.2.0"
     ipfs-api "git://github.com/RequestNetwork/js-ipfs-api.git#9a99b08313e623c14a17357bb9655814dbe1d018"
-    requestnetworkartifacts "1.7.1"
+    requestnetworkartifacts "1.8.0"
     tslib "1.9.3"
     typescript "2.9.2"
     wallet-address-validator "0.1.7"
@@ -6825,8 +6831,8 @@ lodash.defaults@^4.2.0:
   resolved "https://registry.yarnpkg.com/lodash.defaults/-/lodash.defaults-4.2.0.tgz#d09178716ffea4dde9e5fb7b37f6f0802274580c"
 
 lodash.defaultsdeep@^4.6.0:
-  version "4.6.0"
-  resolved "https://registry.yarnpkg.com/lodash.defaultsdeep/-/lodash.defaultsdeep-4.6.0.tgz#bec1024f85b1bd96cbea405b23c14ad6443a6f81"
+  version "4.6.1"
+  resolved "https://registry.yarnpkg.com/lodash.defaultsdeep/-/lodash.defaultsdeep-4.6.1.tgz#512e9bd721d272d94e3d3a63653fa17516741ca6"
 
 lodash.filter@^4.6.0:
   version "4.6.0"
@@ -9027,6 +9033,10 @@ regenerator-runtime@^0.11.0:
   version "0.11.1"
   resolved "https://registry.yarnpkg.com/regenerator-runtime/-/regenerator-runtime-0.11.1.tgz#be05ad7f9bf7d22e056f9726cee5017fbf19e2e9"
 
+regenerator-runtime@^0.13.2:
+  version "0.13.3"
+  resolved "https://registry.yarnpkg.com/regenerator-runtime/-/regenerator-runtime-0.13.3.tgz#7cf6a77d8f5c6f60eb73c5fc1955b2ceb01e6bf5"
+
 regenerator-transform@^0.10.0:
   version "0.10.1"
   resolved "https://registry.yarnpkg.com/regenerator-transform/-/regenerator-transform-0.10.1.tgz#1e4996837231da8b7f3cf4114d71b5691a0680dd"
@@ -9169,9 +9179,9 @@ requestnetwork-data-format@^0.1.2:
     tslib "1.9.0"
     typescript "2.8.1"
 
-requestnetworkartifacts@1.7.1:
-  version "1.7.1"
-  resolved "https://registry.yarnpkg.com/requestnetworkartifacts/-/requestnetworkartifacts-1.7.1.tgz#743698c5299afe18e562dcfde74b9364ed34b734"
+requestnetworkartifacts@1.8.0:
+  version "1.8.0"
+  resolved "https://registry.yarnpkg.com/requestnetworkartifacts/-/requestnetworkartifacts-1.8.0.tgz#4448aa923ce227839831947cf80a2745194614e7"
 
 requestretry@^1.2.2:
   version "1.13.0"
