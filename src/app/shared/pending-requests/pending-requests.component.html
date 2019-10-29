@@ -1,6 +1,7 @@
-<div *ngIf="broadcastingRequestCount != 0 || notificationCount != 0 || requestList.length > 0" (click)="clickPendingRequestsTab()" class="pending-requests-float">YOUR PENDING REQUESTS<i class="pending-notifications">{{notificationCount}}</i></div>
+<div (click)="clickPendingRequestsTab()" class="pending-requests-float {{broadcastingRequestCount != 0 || notificationCount != 0 || requestList.length > 0 || showPendingPopup || !hasBeenClicked ? '' : 'offset'}}">YOUR PENDING REQUESTS<i class="pending-notifications">{{notificationCount}}</i></div>
 
-<div *ngIf="showPendingPopup && requestList.length > 0" class="pending-request-popup">
+<div *ngIf="showPendingPopup" class="pending-request-popup">
+    <i class="close" (click)="clickPendingRequestsTab()">&times;</i>
     <h3>Your pending requests</h3>
     <ul class="pending-request-list" *ngFor="let pendingRequest of requestList">
         <li>
@@ -9,6 +10,6 @@
             <span class="status-{{ pendingRequest.status.replace(' ','-') }}">{{pendingRequest.status}}</span>
             <i class="remove" (click)="removeRequestFromCookie(pendingRequest.txid)">&times;</i>
         </li>
-        
     </ul>
+    <p class="pending-request-none" *ngIf="requestList.length == 0">No Pending Requests</p>
 </div>

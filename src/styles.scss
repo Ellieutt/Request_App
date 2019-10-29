@@ -1152,6 +1152,15 @@ i.dash:after {
   line-height: 50px;
   color: #fff;
   cursor: pointer;
+  transition: right 0.2s cubic-bezier(0.455, 0.03, 0.515, 0.955);
+
+  &.offset {
+    right: 10px;
+
+    &:hover {
+      right: 48px;
+    }
+  }
 }
 
 .pending-notifications {
@@ -1181,6 +1190,24 @@ i.dash:after {
   text-align: center;
   padding: 30px 90px;
   box-shadow: 2px 2px 18px 0px rgba(212, 227, 255, 0.5) !important;
+
+  .close {
+    font-size: 24px;
+    position: absolute;
+    right: 14px;
+    font-style: initial;
+    opacity: 0.8;
+    cursor: pointer;
+    width: 24px;
+    height: 24px;
+    line-height: 24px;
+    top: 14px;
+  }
+}
+
+.pending-request-none {
+  margin: 0;
+  margin-top: 16px;
 }
 
 .pending-request-list {
