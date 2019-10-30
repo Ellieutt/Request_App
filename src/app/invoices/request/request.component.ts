@@ -5,7 +5,7 @@ import {
   AfterContentInit,
   OnDestroy,
 } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Web3Service } from '../../util/web3.service';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { UtilService } from '../../util/util.service';
@@ -45,8 +45,12 @@ export class RequestComponent implements OnInit, OnDestroy, AfterContentInit {
     private dialog: MatDialog,
     private utilService: UtilService,
     private emailService: EmailService,
-    private cookieService: CookieService
-  ) { }
+    private cookieService: CookieService,
+    private router: Router
+  ) {
+      // force route reload whenever params change;
+      this.router.routeReuseStrategy.shouldReuseRoute = () => false;
+   }
 
   get amount() {
     return this.web3Service.BNToAmount(

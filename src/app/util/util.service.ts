@@ -7,7 +7,7 @@ import { Subject } from 'rxjs';
 export class UtilService {
   public searchValue = new Subject<string>();
 
-  constructor(private snackBar: MatSnackBar, private router: Router) {}
+  constructor(private snackBar: MatSnackBar, private router: Router) { }
 
   public setSearchValue(searchValue: string) {
     this.searchValue.next(searchValue);
@@ -15,7 +15,8 @@ export class UtilService {
 
   // routerLink encodes the request info in the URL so we need to navigate by URL instead
   public redirectToPage(pageUrl: string) {
-    this.router.navigateByUrl(pageUrl);
+    const pageUrlEncoded = encodeURI(pageUrl);
+    this.router.navigateByUrl(pageUrlEncoded);
   }
 
   getAgeFromTimeStamp(timestamp) {
