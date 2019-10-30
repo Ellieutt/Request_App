@@ -1,11 +1,18 @@
 @import 'variables';
 
-.copy-button {
+.address-book-float {
     position: absolute;
-    width: 17.03px;
-    height: 21.25px;
-    left: 802px;
-    top: 201px;
+    width: 510px;
+    height: 213px;
+    left: 385px;
+    top: 100px;
+
+    padding: 40px 60px;
+
+    background: #FFFFFF;
+    box-shadow: 0px 20px 20px rgba(199, 199, 199, 0.5);
+    border-radius: 4px;
+    z-index: 2;
 }
 
 .address-book-new-body-title {
@@ -18,58 +25,66 @@
     font-family: Beatrice;
     font-size: 14px;
     line-height: 20px;
+    font-weight: 600;
+    font-weight: bold;
 
     text-align: center;
 
     color: #000000;
 }
 
-.address-book-float {
-    position: absolute;
-    width: 510px;
-    height: 213px;
-    left: 385px;
-    top: 100px;
-
-    background: #FFFFFF;
-    box-shadow: 0px 20px 20px rgba(199, 199, 199, 0.5);
-    border-radius: 4px;
-    z-index: 2;
-}
-
-.address-book-new-address {
-    position: absolute;
-    left: 0%;
-    right: 0%;
-    width: 100%;
-    z-index: 3;
-
-    background: #F3F3F3;
-}
-
 .address-book-new-user {
     position: absolute;
-    left: 0%;
-    right: 0%;
     width: 390px;
     height: 40px;
     top: 39.1%;
     bottom: 30.83%;
+    margin: 0 auto;
 }
 
 .address-book-new-blockie {
     position: absolute;
     left: 0%;
-    right: 89.74%;
+    right: 90%;
+    height: 40px;
     top: 0%;
     z-index: 4
 }
 
-.right-link {
+.address-book-new-address {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    text-align: left;
+    padding-left: 56px;
+    padding-right: 59px;
+    font-size: 14px;
+
+    background: #F3F3F3;
+}
+
+.copy-address {
+    position: absolute;
+    right: 16px;
+    top: 9px;
+}
+
+.copy-button {
+    position: absolute;
+    width: 17.03px;
+    height: 21.25px;
+    left: 802px;
+    top: 201px;
+}
+
+.left-link {
+    /* Add custom label */
+
+
     position: absolute;
     height: 21px;
-    left: 70.51%;
-    right: 0%;
+    left: 7.95%;
+    right: 57.69%;
     top: calc(50% - 21px/2 + 56px);
 
     font-family: Beatrice;
@@ -81,14 +96,11 @@
     color: #00E6A0;
 }
 
-.left-link {
-    /* Add custom label */
-
-
+.right-link {
     position: absolute;
     height: 21px;
-    left: 7.95%;
-    right: 57.69%;
+    left: 70.51%;
+    right: 0%;
     top: calc(50% - 21px/2 + 56px);
 
     font-family: Beatrice;
