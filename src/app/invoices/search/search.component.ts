@@ -113,7 +113,6 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
           );
           cookieList.forEach(element => {
             if (element.status !== 'created') {
-              console.log(element);
               resultsList.unshift(element);
             }
           });

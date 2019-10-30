@@ -63,7 +63,7 @@
           <mat-cell *matCellDef="let req">
             <a *ngIf="req.requestId" routerLink="/request/requestId/{{req.requestId}}"
               class="fc-accent-secondary">{{ req.requestId.substring(0,5) }}...{{ req.requestId.substring(61,66) }}</a>
-            <a *ngIf="req.txid" (click)="utilService.redirectToTxidPage('/request/txHash/' + req.txid)" class="fc-accent-secondary">{{ req.txid.substring(0,5) }}...{{ req.txid.substring(61,66) }}</a>
+            <a *ngIf="req.txid" (click)="utilService.redirectToPage('/request/txHash/' + req.txid)" class="fc-accent-secondary">{{ req.txid.substring(0,5) }}...{{ req.txid.substring(61,66) }}</a>
           </mat-cell>
         </ng-container>
         <!-- Age Column -->

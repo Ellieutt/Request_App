@@ -83,7 +83,7 @@ export class Web3Service {
       const updatedCookieList = [];
       await this.asyncForEach(cookieList, async element => {
         if (element.status !== 'created') {
-          // The txid ID is stored as txid&request="requestMeta". So we spli
+          // The txid ID is stored as txid&request="requestMeta". So we need to split 
           const txidToCheck = element.txid.split('?')[0];
           const result = await this.getRequestByTransactionHash(txidToCheck);
           if (result.request && result.request.requestId) {
@@ -93,9 +93,9 @@ export class Web3Service {
               const updatedElement = element;
               updatedElement.status = 'created';
               updatedElement.unread = true;
-              updatedCookieList.push(updatedElement);
               hasChanged = true;
             }
+            updatedCookieList.push(element);
           } else if (
             result.message === 'Contract is not supported by request'
           ) {

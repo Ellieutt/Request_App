@@ -14,8 +14,8 @@ export class UtilService {
   }
 
   // routerLink encodes the request info in the URL so we need to navigate by URL instead
-  public redirectToTxidPage(txidPageUrl: string) {
-    this.router.navigateByUrl(txidPageUrl);
+  public redirectToPage(pageUrl: string) {
+    this.router.navigateByUrl(pageUrl);
   }
 
   getAgeFromTimeStamp(timestamp) {

@@ -53,7 +53,8 @@ export class HomeComponent implements OnInit {
     private web3Service: Web3Service,
     private utilService: UtilService,
     private formBuilder: FormBuilder,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {
     setInterval(() => {
       this.date = new Date().getTime();
@@ -124,7 +125,28 @@ export class HomeComponent implements OnInit {
       this.account = account;
       this.payeeIdAddressFormControl.setValue(this.account);
       this.payerAddressFormControl.updateValueAndValidity();
+      this.setValueFromQueryParams();
     });
+  }
+
+  setValueFromQueryParams() {
+    // console.log(this.router.url.split('/')[1]);
+    const retryParamsObj = this.router.url.split('/');
+    if (retryParamsObj.length > 1) {
+      const retryParams = new URLSearchParams(retryParamsObj[1]);
+      if (retryParams.has('amount')) {
+        this.expectedAmountFormControl.setValue(retryParams.get('amount'));
+      }
+      if (retryParams.has('payer')) {
+        this.payerAddressFormControl.setValue(retryParams.get('payer'));
+      }
+      if (retryParams.has('reason')) {
+        this.reasonFormControl.setValue(retryParams.get('reason'));
+      }
+      if (retryParams.has('currency')) {
+        this.currencyFormControl.setValue(retryParams.get('currency'));
+      }
+    }
   }
 
   createRequest() {

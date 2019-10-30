@@ -97,7 +97,7 @@ export class RequestComponent implements OnInit, OnDestroy, AfterContentInit {
     // watch Request in background
     this.timerInterval = setInterval(async () => {
       if (
-        !this.requestObject &&
+        !this.requestObject ||
         this.loading
       ) {
         return;
@@ -118,7 +118,7 @@ export class RequestComponent implements OnInit, OnDestroy, AfterContentInit {
     let isNewRequest = true;
     const that = this;
     cookieList.forEach(element => {
-      if (element.txid.split('&')[0] !== that.txHash) {
+      if (element.txid.split('?')[0] === that.txHash) {
         isNewRequest = false;
       }
     });
@@ -194,16 +194,6 @@ export class RequestComponent implements OnInit, OnDestroy, AfterContentInit {
       if (blockNumber - result.transaction.blockNumber > 0) {
         return this.utilService.setSearchValue(result.request.requestId);
       }
-    } else if (result.message === 'Contract is not supported by request') {
-      return await this.setRequest({
-        errorTxHash:
-          'Sorry, we are unable to locate any request matching this transaction hash',
-      });
-    } else if (result.transaction) {
-      const request = await this.web3Service.buildRequestFromCreateRequestTransactionParams(
-        result.transaction
-      );
-      await this.setRequest(request);
     } else if (this.route.snapshot.queryParams.request) {
       if (!this.request || !this.request.waitingMsg) {
         const queryParamRequest = JSON.parse(
@@ -225,10 +215,34 @@ export class RequestComponent implements OnInit, OnDestroy, AfterContentInit {
             queryParamRequest.payee.expectedAmount,
             queryParamRequest.currency
           );
+
+          let cookieList = [];
+          if (this.cookieService.get('processing_requests')) {
+            cookieList = JSON.parse(
+              this.cookieService.get('processing_requests')
+            );
+          }
+          const that = this;
+          cookieList.forEach(element => {
+            if (element.txid.split('&')[0] !== that.txHash) {
+              request.status = element.status;
+            }
+          });
+
           await this.setRequest(request);
           this.addPendingRequestToCookie(request);
         }
       }
+    } else if (result.message === 'Contract is not supported by request') {
+      return await this.setRequest({
+        errorTxHash:
+          'Sorry, we are unable to locate any request matching this transaction hash',
+      });
+    } else if (result.transaction) {
+      const request = await this.web3Service.buildRequestFromCreateRequestTransactionParams(
+        result.transaction
+      );
+      await this.setRequest(request);
     } else {
       return await this.setRequest({
         errorTxHash: 'Sorry, we are unable to locate this transaction hash',
@@ -256,6 +270,24 @@ export class RequestComponent implements OnInit, OnDestroy, AfterContentInit {
           this.request.requestId &&
           this.request.requestId !== request.requestId))
     ) {
+
+      if (this.cookieService.get('processing_requests')) {
+        const newCookieList = [];
+        const that = this;
+        const cookieList = JSON.parse(
+          this.cookieService.get('processing_requests')
+        );
+        cookieList.forEach(element => {
+          const txidToCheck = element.txid.split('?')[0];
+          if (txidToCheck === that.route.snapshot.params['txHash']) {
+            element.status = 'created';
+          }
+          newCookieList.push(element);
+        });
+        this.cookieService.set('processing_requests', JSON.stringify(newCookieList), 1);
+      }
+
+
       this.request = null;
       history.pushState(
         null,
@@ -281,18 +313,17 @@ export class RequestComponent implements OnInit, OnDestroy, AfterContentInit {
     }
     if (request.events) {
       request.events.forEach(event => {
-        if (event.name == 'Created') {
+        if (event.name === 'Created') {
           request.createdTimestamp = event._meta.timestamp;
         }
-        if (event.name == 'UpdateBalance') {
-          if (request.status == 'paid') {
+        if (event.name === 'UpdateBalance') {
+          if (request.status === 'paid') {
             request.paymentTimestamp = event._meta.timestamp;
           }
         }
       });
-  
     }
-    
+
     this.request = request;
     this.getRequestMode();
     if (request && request.payee) {

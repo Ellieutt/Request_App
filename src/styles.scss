@@ -1045,6 +1045,36 @@ ul {
     cursor: pointer;
   }
 }
+#request-invoice-right {
+  .failed-container, .broadcasting-message-container {
+    .semi-bold {
+      margin-bottom: 16px;
+    }
+    button {
+      display: block;
+      margin: 0 !important;
+      margin-top: 12px !important;
+    }
+  } 
+}
+
+.failed-message {
+  position: relative;
+  margin-bottom: 44px;
+  padding-bottom: 44px;
+  border-bottom: 2px solid #EFEFEF;
+  svg {
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
+  p {
+    position: relative;
+    top: 10px;
+    font-style: italic;
+    padding-left: 60px;
+  }
+}
 
 .request-amount {
   background: #FAFAFA;
@@ -1155,7 +1185,7 @@ i.dash:after {
   transition: right 0.2s cubic-bezier(0.455, 0.03, 0.515, 0.955);
 
   &.offset {
-    right: 10px;
+    right: 12px;
 
     &:hover {
       right: 48px;
@@ -1175,9 +1205,14 @@ i.dash:after {
   line-height: 26px;
   border-radius: 50%;
   display: inline-block;
-  transform: rotate(90deg);
+  transform: scale(1) rotate(90deg);
   font-style: inherit;
   font-weight: 600;
+  transition: all 0.2s cubic-bezier(0.455, 0.03, 0.515, 0.955);
+
+  &.no-notifications {
+    transform: scale(0) rotate(90deg);
+  }
 }
 
 .pending-request-popup {
