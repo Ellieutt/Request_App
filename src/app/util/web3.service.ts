@@ -90,9 +90,8 @@ export class Web3Service {
             const blockNumber = await this.getBlockNumber();
             // wait 1 block confirmation
             if (blockNumber - result.transaction.blockNumber > 0) {
-              const updatedElement = element;
-              updatedElement.status = 'created';
-              updatedElement.unread = true;
+              element.status = 'created';
+              element.unread = true;
               hasChanged = true;
             }
             updatedCookieList.push(element);
