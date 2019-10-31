@@ -25,13 +25,12 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
   pageEvent: PageEvent;
   subscription;
   displayedColumns = [
-    'request.arrow',
-    'requestId',
     '_meta.timestamp',
     'request.payee.address',
     'request.payer',
     'request.payee.expectedAmount',
     'request.status',
+    'requestId',
   ];
   dataSource = new MatTableDataSource();
   loading = true;

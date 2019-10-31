@@ -171,6 +171,10 @@ header {
   background-color: $orange;
 }
 
+.amount-dashboard {
+
+}
+
 .currency-select {
   overflow:visible !important;
   .mat-option, .show-more-button {
@@ -696,8 +700,56 @@ ul li:after {
   cursor: pointer;
 }
 
+.amount-dashboard {
+  font-weight: 500;
+  color: #00CC8E;
+
+  &.negative {
+    color: #CE2E2E;
+  }
+}
+
+.cdk-column-request-payee-address, .cdk-column-request-payer {
+  position: relative;
+}
+
+.address-label-outer {
+  cursor: pointer;
+  padding: 3px 24px 3px;
+  padding-left: 38px;
+  background: #F3F3F3;
+
+  &.owner {
+    background: #C2E8FF;
+  }
+}
+
+.mat-table .blockies {
+  cursor: pointer;
+  position: absolute;
+  left: 0;
+  top: 11px;
+  canvas {
+    border-radius: 0;
+  }
+}
+
+.cdk-column-requestId a {
+  text-decoration: underline;
+}
+
+mat-header-row {
+  border-bottom-color: #EBEBEB !important; 
+  margin-bottom: 5px;
+}
+
+mat-row {
+  border-bottom-width: 0 !important;
+  margin: 5px 0;
+}
+
 .mat-sort-header-button {
-  font-weight: 600 !important;
+  font-size: 18px !important;
 }
 
 .mat-header-cell {
