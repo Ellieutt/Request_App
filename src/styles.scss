@@ -171,6 +171,16 @@ header {
   background-color: $orange;
 }
 
+.status-broadcasting {
+  @extend .status;
+  background-color: #953AB5;
+}
+
+.status-failed {
+  @extend .status;
+  background-color: #B53A3A;
+}
+
 .currency-select {
   overflow:visible !important;
   .mat-option, .show-more-button {
@@ -1035,8 +1045,242 @@ ul {
     cursor: pointer;
   }
 }
+#request-invoice-right {
+  .failed-container, .broadcasting-message-container {
+    .semi-bold {
+      margin-bottom: 16px;
+    }
+    button {
+      display: block;
+      margin: 0 !important;
+      margin-top: 12px !important;
+    }
+  } 
+}
+
+.failed-message {
+  position: relative;
+  margin-bottom: 44px;
+  padding-bottom: 44px;
+  border-bottom: 2px solid #EFEFEF;
+  svg {
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
+  p {
+    position: relative;
+    top: 10px;
+    font-style: italic;
+    padding-left: 60px;
+  }
+}
 
 .request-amount {
   background: #FAFAFA;
 }
 
+.broadcasting-message-container {
+  position: relative;
+
+  .request-spinner {
+    position: absolute;
+    top: 1px;
+    left: 0;
+  }
+
+  p {
+    padding-left: 60px;
+    line-height: 18px;
+    font-style: italic;
+  }
+}
+
+i.dash {
+  width: 36px;
+  display: inline-block;
+  position: relative;
+  height: 24px;
+}
+
+i.dash:after {
+  content: '';
+  position: absolute;
+  left: 0;
+  width: 24px;
+  height: 3px;
+  background: #3FD783;
+  top: 17px;
+}
+
+.broadcasting-message-container button {
+  display: block;
+}
+
+.broadcasting-message-container hr {
+  margin-top: 2.5rem !important;
+  margin-bottom: 2.5rem !important;
+}
+
+.request-spinner {
+  $circleCount: 6;
+  $animationDuration: 1.2s;
+  $spinnerSize: 32px;
+  $spinnerColor: #008C62;
+
+  width: $spinnerSize;
+  height: $spinnerSize;
+  position: relative;
+
+  .request-spinner-child {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
+
+  .request-spinner-child:before {
+    content: '';
+    display: block;
+    margin: 0 auto;
+    width: 6px;
+    height: 10px;
+    background-color: $spinnerColor;
+    border-radius: 10px;
+    animation: request-spinnerBounceDelay $animationDuration infinite ease-in-out both;
+  }
+
+  @for $i from 2 through $circleCount {
+    .request-spinner#{$i} { transform: rotate(360deg / $circleCount * ($i - 1)); }
+  }
+
+  @for $i from 2 through $circleCount {
+    .request-spinner#{$i}:before { animation-delay: - $animationDuration + $animationDuration / $circleCount * ($i - 1); }
+  }
+}
+
+@keyframes request-spinnerBounceDelay {
+  0%, 80%, 100% { transform: scale(0) }
+  40% { transform: scale(1.0) }
+}
+
+.pending-requests-float {
+  z-index: 2;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  height: 48px;
+  margin: auto;
+  background: #953AB5;
+  padding: 0 46px;
+  right: 48px;
+  -webkit-transform-origin: 100% 50%;
+  transform-origin: 100% 50%;
+  -webkit-transform: rotate(90deg) translate(50%, 50%);
+  transform: rotate(-90deg) translate(50%, 50%);
+  line-height: 50px;
+  color: #fff;
+  cursor: pointer;
+  transition: right 0.2s cubic-bezier(0.455, 0.03, 0.515, 0.955);
+
+  &.offset {
+    right: 12px;
+
+    &:hover {
+      right: 48px;
+    }
+  }
+}
+
+.pending-notifications {
+  position: absolute;
+  top: 12px;
+  left: 10px;
+  width: 26px;
+  height: 26px;
+  background: #FF3939;
+  color: #fff;
+  text-align: center;
+  line-height: 26px;
+  border-radius: 50%;
+  display: inline-block;
+  transform: scale(1) rotate(90deg);
+  font-style: inherit;
+  font-weight: 600;
+  transition: all 0.2s cubic-bezier(0.455, 0.03, 0.515, 0.955);
+
+  &.no-notifications {
+    transform: scale(0) rotate(90deg);
+  }
+}
+
+.pending-request-popup {
+  position: fixed;
+  right: 100px;
+  top: 100px;
+  width: auto;
+  background: white;
+  z-index: 10;
+  text-align: center;
+  padding: 30px 90px;
+  box-shadow: 2px 2px 18px 0px rgba(212, 227, 255, 0.5) !important;
+
+  .close {
+    font-size: 24px;
+    position: absolute;
+    right: 14px;
+    font-style: initial;
+    opacity: 0.8;
+    cursor: pointer;
+    width: 24px;
+    height: 24px;
+    line-height: 24px;
+    top: 14px;
+  }
+}
+
+.pending-request-none {
+  margin: 0;
+  margin-top: 16px;
+}
+
+.pending-request-list {
+	padding: 0;
+
+  li {
+    display: inline-block;
+    margin-bottom: 0;
+    margin-top: 16px;
+
+    &:before {
+      content: 'o';
+      position: absolute;
+      top: 0;
+      left: -26px;
+      font-weight: bold;
+    }
+    
+    &:after {
+      display: none;
+    }
+  }
+  a {
+    text-decoration: underline !important;
+  }
+  .amount {
+    margin: 0 40px;
+  }
+
+  .remove {
+    font-size: 24px;
+    position: absolute;
+    right: -30px;
+    font-style: initial;
+    opacity: 0.4;
+    cursor: pointer;
+    width: 24px;
+    height: 24px;
+    line-height: 24px;
+  }
+}

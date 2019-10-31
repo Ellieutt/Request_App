@@ -18,6 +18,7 @@ import { RefundDialogComponent } from './util/dialogs/refund-dialog.component';
 import { SharedModule } from './shared/shared.module';
 import { UtilModule } from './util/util.module';
 import { AppRoutingModule } from './app-routing.module';
+import { CookieService } from 'ngx-cookie-service';
 
 declare global {
   interface Window {
@@ -58,7 +59,7 @@ declare global {
     AdditionalDialogComponent,
     RefundDialogComponent,
   ],
-  providers: [UtilModule],
+  providers: [UtilModule, CookieService],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
