@@ -40,6 +40,7 @@ import { QRCodeModule } from 'angularx-qrcode';
 import { CurrencyConverterComponent } from './currency-converter/currency-converter.component';
 import { RequestMetadataComponent } from './request-metadata/request-metadata.component';
 import { RequestAddressesComponent } from './request-addresses/request-addresses.component';
+import { PendingRequestsComponent } from './pending-requests/pending-requests.component';
 import { ShortAddressPipe } from './short-address.pipe';
 import { BlockiesComponent } from './blockies/blockies.component';
 import { RequestAmountComponent } from './request-amount/request-amount.component';
@@ -90,6 +91,7 @@ import { RequestAddressComponent } from './request-address/request-address.compo
     RequestMetadataComponent,
     CurrencyConverterComponent,
     RequestAddressesComponent,
+    PendingRequestsComponent,
     ShortAddressPipe,
     BlockiesComponent,
     RequestAmountComponent,
@@ -111,6 +113,7 @@ import { RequestAddressComponent } from './request-address/request-address.compo
     RequestAddressComponent,
     CurrencyConverterComponent,
     RequestAddressesComponent,
+    PendingRequestsComponent,
     MatButtonModule,
     MatCardModule,
     // MatCheckboxModule,

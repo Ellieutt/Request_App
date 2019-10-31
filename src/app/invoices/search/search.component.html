@@ -7,6 +7,9 @@
       <span class="ml-auto semi-bold" *ngIf="!loading && dataSource && dataSource.data.length == 0">&nbsp;0 result found
         for this address</span>
     </div>
+
+ 
+
     <!-- <div class="col-md-3">&nbsp;</div> -->
     <div class="col-md-12 d-flex flex-column">
       <mat-table #table matSort [dataSource]="dataSource">
@@ -46,6 +49,14 @@
                 </span>
               </ng-template>
             </div>
+            <div *ngIf="req.payee">
+                <a (click)="utilService.setSearchValue(req.payee)"
+                  *ngIf="req.payee != searchValue; else payeeSpanBroadcasting"
+                  class="fc-accent-secondary">{{ req.payee.substring(0, 5) }}...{{ req.payee.substring(37, 42) }}</a>
+                <ng-template #payeeSpanBroadcasting>
+                  <span>{{ req.payee.substring(0, 5) }}...{{ req.payee.substring(37, 42) }}</span>
+                </ng-template>
+              </div>
           </mat-cell>
         </ng-container>
         <!-- To Column -->
@@ -73,13 +84,21 @@
                 </span>
               </ng-template>
             </div>
+            <div *ngIf="req.payer">
+                <a (click)="utilService.setSearchValue(req.payer)"
+                  *ngIf="req.payer != searchValue; else payerSpan"
+                  class="fc-accent-secondary">{{ req.payer.substring(0, 5) }}...{{ req.payer.substring(37, 42) }}</a>
+                <ng-template #payerSpan>
+                  <span>{{ req.payer.substring(0, 5) }}...{{ req.payer.substring(37, 42) }}</span>
+                </ng-template>
+              </div>
           </mat-cell>
         </ng-container>
         <!-- Amount Column -->
         <ng-container matColumnDef="request.payee.expectedAmount">
           <mat-header-cell *matHeaderCellDef mat-sort-header>Amount</mat-header-cell>
           <mat-cell *matCellDef="let req">
-            <div *ngIf="req.request; else spinSpan">
+            <div *ngIf="req.request; else broadcastingRequest">
               <span *ngIf="req.request.payee.address != searchValue; else payeeSpan">
                 <div class="amount-dashboard">
                   +
@@ -94,6 +113,12 @@
                 </div>
               </ng-template>
             </div>
+            <ng-template #broadcastingRequest>
+                <div *ngIf="req.amount && req.currency; else spinSpan">
+                    <!-- {{ this.web3Service.BNToAmount(req.amount, req.currency) }}&nbsp;{{ req.currency }} -->
+                    {{ req.amount }} {{ req.currency }}
+                  </div>
+            </ng-template>
             <ng-template #spinSpan>
               <span>
                 <i class="fa fa-circle-o-notch fa-spin"></i>
@@ -108,6 +133,9 @@
             <div *ngIf="req.request">
               <span class="status-{{ req.request.status.replace(' ','-') }}">{{ req.request.status }}</span>
             </div>
+            <div *ngIf="req.status">
+                <span class="status-{{ req.status.replace(' ','-') }}">{{ req.status }}</span>
+              </div>
           </mat-cell>
         </ng-container>
         <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
