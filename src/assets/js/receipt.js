@@ -116,6 +116,6 @@ $('#download-receipt').click(function () {
         centeredText(amountUSD, amountUsdValueY);
     }
 
-    doc.save('RequestInvoice');
+    doc.save('RequestInvoice.pdf');
 
 });
