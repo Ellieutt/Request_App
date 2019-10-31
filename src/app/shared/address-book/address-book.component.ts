@@ -8,8 +8,19 @@ import { Component, OnInit, Input } from '@angular/core';
 
 export class AddressBookComponent implements OnInit {
     showAddressBook = true;
-    addressToAdd = "0xc257274276a4e539741ca11b590b9447b26a8051";
-    blockchainName = "Eth";
+    editLabel = false;
+    @Input()
+    addressToAdd: string;
+    @Input()
+    displayName: string;
+    
     ngOnInit() {
+      if (!this.displayName) {
+        this.displayName = "Address";
+      }
+    }
+
+    toggleEdition() {
+      this.editLabel = !this.editLabel;
     }
 }
