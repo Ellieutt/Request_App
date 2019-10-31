@@ -139,6 +139,21 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
           this.web3Service
             .getRequestByRequestId(result.requestId)
             .then(requestObject => {
+
+              if (this.cookieService.get('request_label_tags')) {
+                const labelList = JSON.parse(
+                  this.cookieService.get('request_label_tags')
+                );
+                labelList.forEach(element => {
+                  if (element.hasOwnProperty(requestObject.requestData.payee.address)) {
+                    requestObject.requestData.payee.label = element[requestObject.requestData.payee.address];
+                  }
+                  if (element.hasOwnProperty(requestObject.requestData.payer)) {
+                    requestObject.requestData.payerLabel = element[requestObject.requestData.payer];
+                  }
+                });
+              }
+
               result.request = requestObject.requestData;
             })
         );

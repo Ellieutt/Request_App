@@ -8,7 +8,7 @@
         for this address</span>
     </div>
 
- 
+
 
     <!-- <div class="col-md-3">&nbsp;</div> -->
     <div class="col-md-12 d-flex flex-column">
@@ -17,7 +17,10 @@
         <!-- Age Column -->
         <ng-container matColumnDef="_meta.timestamp">
           <mat-header-cell *matHeaderCellDef mat-sort-header>Date</mat-header-cell>
-          <mat-cell *matCellDef="let req">{{ req._meta.timestamp * 1000 | date: 'y/MM/dd'  }}</mat-cell>
+          <mat-cell *matCellDef="let req">
+            <span *ngIf="req._meta && req._meta.timestamp">{{ req._meta.timestamp * 1000 | date: 'y/MM/dd'  }}</span>
+            <span *ngIf="req.timestamp">{{ req.timestamp | date: 'y/MM/dd'  }}</span>
+          </mat-cell>
         </ng-container>
         <ng-container matColumnDef="requestId">
           <mat-header-cell *matHeaderCellDef mat-sort-header></mat-header-cell>
@@ -35,7 +38,7 @@
                   <angular-blockies [options]="{ seed: req.request.payee.address.toLowerCase() }" class="blockies"
                     [options]="{ size:5, scale:8 }"></angular-blockies>
                   <div class="address-label-outer">
-                    {{ req.request.payee.address.substring(0, 6) }}...{{ req.request.payee.address.substring(36, 42) }}
+                    {{ req.request.payee.label ? req.request.payee.label : req.request.payee.address.substring(0, 6) + '...' + req.request.payee.address.substring(36, 42) }}
                   </div>
                 </span>
               </div>
@@ -44,19 +47,31 @@
                   <angular-blockies [options]="{ seed: req.request.payee.address.toLowerCase() }" class="blockies"
                     [options]="{ size:5, scale:8 }"></angular-blockies>
                   <div class="address-label-outer owner">
-                    {{ req.request.payee.address.substring(0, 6) }}...{{ req.request.payee.address.substring(36, 42) }}
+                    {{ req.request.payee.label ? req.request.payee.label : req.request.payee.address.substring(0, 6) + '...' + req.request.payee.address.substring(36, 42) }}
                   </div>
                 </span>
               </ng-template>
             </div>
             <div *ngIf="req.payee">
-                <a (click)="utilService.setSearchValue(req.payee)"
-                  *ngIf="req.payee != searchValue; else payeeSpanBroadcasting"
-                  class="fc-accent-secondary">{{ req.payee.substring(0, 5) }}...{{ req.payee.substring(37, 42) }}</a>
-                <ng-template #payeeSpanBroadcasting>
-                  <span>{{ req.payee.substring(0, 5) }}...{{ req.payee.substring(37, 42) }}</span>
-                </ng-template>
+              <div *ngIf="req.payee != searchValue; else payeeSpanBroadcasting">
+                <span>
+                  <angular-blockies [options]="{ seed: req.payee.toLowerCase() }" class="blockies"
+                    [options]="{ size:5, scale:8 }"></angular-blockies>
+                  <div class="address-label-outer">
+                    {{ req.payeeLabel ? req.payeeLabel : req.payee.substring(0, 6) + '...' + req.payee.substring(36, 42) }}
+                  </div>
+                </span>
               </div>
+              <ng-template #payeeSpanBroadcasting>
+                <span>
+                  <angular-blockies [options]="{ seed: req.payee.toLowerCase() }" class="blockies"
+                    [options]="{ size:5, scale:8 }"></angular-blockies>
+                  <div class="address-label-outer owner">
+                    {{ req.payeeLabel ? req.payeeLabel : req.payee.substring(0, 6) + '...' + req.payee.substring(36, 42) }}
+                  </div>
+                </span>
+              </ng-template>
+            </div>
           </mat-cell>
         </ng-container>
         <!-- To Column -->
@@ -64,34 +79,45 @@
           <mat-header-cell *matHeaderCellDef mat-sort-header>To</mat-header-cell>
           <mat-cell *matCellDef="let req">
             <div *ngIf="req.request">
-              <div
-                *ngIf="req.request.payer != searchValue; else payerSpan">
+              <div *ngIf="req.request.payer != searchValue; else payerSpan">
                 <span>
-                    <angular-blockies [options]="{ seed: req.request.payer.toLowerCase() }" class="blockies"
-                      [options]="{ size:5, scale:8 }"></angular-blockies>
-                    <div class="address-label-outer">
-                      {{ req.request.payer.substring(0, 6) }}...{{ req.request.payer.substring(36, 42) }}
-                    </div>
-                  </span>
+                  <angular-blockies [options]="{ seed: req.request.payer.toLowerCase() }" class="blockies"
+                    [options]="{ size:5, scale:8 }"></angular-blockies>
+                  <div class="address-label-outer">
+                    {{ req.request.payerLabel ? req.request.payerLabel : req.request.payer.substring(0, 6) + '...' + req.request.payer.substring(36, 42) }}
+                  </div>
+                </span>
               </div>
               <ng-template #payerSpan>
                 <span>
                   <angular-blockies [options]="{ seed: req.request.payer.toLowerCase() }" class="blockies"
                     [options]="{ size:5, scale:8 }"></angular-blockies>
                   <div class="address-label-outer owner">
-                    {{ req.request.payer.substring(0, 6) }}...{{ req.request.payer.substring(36, 42) }}
+                    {{ req.request.payerLabel ? req.request.payerLabel : req.request.payer.substring(0, 6) + '...' + req.request.payer.substring(36, 42) }}
                   </div>
                 </span>
               </ng-template>
             </div>
             <div *ngIf="req.payer">
-                <a (click)="utilService.setSearchValue(req.payer)"
-                  *ngIf="req.payer != searchValue; else payerSpan"
-                  class="fc-accent-secondary">{{ req.payer.substring(0, 5) }}...{{ req.payer.substring(37, 42) }}</a>
-                <ng-template #payerSpan>
-                  <span>{{ req.payer.substring(0, 5) }}...{{ req.payer.substring(37, 42) }}</span>
-                </ng-template>
+              <div *ngIf="req.payer != searchValue; else payerSpan">
+                <span>
+                  <angular-blockies [options]="{ seed: req.payer.toLowerCase() }" class="blockies"
+                    [options]="{ size:5, scale:8 }"></angular-blockies>
+                  <div class="address-label-outer">
+                    {{ req.payerLabel ? req.payerLabel : req.payer.substring(0, 6) + '...' + req.payer.substring(36, 42) }}
+                  </div>
+                </span>
               </div>
+              <ng-template #payerSpan>
+                <span>
+                  <angular-blockies [options]="{ seed: req.payer.toLowerCase() }" class="blockies"
+                    [options]="{ size:5, scale:8 }"></angular-blockies>
+                  <div class="address-label-outer owner">
+                    {{ req.payerLabel ? req.payerLabel : req.payer.substring(0, 6) + '...' + req.payer.substring(36, 42) }}
+                  </div>
+                </span>
+              </ng-template>
+            </div>
           </mat-cell>
         </ng-container>
         <!-- Amount Column -->
@@ -114,10 +140,19 @@
               </ng-template>
             </div>
             <ng-template #broadcastingRequest>
-                <div *ngIf="req.amount && req.currency; else spinSpan">
-                    <!-- {{ this.web3Service.BNToAmount(req.amount, req.currency) }}&nbsp;{{ req.currency }} -->
-                    {{ req.amount }} {{ req.currency }}
+              <div *ngIf="req.amount && req.currency; else spinSpan">
+                <span *ngIf="req.payee != searchValue; else payeeSpan">
+                  <div class="amount-dashboard">
+                    + {{ req.amount }} {{ req.currency }}
                   </div>
+                </span>
+                <ng-template #payeeSpan>
+                  <div class="amount-dashboard negative">
+                    - {{ req.amount }} {{ req.currency }}
+                  </div>
+                </ng-template>
+
+              </div>
             </ng-template>
             <ng-template #spinSpan>
               <span>
@@ -134,8 +169,8 @@
               <span class="status-{{ req.request.status.replace(' ','-') }}">{{ req.request.status }}</span>
             </div>
             <div *ngIf="req.status">
-                <span class="status-{{ req.status.replace(' ','-') }}">{{ req.status }}</span>
-              </div>
+              <span class="status-{{ req.status.replace(' ','-') }}">{{ req.status }}</span>
+            </div>
           </mat-cell>
         </ng-container>
         <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
