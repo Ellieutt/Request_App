@@ -7,6 +7,9 @@
       <span class="ml-auto semi-bold" *ngIf="!loading && dataSource && dataSource.data.length == 0">&nbsp;0 result found
         for this address</span>
     </div>
+
+ 
+
     <!-- <div class="col-md-3">&nbsp;</div> -->
     <div class="col-md-12 d-flex flex-column">
       <mat-table #table matSort [dataSource]="dataSource">
@@ -33,19 +36,43 @@
                 </span>
               </ng-template>
             </div>
+            <div *ngIf="req.payee">
+                <span *ngIf="req.payee != searchValue; else payeeSpan"><svg width="11" height="16"
+                    viewBox="0 0 11 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" clip-rule="evenodd"
+                      d="M10.7766 9.46803C10.6669 9.23564 10.4258 9.08764 10.1603 9.08764H7.45088V0.649117C7.45088 0.290805 7.14743 0 6.77353 0H4.06415C3.69026 0 3.38681 0.290805 3.38681 0.649117V9.08764H0.677428C0.411909 9.08764 0.170774 9.23694 0.0610441 9.46803C-0.0500405 9.70041 -0.00669038 9.97174 0.168065 10.1639L4.90948 15.3568C5.03817 15.4983 5.22377 15.5788 5.41884 15.5788C5.61392 15.5788 5.79951 15.497 5.92821 15.3568L10.6696 10.1639C10.8457 9.97304 10.8864 9.70041 10.7766 9.46803Z"
+                      fill="black" />
+                  </svg>
+                </span>
+                <ng-template #payeeSpan>
+                  <span>
+                    <svg width="11" height="16" viewBox="0 0 11 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path fill-rule="evenodd" clip-rule="evenodd"
+                        d="M10.7766 6.1108C10.6669 6.34318 10.4258 6.49118 10.1603 6.49118H7.45088V14.9297C7.45088 15.288 7.14743 15.5788 6.77353 15.5788H4.06415C3.69026 15.5788 3.38681 15.288 3.38681 14.9297V6.49118H0.677428C0.411909 6.49118 0.170774 6.34189 0.0610441 6.1108C-0.0500405 5.87842 -0.00669038 5.60709 0.168065 5.41495L4.90948 0.222008C5.03817 0.0805006 5.22377 9.53674e-06 5.41884 9.53674e-06C5.61392 9.53674e-06 5.79951 0.0817986 5.92821 0.222008L10.6696 5.41495C10.8457 5.60579 10.8864 5.87842 10.7766 6.1108Z"
+                        fill="black" />
+                    </svg>
+  
+                  </span>
+                </ng-template>
+              </div>
           </mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="requestId">
           <mat-header-cell *matHeaderCellDef mat-sort-header>ID</mat-header-cell>
-          <mat-cell *matCellDef="let req"><a routerLink="/request/requestId/{{req.requestId}}"
+          <mat-cell *matCellDef="let req">
+            <a *ngIf="req.requestId" routerLink="/request/requestId/{{req.requestId}}"
               class="fc-accent-secondary">{{ req.requestId.substring(0,5) }}...{{ req.requestId.substring(61,66) }}</a>
+            <a *ngIf="req.txid" (click)="utilService.redirectToPage('/request/txHash/' + req.txid)" class="fc-accent-secondary">{{ req.txid.substring(0,5) }}...{{ req.txid.substring(61,66) }}</a>
           </mat-cell>
         </ng-container>
         <!-- Age Column -->
         <ng-container matColumnDef="_meta.timestamp">
           <mat-header-cell *matHeaderCellDef mat-sort-header>Age</mat-header-cell>
-          <mat-cell *matCellDef="let req">{{ utilService.getAgeFromTimeStamp(req._meta.timestamp) }}</mat-cell>
+          <mat-cell *matCellDef="let req">
+            <span *ngIf="req._meta && req._meta.timestamp">{{ utilService.getAgeFromTimeStamp(req._meta.timestamp) }}</span>
+            <span *ngIf="req.timestamp">{{ utilService.getAgeFromTimeStamp(req.timestamp) }}</span>
+          </mat-cell>
         </ng-container>
         <!-- From Column -->
         <ng-container matColumnDef="request.payee.address">
@@ -59,6 +86,14 @@
                 <span>{{ req.request.payee.address.substring(0, 5) }}...{{ req.request.payee.address.substring(37, 42) }}</span>
               </ng-template>
             </div>
+            <div *ngIf="req.payee">
+                <a (click)="utilService.setSearchValue(req.payee)"
+                  *ngIf="req.payee != searchValue; else payeeSpanBroadcasting"
+                  class="fc-accent-secondary">{{ req.payee.substring(0, 5) }}...{{ req.payee.substring(37, 42) }}</a>
+                <ng-template #payeeSpanBroadcasting>
+                  <span>{{ req.payee.substring(0, 5) }}...{{ req.payee.substring(37, 42) }}</span>
+                </ng-template>
+              </div>
           </mat-cell>
         </ng-container>
         <!-- To Column -->
@@ -73,15 +108,29 @@
                 <span>{{ req.request.payer.substring(0, 5) }}...{{ req.request.payer.substring(37, 42) }}</span>
               </ng-template>
             </div>
+            <div *ngIf="req.payer">
+                <a (click)="utilService.setSearchValue(req.payer)"
+                  *ngIf="req.payer != searchValue; else payerSpan"
+                  class="fc-accent-secondary">{{ req.payer.substring(0, 5) }}...{{ req.payer.substring(37, 42) }}</a>
+                <ng-template #payerSpan>
+                  <span>{{ req.payer.substring(0, 5) }}...{{ req.payer.substring(37, 42) }}</span>
+                </ng-template>
+              </div>
           </mat-cell>
         </ng-container>
         <!-- Amount Column -->
         <ng-container matColumnDef="request.payee.expectedAmount">
           <mat-header-cell *matHeaderCellDef mat-sort-header>Amount</mat-header-cell>
           <mat-cell *matCellDef="let req">
-            <div *ngIf="req.request; else spinSpan">
+            <div *ngIf="req.request; else broadcastingRequest">
               {{ this.web3Service.BNToAmount(req.request.payee.expectedAmount, req.request.currency) }}&nbsp;{{ req.request.currency }}
             </div>
+            <ng-template #broadcastingRequest>
+                <div *ngIf="req.amount && req.currency; else spinSpan">
+                    <!-- {{ this.web3Service.BNToAmount(req.amount, req.currency) }}&nbsp;{{ req.currency }} -->
+                    {{ req.amount }} {{ req.currency }}
+                  </div>
+            </ng-template>
             <ng-template #spinSpan>
               <span>
                 <i class="fa fa-circle-o-notch fa-spin"></i>
@@ -96,6 +145,9 @@
             <div *ngIf="req.request">
               <span class="status-{{ req.request.status.replace(' ','-') }}">{{ req.request.status }}</span>
             </div>
+            <div *ngIf="req.status">
+                <span class="status-{{ req.status.replace(' ','-') }}">{{ req.status }}</span>
+              </div>
           </mat-cell>
         </ng-container>
         <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>

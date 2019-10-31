@@ -1,0 +1,15 @@
+<div (click)="clickPendingRequestsTab()" class="pending-requests-float {{notificationCount != 0 || !hasBeenClicked ? '' : 'offset'}}">YOUR PENDING REQUESTS<i class="pending-notifications {{notificationCount == 0 ? 'no-notifications' : ''}}">{{notificationCount}}</i></div>
+
+<div *ngIf="showPendingPopup" class="pending-request-popup">
+    <i class="close" (click)="clickPendingRequestsTab()">&times;</i>
+    <h3>Your pending requests</h3>
+    <ul class="pending-request-list" *ngFor="let pendingRequest of requestList">
+        <li>
+            <a (click)="utilService.redirectToPage('/request/txHash/' + pendingRequest.txid)">view</a>
+            <span class="amount">{{pendingRequest.amount}} {{pendingRequest.currency}}</span>
+            <span class="status-{{ pendingRequest.status.replace(' ','-') }}">{{pendingRequest.status}}</span>
+            <i class="remove" *ngIf="pendingRequest.status != 'broadcasting'" (click)="removeRequestFromCookie(pendingRequest.txid)">&times;</i>
+        </li>
+    </ul>
+    <p class="pending-request-none" *ngIf="requestList.length == 0">No Pending Requests</p>
+</div>

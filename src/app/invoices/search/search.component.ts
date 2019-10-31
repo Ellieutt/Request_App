@@ -14,6 +14,8 @@ import {
   PageEvent,
 } from '@angular/material';
 import { UtilService } from '../../util/util.service';
+import { CookieService } from 'ngx-cookie-service';
+import { ConstantPool } from '@angular/compiler';
 
 @Component({
   selector: 'app-search',
@@ -46,7 +48,8 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
     private web3Service: Web3Service,
     private router: Router,
     private route: ActivatedRoute,
-    private utilService: UtilService
+    private utilService: UtilService,
+    private cookieService: CookieService
   ) {}
 
   // on page change we preload the next page to ensure a smooth UX
@@ -103,6 +106,18 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
             )
           );
         });
+
+        if (this.cookieService.get('processing_requests')) {
+          const cookieList = JSON.parse(
+            this.cookieService.get('processing_requests')
+          );
+          cookieList.forEach(element => {
+            if (element.status !== 'created') {
+              resultsList.unshift(element);
+            }
+          });
+        }
+
         this.dataSource.data = resultsList;
         this.loading = false;
       }
