@@ -1,9 +1,10 @@
 @import 'variables';
 
 .address-book-float {
-    position: relative;
+    position: fixed;
     width: 510px;
-    left: 385px;
+    right: 50%;
+    margin-right: -255px;
     top: 100px;
     line-height: 21px;
 
@@ -13,20 +14,6 @@
     box-shadow: 0px 20px 20px rgba(199, 199, 199, 0.5);
     border-radius: 4px;
     z-index: 2;
-}
-
-.address-book-new-body-title {
-    position: relative;
-    height: 20px;
-
-    font-family: Beatrice;
-    font-size: 14px;
-    line-height: 20px;
-    font-weight: 600;
-
-    text-align: center;
-
-    color: #000000;
 }
 
 .address-book-new-user {
@@ -51,6 +38,7 @@
     padding-right: 5px;
     font-size: 14px;
 
+    border-style: none;
     background: #F3F3F3;
     float: left;
 }
@@ -72,6 +60,21 @@
     float: right;
 }
 
+.address-book-new-header {
+    font-family: Beatrice;
+    font-size: 12px;
+    line-height: 20px;
+
+    text-align: center;
+
+    color: #000000;
+    
+}
+
+.address-book-new-body-title {
+    font-weight: 600;
+}
+
 .address-book-new-label {
     width: 390px;
     height: 60px;
@@ -79,9 +82,9 @@
     border: 1px solid #999999;
     box-sizing: border-box;
     border-radius: 4px;
-    padding: 0 5px;
+    padding: 0 25px;
     margin-bottom: 24px;
-    margin-top: 32px;
+    margin-top: 12px;
 
     font-family: Beatrice;
     font-style: normal;
@@ -90,14 +93,27 @@
     line-height: 21px;
 }
 
+div.form-buttons {
+    padding-bottom: 11px;
+}
+
 .form-buttons {
     clear: left;
     width: 100%;
-    height: 60px;
-    margin-bottom: 24px;
+    text-align: center;
+    vertical-align: middle;
+    
+    font-family: Beatrice;
+    font-style: normal;
+    font-size: 14px;
+    font-weight: normal;
+    line-height: 24px;
 }
 .form-buttons button {
+    height: 60px;
+    margin-bottom: 32px;
+    
+    font-size: 16px;
     background: #00E6A0;
     border-radius: 4px;
-    margin-bottom: 32px;
 }
