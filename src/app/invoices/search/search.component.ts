@@ -36,6 +36,9 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
   ];
   dataSource = new MatTableDataSource();
   loading = true;
+  openAddressBookModal = false;
+  addressToAdd = '';
+  addressLabel = '';
   preLoadAmount = 10; // default page is 10, so we load the next page
 
   @ViewChild(MatPaginator)
@@ -51,6 +54,12 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
     private cookieService: CookieService
   ) {}
 
+  openAddressModal(address, label) {
+    this.openAddressBookModal = true;
+    this.addressToAdd = address;
+    this.addressLabel = label;
+  }
+
   // on page change we preload the next page to ensure a smooth UX
   handlePageChange(e) {
     const pageIndex = e.pageIndex;
@@ -60,6 +69,25 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.getRequestsFromIds(this.dataSource.data.slice(start, end));
     return pageIndex;
+  }
+
+  closedModal(event) {
+    this.openAddressBookModal = event;
+  }
+
+  updateTableWithNewLabel(event) {
+    if (event && event.address && event.label) {
+      this.dataSource.data.forEach(function(requestObject) {
+        if (requestObject['request']) {
+          if (requestObject['request'].payee.address.toLowerCase() === event.address) {
+            requestObject['request'].payee.label = event.label;
+          }
+          if (requestObject['request'].payer.toLowerCase() === event.address) {
+            requestObject['request'].payerLabel = event.label;
+          }
+        }
+      });
+    }
   }
 
   async ngOnInit() {
@@ -112,6 +140,20 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
           );
           cookieList.forEach(element => {
             if (element.status !== 'created') {
+              if (this.cookieService.get('request_label_tags')) {
+                const labelList = JSON.parse(
+                  this.cookieService.get('request_label_tags')
+                );
+                console.log(element);
+                labelList.forEach(label => {
+                  if (label.hasOwnProperty(element.payer.toLowerCase())) {
+                    element.payerLabel = label[element.payer.toLowerCase()];
+                  }
+                  if (label.hasOwnProperty(element.payee.toLowerCase())) {
+                    element.payeeLabel = label[element.payee.toLowerCase()];
+                  }
+                });
+              }
               resultsList.unshift(element);
             }
           });
@@ -145,11 +187,11 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
                   this.cookieService.get('request_label_tags')
                 );
                 labelList.forEach(element => {
-                  if (element.hasOwnProperty(requestObject.requestData.payee.address)) {
-                    requestObject.requestData.payee.label = element[requestObject.requestData.payee.address];
+                  if (element.hasOwnProperty(requestObject.requestData.payee.address.toLowerCase())) {
+                    requestObject.requestData.payee.label = element[requestObject.requestData.payee.address.toLowerCase()];
                   }
-                  if (element.hasOwnProperty(requestObject.requestData.payer)) {
-                    requestObject.requestData.payerLabel = element[requestObject.requestData.payer];
+                  if (element.hasOwnProperty(requestObject.requestData.payer.toLowerCase())) {
+                    requestObject.requestData.payerLabel = element[requestObject.requestData.payer.toLowerCase()];
                   }
                 });
               }

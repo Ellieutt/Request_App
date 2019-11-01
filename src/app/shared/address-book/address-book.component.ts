@@ -1,4 +1,5 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { CookieService } from 'ngx-cookie-service';
 
 @Component({
   selector: 'address-book',
@@ -7,20 +8,66 @@ import { Component, OnInit, Input } from '@angular/core';
 })
 
 export class AddressBookComponent implements OnInit {
-    showAddressBook = true;
-    editLabel = false;
-    @Input()
-    addressToAdd: string;
-    @Input()
-    displayName: string;
-    
-    ngOnInit() {
-      if (!this.displayName) {
-        this.displayName = "Address";
-      }
+  editLabel = false;
+  @Input()
+  addressToAdd: string;
+  @Input()
+  addressLabel: string;
+  @Output()
+  emitHideAddressBook = new EventEmitter<boolean>();
+  @Output()
+  emitNewLabel = new EventEmitter<{ address: string, label: string }>();
+  newLabelValue: string;
+
+  constructor(
+    private cookieService: CookieService
+  ) { }
+
+  ngOnInit() {
+    if (!this.addressLabel) {
+      this.addressLabel = 'Address';
+    }
+  }
+
+  toggleEdition() {
+    this.editLabel = !this.editLabel;
+  }
+
+  onNameChangeInput(label) {
+    this.newLabelValue = label;
+  }
+
+  closeModal() {
+    this.emitHideAddressBook.emit(false);
+  }
+
+  onSave(address) {
+    this.toggleEdition();
+    this.addressLabel = this.newLabelValue;
+    console.log(address);
+    const requestLabelList = [];
+    let isNew = true;
+    if (this.cookieService.get('request_label_tags')) {
+      const labelList = JSON.parse(
+        this.cookieService.get('request_label_tags')
+      );
+      labelList.forEach(element => {
+        if (element.hasOwnProperty(address)) {
+          isNew = false;
+          element[address] = this.newLabelValue;
+        }
+        requestLabelList.push(element);
+      });
+    }
+    console.log(isNew);
+    if (isNew) {
+      requestLabelList.push({
+        [address]: this.newLabelValue
+      });
     }
 
-    toggleEdition() {
-      this.editLabel = !this.editLabel;
-    }
+    this.emitNewLabel.emit({ address, label: this.newLabelValue });
+
+    this.cookieService.set('request_label_tags', JSON.stringify(requestLabelList), 9999);
+  }
 }

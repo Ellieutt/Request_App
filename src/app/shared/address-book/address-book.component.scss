@@ -1,52 +1,72 @@
 @import 'variables';
 
-.address-book-float {
+.address-book-float-bg {
     position: fixed;
-    width: 510px;
-    right: 50%;
-    margin-right: -255px;
-    top: 100px;
-    line-height: 21px;
-
-    padding: 40px 60px;
-
-    background: #FFFFFF;
-    box-shadow: 0px 20px 20px rgba(199, 199, 199, 0.5);
-    border-radius: 4px;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #fff;
+    opacity: 0.7;
     z-index: 2;
 }
 
+.address-book-float {
+    position: fixed;
+    width: 510px;
+    left: 50%;
+    transform: translate(-50%, 0);
+    line-height: 21px;
+    padding: 40px 60px;
+    background: #FFFFFF;
+    box-shadow: 0px 20px 20px rgba(199, 199, 199, 0.5);
+    border-radius: 4px;
+    z-index: 3;
+    top: 10%;
+
+    .close-icon {
+        font-style: normal;
+        position: absolute;
+        top: 0;
+        right: 0;
+        font-size: 36px;
+        padding: 20px;
+        line-height: 16px;
+        cursor: pointer;
+    }
+}
+
 .address-book-new-user {
-    width: 390px;
+    position: relative;
+    width: 100%;
     height: 40px;
     margin-top: 32px;
     margin-bottom: 20px;
 }
 
 .address-book-new-blockie {
-    position: relative;
-    float: left;
+    position: absolute;
+    left: 0;
+    top: 0;
 }
 
 .address-book-new-address {
-    position: relative;
-    width: 325px;
-    height: 100%;
-
-    text-align: left;
-    padding-left: 16px;
-    padding-right: 5px;
+    width: 100%;
+    padding-left: 56px;
+    padding-right: 40px;
     font-size: 14px;
-
+    height: 40px;
+    line-height: 40px;
     border-style: none;
     background: #F3F3F3;
     float: left;
+    pointer-events: none;
 }
 
 .copy-address {
-    position: relative;
-    margin-top: 10px;
-    float: right;
+    position: absolute;
+    right: 9px;
+    top: 9px;
 }
 
 .bottom-buttons a {
@@ -73,6 +93,7 @@
 
 .address-book-new-body-title {
     font-weight: 600;
+    font-size: 14px;
 }
 
 .address-book-new-label {

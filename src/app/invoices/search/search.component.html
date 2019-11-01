@@ -1,3 +1,5 @@
+<address-book *ngIf="openAddressBookModal" (emitNewLabel)="updateTableWithNewLabel($event)" (emitHideAddressBook)="closedModal($event)" addressToAdd="{{addressToAdd}}" addressLabel="{{addressLabel}}"></address-book>
+
 <div class="container">
   <div class="row my-5 mt-6">
     <div class="col-12 fs-22 d-flex mb-4">
@@ -24,8 +26,10 @@
         </ng-container>
         <ng-container matColumnDef="requestId">
           <mat-header-cell *matHeaderCellDef mat-sort-header></mat-header-cell>
-          <mat-cell *matCellDef="let req"><a routerLink="/request/requestId/{{req.requestId}}"
+          <mat-cell *matCellDef="let req">
+            <a *ngIf="req.requestId" routerLink="/request/requestId/{{req.requestId}}"
               class="fc-accent-secondary">View Request</a>
+            <a *ngIf="req.txid" (click)="utilService.redirectToPage('/request/txHash/' + req.txid)" class="fc-accent-secondary">View Request</a>
           </mat-cell>
         </ng-container>
         <!-- From Column -->
@@ -34,18 +38,16 @@
           <mat-cell *matCellDef="let req">
             <div *ngIf="req.request">
               <div *ngIf="req.request.payee.address != searchValue; else payeeSpan">
-                <span>
-                  <angular-blockies [options]="{ seed: req.request.payee.address.toLowerCase() }" class="blockies"
-                    [options]="{ size:5, scale:8 }"></angular-blockies>
+                <span (click)="openAddressModal(req.request.payee.address, req.request.payee.label ? req.request.payee.label : req.request.payee.address)">
+                  <angular-blockies [options]="{ seed: req.request.payee.address.toLowerCase(), size:5, scale:8 }" class="blockies"></angular-blockies>
                   <div class="address-label-outer">
                     {{ req.request.payee.label ? req.request.payee.label : req.request.payee.address.substring(0, 6) + '...' + req.request.payee.address.substring(36, 42) }}
                   </div>
                 </span>
               </div>
               <ng-template #payeeSpan>
-                <span>
-                  <angular-blockies [options]="{ seed: req.request.payee.address.toLowerCase() }" class="blockies"
-                    [options]="{ size:5, scale:8 }"></angular-blockies>
+                <span (click)="openAddressModal(req.request.payee.address, req.request.payee.label ? req.request.payee.label : req.request.payee.address)">
+                  <angular-blockies [options]="{ seed: req.request.payee.address.toLowerCase(), size:5, scale:8 }" class="blockies"></angular-blockies>
                   <div class="address-label-outer owner">
                     {{ req.request.payee.label ? req.request.payee.label : req.request.payee.address.substring(0, 6) + '...' + req.request.payee.address.substring(36, 42) }}
                   </div>
@@ -54,18 +56,16 @@
             </div>
             <div *ngIf="req.payee">
               <div *ngIf="req.payee != searchValue; else payeeSpanBroadcasting">
-                <span>
-                  <angular-blockies [options]="{ seed: req.payee.toLowerCase() }" class="blockies"
-                    [options]="{ size:5, scale:8 }"></angular-blockies>
+                <span (click)="openAddressModal(req.payee, req.payeeLabel ? req.payeeLabel : req.payee)">
+                  <angular-blockies [options]="{ seed: req.payee.toLowerCase(),size:5, scale:8 }" class="blockies"></angular-blockies>
                   <div class="address-label-outer">
                     {{ req.payeeLabel ? req.payeeLabel : req.payee.substring(0, 6) + '...' + req.payee.substring(36, 42) }}
                   </div>
                 </span>
               </div>
               <ng-template #payeeSpanBroadcasting>
-                <span>
-                  <angular-blockies [options]="{ seed: req.payee.toLowerCase() }" class="blockies"
-                    [options]="{ size:5, scale:8 }"></angular-blockies>
+                <span (click)="openAddressModal(req.payee, req.payeeLabel ? req.payeeLabel : req.payee)">
+                  <angular-blockies [options]="{ seed: req.payee.toLowerCase(), size:5, scale:8 }" class="blockies"></angular-blockies>
                   <div class="address-label-outer owner">
                     {{ req.payeeLabel ? req.payeeLabel : req.payee.substring(0, 6) + '...' + req.payee.substring(36, 42) }}
                   </div>
@@ -80,16 +80,15 @@
           <mat-cell *matCellDef="let req">
             <div *ngIf="req.request">
               <div *ngIf="req.request.payer != searchValue; else payerSpan">
-                <span>
-                  <angular-blockies [options]="{ seed: req.request.payer.toLowerCase() }" class="blockies"
-                    [options]="{ size:5, scale:8 }"></angular-blockies>
+                <span (click)="openAddressModal(req.request.payer, req.request.payerLabel ? req.request.payerLabel : req.request.payer)">
+                  <angular-blockies [options]="{ seed: req.request.payer.toLowerCase(), size:5, scale:8 }" class="blockies"></angular-blockies>
                   <div class="address-label-outer">
                     {{ req.request.payerLabel ? req.request.payerLabel : req.request.payer.substring(0, 6) + '...' + req.request.payer.substring(36, 42) }}
                   </div>
                 </span>
               </div>
               <ng-template #payerSpan>
-                <span>
+                <span (click)="openAddressModal(req.request.payer, req.request.payerLabel ? req.request.payerLabel : req.request.payer)">
                   <angular-blockies [options]="{ seed: req.request.payer.toLowerCase() }" class="blockies"
                     [options]="{ size:5, scale:8 }"></angular-blockies>
                   <div class="address-label-outer owner">
@@ -100,18 +99,16 @@
             </div>
             <div *ngIf="req.payer">
               <div *ngIf="req.payer != searchValue; else payerSpan">
-                <span>
-                  <angular-blockies [options]="{ seed: req.payer.toLowerCase() }" class="blockies"
-                    [options]="{ size:5, scale:8 }"></angular-blockies>
+                <span (click)="openAddressModal(req.payerLabel, req.payerLabel ? req.payerLabel : req.payer)">
+                  <angular-blockies [options]="{ seed: req.payer.toLowerCase(), size:5, scale:8 }" class="blockies"></angular-blockies>
                   <div class="address-label-outer">
                     {{ req.payerLabel ? req.payerLabel : req.payer.substring(0, 6) + '...' + req.payer.substring(36, 42) }}
                   </div>
                 </span>
               </div>
               <ng-template #payerSpan>
-                <span>
-                  <angular-blockies [options]="{ seed: req.payer.toLowerCase() }" class="blockies"
-                    [options]="{ size:5, scale:8 }"></angular-blockies>
+                <span (click)="openAddressModal(req.payerLabel, req.payerLabel ? req.payerLabel : req.payer)">
+                  <angular-blockies [options]="{ seed: req.payer.toLowerCase(), size:5, scale:8 }" class="blockies"></angular-blockies>
                   <div class="address-label-outer owner">
                     {{ req.payerLabel ? req.payerLabel : req.payer.substring(0, 6) + '...' + req.payer.substring(36, 42) }}
                   </div>
