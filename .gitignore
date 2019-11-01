@@ -40,3 +40,4 @@ testem.log
 .DS_Store
 Thumbs.db
 yarn-error.log
+.vscode/settings.json
