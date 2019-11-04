@@ -116,6 +116,7 @@ $('#download-receipt').click(function () {
 
     const fileName = 'RequestInvoice.pdf';
 
+    // IOS fix for the PDF extension, according to: MrRio/jsPDF#2080
     if (/android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(navigator.userAgent.toLowerCase())) {
         window.open(doc.output('bloburl', { filename: fileName }))
     } else {
