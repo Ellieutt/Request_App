@@ -1,14 +1,24 @@
-<div class="px-3" [style.width]="'64px'">
-  <app-blockies [address]="address"></app-blockies>
-</div>
-<div>
-  <div class="semi-bold">{{ title }}</div>
-  <div *ngIf="showLongAddress" class="mt-2" [popover]="address" popoverPlacement="bottom" [popoverOnHover]="true"
-    [popoverCloseOnMouseOutside]="true">
-    {{address}}
+<div class="request-address-outer">
+  <div class="request-address-title semi-bold">{{ title }}</div>
+  <div class="blockies-address-container">
+    <div class="blockies-outer" [style.width]="'64px'">
+      <app-blockies [address]="address.toLowerCase()"></app-blockies>
+    </div>
+    <div class="request-address-item-outer {{ primaryLabel ? 'primary-label' : '' }}">
+      <div *ngIf="showLongAddress" [popover]="address" popoverPlacement="bottom" [popoverOnHover]="true"
+        [popoverCloseOnMouseOutside]="true">
+        <span *ngIf="!label">
+          {{address}}
+        </span>
+        <span *ngIf="label">
+          {{label}}
+        </span>
+      </div>
+      <div *ngIf="!showLongAddress" [popover]="address" popoverPlacement="bottom" [popoverOnHover]="true"
+        [popoverCloseOnMouseOutside]="true">
+        {{address | shortAddress}}
+      </div>
+    </div>
   </div>
-  <div *ngIf="!showLongAddress" class="mt-2" [popover]="address" popoverPlacement="bottom" [popoverOnHover]="true"
-    [popoverCloseOnMouseOutside]="true">
-    {{address | shortAddress}}
-  </div>
+  <span class="hidden pdf-address">{{ label ? label : address }}</span>
 </div>

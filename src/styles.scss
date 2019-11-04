@@ -290,7 +290,7 @@ button.account-menu-button {
     width: inherit;
     height: inherit;
     image-rendering: pixelated;
-    border-radius: 100%;
+    border-radius: 50%;
   }
 }
 
@@ -706,8 +706,56 @@ ul li:after {
   cursor: pointer;
 }
 
+.amount-dashboard {
+  font-weight: 500;
+  color: #00CC8E;
+
+  &.negative {
+    color: #CE2E2E;
+  }
+}
+
+.cdk-column-request-payee-address, .cdk-column-request-payer {
+  position: relative;
+}
+
+.address-label-outer {
+  cursor: pointer;
+  padding: 3px 24px 3px;
+  padding-left: 38px;
+  background: #F3F3F3;
+
+  &.owner {
+    background: #C2E8FF;
+  }
+}
+
+.mat-table .blockies {
+  cursor: pointer;
+  position: absolute;
+  left: 0;
+  top: 11px;
+  canvas {
+    border-radius: 0;
+  }
+}
+
+.cdk-column-requestId a {
+  text-decoration: underline !important;
+}
+
+mat-header-row {
+  border-bottom-color: #EBEBEB !important; 
+  margin-bottom: 5px;
+}
+
+mat-row {
+  border-bottom-width: 0 !important;
+  margin: 5px 0;
+}
+
 .mat-sort-header-button {
-  font-weight: 600 !important;
+  font-size: 18px !important;
 }
 
 .mat-header-cell {
@@ -1282,5 +1330,13 @@ i.dash:after {
     width: 24px;
     height: 24px;
     line-height: 24px;
+  }
+}
+
+.blockies-outer {
+  .blockies {
+    canvas {
+      border-radius: 0;
+    }
   }
 }

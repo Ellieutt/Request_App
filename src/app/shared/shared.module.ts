@@ -45,6 +45,8 @@ import { ShortAddressPipe } from './short-address.pipe';
 import { BlockiesComponent } from './blockies/blockies.component';
 import { RequestAmountComponent } from './request-amount/request-amount.component';
 import { RequestAddressComponent } from './request-address/request-address.component';
+import { AddressBookComponent } from './address-book/address-book.component';
+import { ClipboardModule } from 'ngx-clipboard';
 
 @NgModule({
   imports: [
@@ -55,7 +57,7 @@ import { RequestAddressComponent } from './request-address/request-address.compo
     BlockiesModule,
     PopoverModule,
     QRCodeModule,
-
+    ClipboardModule,
     MatButtonModule,
     MatCardModule,
     // MatCheckboxModule,
@@ -96,6 +98,7 @@ import { RequestAddressComponent } from './request-address/request-address.compo
     BlockiesComponent,
     RequestAmountComponent,
     RequestAddressComponent,
+    AddressBookComponent,
   ],
   exports: [
     FormsModule,
@@ -114,6 +117,7 @@ import { RequestAddressComponent } from './request-address/request-address.compo
     CurrencyConverterComponent,
     RequestAddressesComponent,
     PendingRequestsComponent,
+    AddressBookComponent,
     MatButtonModule,
     MatCardModule,
     // MatCheckboxModule,
