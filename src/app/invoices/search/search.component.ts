@@ -144,7 +144,6 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
                 const labelList = JSON.parse(
                   this.cookieService.get('request_label_tags')
                 );
-                console.log(element);
                 labelList.forEach(label => {
                   if (label.hasOwnProperty(element.payer.toLowerCase())) {
                     element.payerLabel = label[element.payer.toLowerCase()];

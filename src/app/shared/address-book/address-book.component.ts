@@ -46,7 +46,6 @@ export class AddressBookComponent implements OnInit {
   onSave(address) {
     this.toggleEdition();
     this.addressLabel = this.newLabelValue;
-    console.log(address);
     const requestLabelList = [];
     let isNew = true;
     if (this.cookieService.get('request_label_tags')) {
@@ -61,7 +60,6 @@ export class AddressBookComponent implements OnInit {
         requestLabelList.push(element);
       });
     }
-    console.log(isNew);
     if (isNew) {
       requestLabelList.push({
         [address]: this.newLabelValue
