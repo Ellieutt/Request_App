@@ -12,6 +12,7 @@ export class PendingRequestsComponent implements OnInit {
   notificationCount = 0;
   broadcastingRequestCount = 0;
   showPendingPopup = false;
+  hasBeenClicked = false;
   requestList = [];
 
   constructor(
@@ -55,6 +56,7 @@ export class PendingRequestsComponent implements OnInit {
       this.requestList = newCookieList;
       if (newCookieList.length === 0) {
         this.broadcastingRequestCount = 0;
+        this.hasBeenClicked = true;	
         this.showPendingPopup = false;
       }
     }
