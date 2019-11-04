@@ -1,5 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
+import { UtilService } from '../../util/util.service';
 
 @Component({
   selector: 'address-book',
@@ -20,7 +21,8 @@ export class AddressBookComponent implements OnInit {
   newLabelValue: string;
 
   constructor(
-    private cookieService: CookieService
+    private cookieService: CookieService,
+    private utilService: UtilService,
   ) { }
 
   ngOnInit() {
@@ -69,5 +71,13 @@ export class AddressBookComponent implements OnInit {
     this.emitNewLabel.emit({ address, label: this.newLabelValue });
 
     this.cookieService.set('request_label_tags', JSON.stringify(requestLabelList), 9999);
+  }
+
+  copyToClipboard() {
+    this.utilService.openSnackBar(
+      'Address copied.',
+      null,
+      'success-snackbar'
+    );
   }
 }

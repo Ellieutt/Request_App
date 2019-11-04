@@ -290,7 +290,7 @@ button.account-menu-button {
     width: inherit;
     height: inherit;
     image-rendering: pixelated;
-    border-radius: 100%;
+    border-radius: 50%;
   }
 }
 
@@ -1330,5 +1330,13 @@ i.dash:after {
     width: 24px;
     height: 24px;
     line-height: 24px;
+  }
+}
+
+.blockies-outer {
+  .blockies {
+    canvas {
+      border-radius: 0;
+    }
   }
 }

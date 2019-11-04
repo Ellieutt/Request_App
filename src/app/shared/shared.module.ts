@@ -46,6 +46,7 @@ import { BlockiesComponent } from './blockies/blockies.component';
 import { RequestAmountComponent } from './request-amount/request-amount.component';
 import { RequestAddressComponent } from './request-address/request-address.component';
 import { AddressBookComponent } from './address-book/address-book.component';
+import { ClipboardModule } from 'ngx-clipboard';
 
 @NgModule({
   imports: [
@@ -56,7 +57,7 @@ import { AddressBookComponent } from './address-book/address-book.component';
     BlockiesModule,
     PopoverModule,
     QRCodeModule,
-
+    ClipboardModule,
     MatButtonModule,
     MatCardModule,
     // MatCheckboxModule,
