@@ -8,6 +8,8 @@ $('#download-receipt').click(function () {
         paidDate = $('#invoice-date-paid').html(),
         payeeAddress = $('#payeeAddressPdf .pdf-address').html(),
         payerAddress = $('#payerAddressPdf .pdf-address').html(),
+        payeeLabel = $('#payeeAddressPdf .pdf-label').html(),
+        payerLabel = $('#payerAddressPdf .pdf-label').html(),
         amount = $('#request-expected-amount').html(),
         amountUSD = $('#amount-usd div').html();
 
@@ -52,12 +54,14 @@ $('#download-receipt').click(function () {
     doc.setFontSize(12);
     //From
     doc.setFillColor(194, 232, 255);
-    doc.rect(46, 164, (payeeAddress.length * 8) + 20, 27, "F");
-    doc.text(58, 183, payeeAddress);
+    doc.rect(46, 164, (payeeLabel.length * 8) + 20, 27, "F");
+    doc.text(58, 183, payeeLabel);
+    doc.text(20, 212, payeeAddress);
     //To
     doc.setFillColor(243, 243, 243);
-    doc.rect(46, 234, (payerAddress.length * 8) + 20, 27, "F");
-    doc.text(58, 253, payerAddress);
+    doc.rect(46, 234, (payerLabel.length * 8) + 20, 27, "F");
+    doc.text(58, 253, payerLabel);
+    doc.text(20, 275, payerAddress);
 
     // User images
     var payeeImage = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAIAAAD8GO2jAAAACXBIWXMAAAsTAAALEwEAmpwYAAAFuGlUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4gPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iQWRvYmUgWE1QIENvcmUgNS42LWMxNDIgNzkuMTYwOTI0LCAyMDE3LzA3LzEzLTAxOjA2OjM5ICAgICAgICAiPiA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPiA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtbG5zOnhtcE1NPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvbW0vIiB4bWxuczpzdEV2dD0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL3NUeXBlL1Jlc291cmNlRXZlbnQjIiB4bWxuczpkYz0iaHR0cDovL3B1cmwub3JnL2RjL2VsZW1lbnRzLzEuMS8iIHhtbG5zOnBob3Rvc2hvcD0iaHR0cDovL25zLmFkb2JlLmNvbS9waG90b3Nob3AvMS4wLyIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ0MgMjAxOCAoV2luZG93cykiIHhtcDpDcmVhdGVEYXRlPSIyMDE5LTExLTA0VDA4OjAxOjU5WiIgeG1wOk1ldGFkYXRhRGF0ZT0iMjAxOS0xMS0wNFQwODowMTo1OVoiIHhtcDpNb2RpZnlEYXRlPSIyMDE5LTExLTA0VDA4OjAxOjU5WiIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDo0MDc2MDg4YS1kYmU1LWU2NGQtODJmOC01MjcwMDU1NzUzNTciIHhtcE1NOkRvY3VtZW50SUQ9ImFkb2JlOmRvY2lkOnBob3Rvc2hvcDpiOWRiZjIxMi1kNTgzLTg2NDYtOTM2Yy0wMmZjZTJjODcxMGIiIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDplZmVmYzA2ZS1lZDAyLTkyNDYtOTg0Yy0zZTNhNjBlZThhNzQiIGRjOmZvcm1hdD0iaW1hZ2UvcG5nIiBwaG90b3Nob3A6Q29sb3JNb2RlPSIzIj4gPHhtcE1NOkhpc3Rvcnk+IDxyZGY6U2VxPiA8cmRmOmxpIHN0RXZ0OmFjdGlvbj0iY3JlYXRlZCIgc3RFdnQ6aW5zdGFuY2VJRD0ieG1wLmlpZDplZmVmYzA2ZS1lZDAyLTkyNDYtOTg0Yy0zZTNhNjBlZThhNzQiIHN0RXZ0OndoZW49IjIwMTktMTEtMDRUMDg6MDE6NTlaIiBzdEV2dDpzb2Z0d2FyZUFnZW50PSJBZG9iZSBQaG90b3Nob3AgQ0MgMjAxOCAoV2luZG93cykiLz4gPHJkZjpsaSBzdEV2dDphY3Rpb249InNhdmVkIiBzdEV2dDppbnN0YW5jZUlEPSJ4bXAuaWlkOjQwNzYwODhhLWRiZTUtZTY0ZC04MmY4LTUyNzAwNTU3NTM1NyIgc3RFdnQ6d2hlbj0iMjAxOS0xMS0wNFQwODowMTo1OVoiIHN0RXZ0OnNvZnR3YXJlQWdlbnQ9IkFkb2JlIFBob3Rvc2hvcCBDQyAyMDE4IChXaW5kb3dzKSIgc3RFdnQ6Y2hhbmdlZD0iLyIvPiA8L3JkZjpTZXE+IDwveG1wTU06SGlzdG9yeT4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz4MpADVAAAAtElEQVRIiWMM+J7GgA38/7Ydzmbk8iRbDRNWUSqCoW8By/eDalglOO0Ja0YOd1zmDP0gon0cIHM4TCci8QiHL6f9Lax6f5zOh7OHfhDR3AJG5LIIOayRwxe5zEHRjCMfIOsd+kFE+3yAGr6IcERN+9jzAS6AbObQDyLaxwFyuYEr7ZNaJ38/OFoWkQBQ6gPU8gS7ODIgRs3QDyL6xgFyPkAOU9S6mgFJDfY8hKx36AcRzS0AAJjPQDByR1w0AAAAAElFTkSuQmCC',
