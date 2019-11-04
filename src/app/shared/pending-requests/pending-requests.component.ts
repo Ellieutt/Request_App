@@ -1,6 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
-import { UtilService } from '../../util/util.service';
 
 @Component({
   selector: 'pending-requests',
@@ -12,12 +11,10 @@ export class PendingRequestsComponent implements OnInit {
   notificationCount = 0;
   broadcastingRequestCount = 0;
   showPendingPopup = false;
-  hasBeenClicked = false;
   requestList = [];
 
   constructor(
     private cookieService: CookieService,
-    private utilService: UtilService,
   ) {
 
     this.checkForNotifications();
@@ -92,7 +89,6 @@ export class PendingRequestsComponent implements OnInit {
       });
       this.cookieService.set('processing_requests', JSON.stringify(updatedCookieList), 1);
     }
-    this.hasBeenClicked = true;
     this.showPendingPopup = !this.showPendingPopup;
   }
 
