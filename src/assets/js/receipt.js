@@ -114,6 +114,12 @@ $('#download-receipt').click(function () {
     doc.setFontSize(14);
     centeredText(amountUSD, amountUsdValueY);
 
-    doc.save('RequestInvoice.pdf');
+    const fileName = 'RequestInvoice.pdf';
+
+    if (/android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(navigator.userAgent.toLowerCase())) {
+        window.open(doc.output('bloburl', { filename: fileName }))
+    } else {
+        doc.save(fileName)
+    }
 
 });
