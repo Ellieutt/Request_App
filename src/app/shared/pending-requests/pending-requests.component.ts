@@ -1,6 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
-import { UtilService } from '../../util/util.service';
 
 @Component({
   selector: 'pending-requests',
@@ -16,7 +15,6 @@ export class PendingRequestsComponent implements OnInit {
 
   constructor(
     private cookieService: CookieService,
-    private utilService: UtilService,
   ) {
 
     this.checkForNotifications();
