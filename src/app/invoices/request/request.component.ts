@@ -5,7 +5,7 @@ import {
   AfterContentInit,
   OnDestroy,
 } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { Web3Service } from '../../util/web3.service';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { UtilService } from '../../util/util.service';
@@ -38,6 +38,7 @@ export class RequestComponent implements OnInit, OnDestroy, AfterContentInit {
   timeOuts = [];
   loading = false;
   ipfsData: any;
+  tries = 0;
 
   constructor(
     public web3Service: Web3Service,
@@ -45,12 +46,8 @@ export class RequestComponent implements OnInit, OnDestroy, AfterContentInit {
     private dialog: MatDialog,
     private utilService: UtilService,
     private emailService: EmailService,
-    private cookieService: CookieService,
-    private router: Router
-  ) {
-      // force route reload whenever params change;
-      this.router.routeReuseStrategy.shouldReuseRoute = () => false;
-   }
+    private cookieService: CookieService
+  ) {}
 
   get amount() {
     return this.web3Service.BNToAmount(
@@ -230,10 +227,13 @@ export class RequestComponent implements OnInit, OnDestroy, AfterContentInit {
           const that = this;
           cookieList.forEach(element => {
             if (element.txid.split('&')[0] !== that.txHash) {
-              if (result == 'Error: transaction not found' && element.status != 'failed') {
-                request.status = 'failed';
-                element.status = 'failed';
-                element.unread = true;
+              if (result == 'Error: transaction not found' && element.status !== 'failed') {
+                if (this.tries === 7) {
+                  request.status = 'failed';
+                  element.status = 'failed';
+                  element.unread = true;
+                }
+                this.tries++;
               } else {
                 request.status = element.status;
               }
