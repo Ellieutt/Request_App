@@ -221,6 +221,7 @@ export class RequestComponent implements OnInit, OnDestroy, AfterContentInit {
           );
 
           let cookieList = [];
+          const newCookieList = [];
           if (this.cookieService.get('processing_requests')) {
             cookieList = JSON.parse(
               this.cookieService.get('processing_requests')
@@ -229,9 +230,17 @@ export class RequestComponent implements OnInit, OnDestroy, AfterContentInit {
           const that = this;
           cookieList.forEach(element => {
             if (element.txid.split('&')[0] !== that.txHash) {
-              request.status = element.status;
+              if (result == 'Error: transaction not found' && element.status != 'failed') {
+                request.status = 'failed';
+                element.status = 'failed';
+                element.unread = true;
+              } else {
+                request.status = element.status;
+              }
             }
+            newCookieList.push(element);
           });
+          this.cookieService.set('processing_requests', JSON.stringify(newCookieList), 1);
 
           await this.setRequest(request);
           this.addPendingRequestToCookie(request);
