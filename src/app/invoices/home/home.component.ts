@@ -130,7 +130,6 @@ export class HomeComponent implements OnInit {
   }
 
   setValueFromQueryParams() {
-    // console.log(this.router.url.split('/')[1]);
     const retryParamsObj = this.router.url.split('/');
     if (retryParamsObj.length > 1) {
       const retryParams = new URLSearchParams(retryParamsObj[1]);
