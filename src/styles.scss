@@ -192,11 +192,17 @@ header {
   .show-more-button {
     text-align: center;
     cursor: pointer;
+    line-height: 1.6rem;
   }
   &.show-all .mat-option {
     display: block !important;
   }
   box-shadow: 2px 2px 18px 0px rgba(212, 227, 255, 0.5) !important;
+}
+
+
+.mat-form-field.mat-focused.mat-form-field-type-currency-selector .mat-form-field-ripple {
+  display: none !important;
 }
 
 .currencyIcon {
