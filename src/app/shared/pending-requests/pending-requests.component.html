@@ -1,4 +1,4 @@
-<div (click)="clickPendingRequestsTab()" class="pending-requests-float {{notificationCount != 0 || !hasBeenClicked ? '' : 'offset'}}">YOUR PENDING REQUESTS<i class="pending-notifications {{notificationCount == 0 ? 'no-notifications' : ''}}">{{notificationCount}}</i></div>
+<div (click)="clickPendingRequestsTab()" class="pending-requests-float {{notificationCount != 0 ? '' : 'offset'}}">YOUR PENDING REQUESTS<i class="pending-notifications {{notificationCount == 0 ? 'no-notifications' : ''}}">{{notificationCount}}</i></div>
 
 <div *ngIf="showPendingPopup" class="pending-request-popup">
     <i class="close" (click)="clickPendingRequestsTab()">&times;</i>
