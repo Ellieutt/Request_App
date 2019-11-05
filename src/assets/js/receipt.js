@@ -45,29 +45,52 @@ $('#download-receipt').click(function () {
     doc.setTextColor('#fff');
     centeredText('YOUR RECEIPT', 99);
 
-    doc.setTextColor('#000');
-    doc.setFontSize(12);
-    doc.text(20, 155, 'From');
-
-    doc.text(20, 225, 'To');
-
-    doc.setFontSize(12);
-    //From
-    doc.setFillColor(194, 232, 255);
-    doc.rect(46, 164, (payeeLabel.length * 8) + 20, 27, "F");
-    doc.text(58, 183, payeeLabel);
-    doc.text(20, 212, payeeAddress);
-    //To
-    doc.setFillColor(243, 243, 243);
-    doc.rect(46, 234, (payerLabel.length * 8) + 20, 27, "F");
-    doc.text(58, 253, payerLabel);
-    doc.text(20, 275, payerAddress);
-
     // User images
     var payeeImage = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAIAAAD8GO2jAAAACXBIWXMAAAsTAAALEwEAmpwYAAAFuGlUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4gPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iQWRvYmUgWE1QIENvcmUgNS42LWMxNDIgNzkuMTYwOTI0LCAyMDE3LzA3LzEzLTAxOjA2OjM5ICAgICAgICAiPiA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPiA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtbG5zOnhtcE1NPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvbW0vIiB4bWxuczpzdEV2dD0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL3NUeXBlL1Jlc291cmNlRXZlbnQjIiB4bWxuczpkYz0iaHR0cDovL3B1cmwub3JnL2RjL2VsZW1lbnRzLzEuMS8iIHhtbG5zOnBob3Rvc2hvcD0iaHR0cDovL25zLmFkb2JlLmNvbS9waG90b3Nob3AvMS4wLyIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ0MgMjAxOCAoV2luZG93cykiIHhtcDpDcmVhdGVEYXRlPSIyMDE5LTExLTA0VDA4OjAxOjU5WiIgeG1wOk1ldGFkYXRhRGF0ZT0iMjAxOS0xMS0wNFQwODowMTo1OVoiIHhtcDpNb2RpZnlEYXRlPSIyMDE5LTExLTA0VDA4OjAxOjU5WiIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDo0MDc2MDg4YS1kYmU1LWU2NGQtODJmOC01MjcwMDU1NzUzNTciIHhtcE1NOkRvY3VtZW50SUQ9ImFkb2JlOmRvY2lkOnBob3Rvc2hvcDpiOWRiZjIxMi1kNTgzLTg2NDYtOTM2Yy0wMmZjZTJjODcxMGIiIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDplZmVmYzA2ZS1lZDAyLTkyNDYtOTg0Yy0zZTNhNjBlZThhNzQiIGRjOmZvcm1hdD0iaW1hZ2UvcG5nIiBwaG90b3Nob3A6Q29sb3JNb2RlPSIzIj4gPHhtcE1NOkhpc3Rvcnk+IDxyZGY6U2VxPiA8cmRmOmxpIHN0RXZ0OmFjdGlvbj0iY3JlYXRlZCIgc3RFdnQ6aW5zdGFuY2VJRD0ieG1wLmlpZDplZmVmYzA2ZS1lZDAyLTkyNDYtOTg0Yy0zZTNhNjBlZThhNzQiIHN0RXZ0OndoZW49IjIwMTktMTEtMDRUMDg6MDE6NTlaIiBzdEV2dDpzb2Z0d2FyZUFnZW50PSJBZG9iZSBQaG90b3Nob3AgQ0MgMjAxOCAoV2luZG93cykiLz4gPHJkZjpsaSBzdEV2dDphY3Rpb249InNhdmVkIiBzdEV2dDppbnN0YW5jZUlEPSJ4bXAuaWlkOjQwNzYwODhhLWRiZTUtZTY0ZC04MmY4LTUyNzAwNTU3NTM1NyIgc3RFdnQ6d2hlbj0iMjAxOS0xMS0wNFQwODowMTo1OVoiIHN0RXZ0OnNvZnR3YXJlQWdlbnQ9IkFkb2JlIFBob3Rvc2hvcCBDQyAyMDE4IChXaW5kb3dzKSIgc3RFdnQ6Y2hhbmdlZD0iLyIvPiA8L3JkZjpTZXE+IDwveG1wTU06SGlzdG9yeT4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz4MpADVAAAAtElEQVRIiWMM+J7GgA38/7Ydzmbk8iRbDRNWUSqCoW8By/eDalglOO0Ja0YOd1zmDP0gon0cIHM4TCci8QiHL6f9Lax6f5zOh7OHfhDR3AJG5LIIOayRwxe5zEHRjCMfIOsd+kFE+3yAGr6IcERN+9jzAS6AbObQDyLaxwFyuYEr7ZNaJ38/OFoWkQBQ6gPU8gS7ODIgRs3QDyL6xgFyPkAOU9S6mgFJDfY8hKx36AcRzS0AAJjPQDByR1w0AAAAAElFTkSuQmCC',
         payerImage = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAIAAAD8GO2jAAAACXBIWXMAAAsTAAALEwEAmpwYAAAFuGlUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4gPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iQWRvYmUgWE1QIENvcmUgNS42LWMxNDIgNzkuMTYwOTI0LCAyMDE3LzA3LzEzLTAxOjA2OjM5ICAgICAgICAiPiA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPiA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtbG5zOnhtcE1NPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvbW0vIiB4bWxuczpzdEV2dD0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL3NUeXBlL1Jlc291cmNlRXZlbnQjIiB4bWxuczpkYz0iaHR0cDovL3B1cmwub3JnL2RjL2VsZW1lbnRzLzEuMS8iIHhtbG5zOnBob3Rvc2hvcD0iaHR0cDovL25zLmFkb2JlLmNvbS9waG90b3Nob3AvMS4wLyIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ0MgMjAxOCAoV2luZG93cykiIHhtcDpDcmVhdGVEYXRlPSIyMDE5LTExLTA0VDA4OjAyOjA4WiIgeG1wOk1ldGFkYXRhRGF0ZT0iMjAxOS0xMS0wNFQwODowMjowOFoiIHhtcDpNb2RpZnlEYXRlPSIyMDE5LTExLTA0VDA4OjAyOjA4WiIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDo1ODI1Njk2Ni0zZTZjLThiNDQtYjFlOC1lNTc5ZGUxZjNkZDMiIHhtcE1NOkRvY3VtZW50SUQ9ImFkb2JlOmRvY2lkOnBob3Rvc2hvcDo3MjUwNzllMi01NGIwLTYwNDYtYmI2Zi1jMzA5OTg1OGI2ZGYiIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDo1YjUwYmE2Yy05YWZiLTFiNDktOTdjMC02ZThjYWQ5Y2IyNzMiIGRjOmZvcm1hdD0iaW1hZ2UvcG5nIiBwaG90b3Nob3A6Q29sb3JNb2RlPSIzIj4gPHhtcE1NOkhpc3Rvcnk+IDxyZGY6U2VxPiA8cmRmOmxpIHN0RXZ0OmFjdGlvbj0iY3JlYXRlZCIgc3RFdnQ6aW5zdGFuY2VJRD0ieG1wLmlpZDo1YjUwYmE2Yy05YWZiLTFiNDktOTdjMC02ZThjYWQ5Y2IyNzMiIHN0RXZ0OndoZW49IjIwMTktMTEtMDRUMDg6MDI6MDhaIiBzdEV2dDpzb2Z0d2FyZUFnZW50PSJBZG9iZSBQaG90b3Nob3AgQ0MgMjAxOCAoV2luZG93cykiLz4gPHJkZjpsaSBzdEV2dDphY3Rpb249InNhdmVkIiBzdEV2dDppbnN0YW5jZUlEPSJ4bXAuaWlkOjU4MjU2OTY2LTNlNmMtOGI0NC1iMWU4LWU1NzlkZTFmM2RkMyIgc3RFdnQ6d2hlbj0iMjAxOS0xMS0wNFQwODowMjowOFoiIHN0RXZ0OnNvZnR3YXJlQWdlbnQ9IkFkb2JlIFBob3Rvc2hvcCBDQyAyMDE4IChXaW5kb3dzKSIgc3RFdnQ6Y2hhbmdlZD0iLyIvPiA8L3JkZjpTZXE+IDwveG1wTU06SGlzdG9yeT4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz4fJfGVAAAApElEQVRIiWO80HiIAQZ498rB2SeXLIWzzWOiGbABXGo+Oz+Cs5mw6qQiGPoWsCBzkMMUGSCHKS6ArFdrvi2cPfSDiOYWMC571EpTC4Z+ENE+HyCnWeSyCBngyh+4yqjRsogkwIhcHyADXPGBC+Aqr4Z+ENG3LELOE5SAa4mH4eyhH0S0j4O7dg+wSuAqf3ABXOXS0A8i2tcHxJT1lKgZ+kFEcwsAK4Iy13ocvPUAAAAASUVORK5CYII=';
-    doc.addImage(payeeImage, 'PNG', 20, 165, 26, 26, undefined, 'FAST');
-    doc.addImage(payerImage, 'PNG', 20, 235, 26, 26, undefined, 'FAST');
+    
+    
+
+    doc.setTextColor('#000');
+    doc.setFontSize(12);
+
+    var paymentY = 155;
+    if (payeeLabel) {
+        paymentY = 140;
+        doc.setFillColor(194, 232, 255);
+        doc.rect(46, 150, (payeeLabel.length * 8) + 20, 26, "F");
+        doc.addImage(payeeImage, 'PNG', 20, 150, 26, 26, undefined, 'FAST');
+        doc.text(58, 168, payeeLabel);
+        // paymentY += 40;
+    }
+
+    doc.text(20, paymentY, 'From');
+    if (payeeLabel) {
+        paymentY += 55;
+    }
+
+    if (payeeLabel != payeeAddress) {
+        doc.text(20, paymentY, payeeAddress);
+    }
+    
+    var paymentX = 220;
+    if (payerLabel) {
+        doc.setFillColor(243, 243, 243);
+        doc.rect(46, 230, (payerLabel.length * 8) + 20, 26, "F");
+        doc.addImage(payerImage, 'PNG', 20, 230, 26, 26, undefined, 'FAST');
+        doc.text(58, 248, payerLabel);
+    }
+
+    doc.text(20, paymentX, 'To');
+    if (payeeLabel) {
+        paymentX += 55;
+    }
+
+    //To
+    if (payerLabel != payerAddress) {
+        doc.text(20, paymentX, payerAddress);
+    }
+    
 
     if (reason) {
         
