@@ -63,7 +63,7 @@
                   <div class="status-banner status-broadcasting fs-16">
                     broadcasting</div>
                 </ng-template>
-                <request-addresses [request]="request"></request-addresses>
+                <request-addresses [request]="request" [account]="account"></request-addresses>
                 <request-metadata *ngIf="request.data" [data]="request.data.data" title="Details"></request-metadata>
                 <div class="d-flex">
                   <div class="w-100 text-center fc-primary py-4 request-amount">
