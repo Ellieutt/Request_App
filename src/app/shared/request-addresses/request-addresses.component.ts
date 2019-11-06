@@ -8,6 +8,8 @@ import { Component, OnInit, Input } from '@angular/core';
 export class RequestAddressesComponent implements OnInit {
   @Input()
   request: any;
+  @Input()
+  account: string;
   payer: string;
   currency: string;
   max: number = 0;
