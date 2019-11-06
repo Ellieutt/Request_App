@@ -123,15 +123,15 @@
           <mat-cell *matCellDef="let req">
             <div *ngIf="req.request; else broadcastingRequest">
               <span *ngIf="req.request.payee.address != searchValue; else payeeSpan">
-                <div class="amount-dashboard">
-                  +
+                <div class="amount-dashboard negative">
+                  -
                   {{ this.web3Service.BNToAmount(req.request.payee.expectedAmount, req.request.currency) }}&nbsp;{{ req.request.currency }}
                 </div>
 
               </span>
               <ng-template #payeeSpan>
-                <div class="amount-dashboard negative">
-                  -
+                <div class="amount-dashboard">
+                  +
                   {{ this.web3Service.BNToAmount(req.request.payee.expectedAmount, req.request.currency) }}&nbsp;{{ req.request.currency }}
                 </div>
               </ng-template>
@@ -139,13 +139,13 @@
             <ng-template #broadcastingRequest>
               <div *ngIf="req.amount && req.currency; else spinSpan">
                 <span *ngIf="req.payee != searchValue; else payeeSpan">
-                  <div class="amount-dashboard">
-                    + {{ req.amount }} {{ req.currency }}
+                  <div class="amount-dashboard negative">
+                    - {{ req.amount }} {{ req.currency }}
                   </div>
                 </span>
                 <ng-template #payeeSpan>
-                  <div class="amount-dashboard negative">
-                    - {{ req.amount }} {{ req.currency }}
+                  <div class="amount-dashboard">
+                    + {{ req.amount }} {{ req.currency }}
                   </div>
                 </ng-template>
 
