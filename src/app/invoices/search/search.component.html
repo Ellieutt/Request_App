@@ -55,7 +55,7 @@
               </ng-template>
             </div>
             <div *ngIf="req.payee">
-              <div *ngIf="req.payee != searchValue; else payeeSpanBroadcasting">
+              <div *ngIf="req.payee != searchValue; else payeeSpanPending">
                 <span (click)="openAddressModal(req.payee, req.payeeLabel ? req.payeeLabel : req.payee)">
                   <angular-blockies [options]="{ seed: req.payee.toLowerCase(),size:5, scale:8 }" class="blockies"></angular-blockies>
                   <div class="address-label-outer">
@@ -63,7 +63,7 @@
                   </div>
                 </span>
               </div>
-              <ng-template #payeeSpanBroadcasting>
+              <ng-template #payeeSpanPending>
                 <span (click)="openAddressModal(req.payee, req.payeeLabel ? req.payeeLabel : req.payee)">
                   <angular-blockies [options]="{ seed: req.payee.toLowerCase(), size:5, scale:8 }" class="blockies"></angular-blockies>
                   <div class="address-label-outer owner">
@@ -121,7 +121,7 @@
         <ng-container matColumnDef="request.payee.expectedAmount">
           <mat-header-cell *matHeaderCellDef mat-sort-header>Amount</mat-header-cell>
           <mat-cell *matCellDef="let req">
-            <div *ngIf="req.request; else broadcastingRequest">
+            <div *ngIf="req.request; else pendingRequest">
               <span *ngIf="req.request.payee.address != searchValue; else payeeSpan">
                 <div class="amount-dashboard negative">
                   -
@@ -136,7 +136,7 @@
                 </div>
               </ng-template>
             </div>
-            <ng-template #broadcastingRequest>
+            <ng-template #pendingRequest>
               <div *ngIf="req.amount && req.currency; else spinSpan">
                 <span *ngIf="req.payee != searchValue; else payeeSpan">
                   <div class="amount-dashboard negative">

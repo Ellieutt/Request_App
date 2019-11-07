@@ -8,7 +8,7 @@
             <a (click)="utilService.redirectToPage('/request/txHash/' + pendingRequest.txid)">view</a>
             <span class="amount">{{pendingRequest.amount}} {{pendingRequest.currency}}</span>
             <span class="status-{{ pendingRequest.status.replace(' ','-') }}">{{pendingRequest.status}}</span>
-            <i class="remove" *ngIf="pendingRequest.status != 'broadcasting'" (click)="removeRequestFromCookie(pendingRequest.txid)">&times;</i>
+            <i class="remove" *ngIf="pendingRequest.status != 'pending'" (click)="removeRequestFromCookie(pendingRequest.txid)">&times;</i>
         </li>
     </ul>
     <p class="pending-request-none" *ngIf="requestList.length == 0">No Pending Requests</p>
