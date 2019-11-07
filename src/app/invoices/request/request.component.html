@@ -199,11 +199,11 @@
             <div *ngIf="request.status && request.state != 2 && request.status != 'failed' && request.status != 'pending'">
               <div class="fs-16 lh-14">
                 <div id="share-request-item" class="semi-bold">
-                  SHARE THIS REQUEST
+                  SHARE THIS REQUEST FOR PAYMENT
                 </div>
                 <button class="fs-16 bor-accent my-3" style="height: 50px" color="accent" type="button"
                   (click)="openEmailDialog(sendToEmail)"><img src="assets/img/email.svg"
-                    style="width: 24px; margin-right: 12px;">Notify the payer</button>
+                    style="width: 24px; margin-right: 12px;">{{ mode === 'payee' ? 'Notify the payer' : 'Email' }}</button>
               </div>
             </div>
             <div *ngIf="request.status == 'failed'" class="fs-16 mb-5 lh-14 failed-container">
