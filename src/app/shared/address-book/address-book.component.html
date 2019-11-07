@@ -28,7 +28,7 @@
             </svg>   
             Add a custom name
         </a>
-        <a (click)="utilService.redirectToPage('/search/' + addressToAdd)" class="right-link">See on Request</a>
+        <a (click)="utilService.redirectToPage('/search/' + addressToAdd)" class="right-link">View Address</a>
     </div>
     <input *ngIf="editLabel" value="{{addressLabel}}" (input)="onNameChangeInput($event.target.value)" class="address-book-new-label" placeholder="Custom name">
     <div *ngIf="editLabel" class="form-buttons">
