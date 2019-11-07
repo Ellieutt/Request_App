@@ -10,7 +10,7 @@ import { UtilService } from '../../util/util.service';
 export class PendingRequestsComponent implements OnInit {
 
   notificationCount = 0;
-  broadcastingRequestCount = 0;
+  pendingRequestCount = 0;
   showPendingPopup = false;
   requestList = [];
 
@@ -20,11 +20,11 @@ export class PendingRequestsComponent implements OnInit {
   ) {
 
     this.checkForNotifications();
-    this.calculateBroadcastingRequestCount();
+    this.calculatePendingRequestCount();
     this.fetchRequestsFromCookie();
     setInterval(async () => {
       this.checkForNotifications();
-      this.calculateBroadcastingRequestCount();
+      this.calculatePendingRequestCount();
       this.fetchRequestsFromCookie();
     }, 1000);
   }
@@ -54,26 +54,26 @@ export class PendingRequestsComponent implements OnInit {
       this.cookieService.set('processing_requests', JSON.stringify(newCookieList), 1);
       this.requestList = newCookieList;
       if (newCookieList.length === 0) {
-        this.broadcastingRequestCount = 0;
+        this.pendingRequestCount = 0;
         this.showPendingPopup = false;
       }
     }
   }
 
-  calculateBroadcastingRequestCount() {
+  calculatePendingRequestCount() {
     if (this.cookieService.get('processing_requests')) {
-      let newBroadcastingRequestCount = 0;
+      let newPendingRequestCount = 0;
       const cookieList = JSON.parse(
         this.cookieService.get('processing_requests')
       );
       cookieList.forEach(element => {
-        if (element.status === 'broadcasting') {
-          newBroadcastingRequestCount += 1;
+        if (element.status === 'pending') {
+          newPendingRequestCount += 1;
         }
       });
-      this.broadcastingRequestCount = newBroadcastingRequestCount;
+      this.pendingRequestCount = newPendingRequestCount;
     } else {
-      this.broadcastingRequestCount = 0;
+      this.pendingRequestCount = 0;
     }
   }
 

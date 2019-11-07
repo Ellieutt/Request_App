@@ -56,12 +56,12 @@
                      else genericRequest'>
               </app-rnf-invoice-request>
               <ng-template #genericRequest>
-                <div *ngIf="request.status; else broadcastingMode"
+                <div *ngIf="request.status; else pendingMode"
                   class="status-banner status-{{request.status.replace(' ','-')}} fs-16">
                   {{request.status}}</div>
-                <ng-template #broadcastingMode>
-                  <div class="status-banner status-broadcasting fs-16">
-                    broadcasting</div>
+                <ng-template #pendingMode>
+                  <div class="status-banner status-pending fs-16">
+                    pending</div>
                 </ng-template>
                 <request-addresses [request]="request" [account]="account"></request-addresses>
                 <request-metadata *ngIf="request.data" [data]="request.data.data" title="Details"></request-metadata>
@@ -84,7 +84,7 @@
                 </div>
               </ng-template>
               <div class="hidden-if-empty p-4 my-3 progress-container">
-                <div *ngIf="request.status && request.state != 2 && request.status != 'broadcasting' && request.status != 'failed'"
+                <div *ngIf="request.status && request.state != 2 && request.status != 'pending' && request.status != 'failed'"
                   class="fs-14 mx-auto w-50 text-center progress-bar-{{request.status.replace(' ','-')}}">
                   <div>
                     <i><strong>{{progress | number: '1.0-2'}}%</strong> of the request has been paid</i></div>
@@ -196,7 +196,7 @@
                   fill="#CAD1D8" />
               </svg>
             </div>
-            <div *ngIf="request.status && request.state != 2 && request.status != 'failed' && request.status != 'broadcasting'">
+            <div *ngIf="request.status && request.state != 2 && request.status != 'failed' && request.status != 'pending'">
               <div class="fs-16 lh-14">
                 <div id="share-request-item" class="semi-bold">
                   SHARE THIS REQUEST
@@ -235,8 +235,8 @@
                 </button>
               </div>
             </div>
-            <div *ngIf="!request.status || request.status == 'broadcasting'" class="fs-16 mb-5 lh-14">
-              <div *ngIf="!request.errorMsg; else errorBlock" class="broadcasting-message-container">
+            <div *ngIf="!request.status || request.status == 'pending'" class="fs-16 mb-5 lh-14">
+              <div *ngIf="!request.errorMsg; else errorBlock" class="pending-message-container">
                 <div class="request-spinner">
                   <div class="request-spinner1 request-spinner-child"></div>
                   <div class="request-spinner2 request-spinner-child"></div>
@@ -314,7 +314,7 @@
               </div>
             </ng-template>
 
-            <div *ngIf="request.status && request.status != 'failed' && request.status != 'broadcasting'">
+            <div *ngIf="request.status && request.status != 'failed' && request.status != 'pending'">
               <input mat-button class="url-box fc-blue-grey fs-14 px-3 w-100 hidden" [value]="url" disabled>
               <button class="fs-16 bor-accent my-3" style="height: 50px" type="button" ngxClipboard [cbContent]="url"
                 (cbOnSuccess)="copyToClipboard()"><img src="assets/img/link.svg"

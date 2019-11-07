@@ -132,7 +132,7 @@ export class RequestComponent implements OnInit, OnDestroy, AfterContentInit {
         'amount': this.web3Service.BNToAmount(request.payee.expectedAmount, request.currency),
         'currency': request.currency,
         'network': 4,
-        'status': 'broadcasting',
+        'status': 'pending',
         'unread': true
       });
       this.cookieService.set('processing_requests', JSON.stringify(cookieList), 1);
