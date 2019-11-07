@@ -324,7 +324,7 @@
                 <p class="semi-bold mb-2 fs-16">History</p>
                 <div *ngIf="request && request.events && request.events.length > 0">
                   <div *ngFor="let e of request.events" class="fs-14 d-flex mb-1 justify-content-between">
-                    <span>{{ spaceBeforeCapital(e.name) }} </span>
+                    <span>{{ spaceBeforeCapital(e.name) === 'Canceled' ? 'Cancelled' : spaceBeforeCapital(e.name) }} </span>
                     <span>{{ utilService.getAgeFromTimeStamp(e._meta.timestamp) }}</span>
                   </div>
                 </div>
