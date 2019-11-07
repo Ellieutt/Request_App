@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material';
-import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
+import { Location } from '@angular/common';
 
 @Injectable()
 export class UtilService {
   public searchValue = new Subject<string>();
 
-  constructor(private snackBar: MatSnackBar, private router: Router) { }
+  constructor(private snackBar: MatSnackBar, private location: Location) {
+   }
 
   public setSearchValue(searchValue: string) {
     this.searchValue.next(searchValue);
@@ -16,7 +17,10 @@ export class UtilService {
   // routerLink encodes the request info in the URL so we need to navigate by URL instead
   public redirectToPage(pageUrl: string) {
     const pageUrlEncoded = encodeURI(pageUrl);
-    this.router.navigateByUrl(pageUrlEncoded);
+    if (!location.hash.includes(pageUrl)) {
+      location.replace('#' + pageUrlEncoded);
+      location.reload();
+    }
   }
 
   getAgeFromTimeStamp(timestamp) {
