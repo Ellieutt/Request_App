@@ -55,19 +55,19 @@
               </ng-template>
             </div>
             <div *ngIf="req.payee">
-              <div *ngIf="req.payee != searchValue; else payeeSpanBroadcasting">
-                <span (click)="openAddressModal(req.payee, req.payeeLabel ? req.payeeLabel : req.payee)">
-                  <angular-blockies [options]="{ seed: req.payee.toLowerCase(),size:5, scale:8 }" class="blockies"></angular-blockies>
+              <div *ngIf="req.payee.address != searchValue; else payeeSpanBroadcasting">
+                <span (click)="openAddressModal(req.payee.address, req.payee.label ? req.payee.label : req.payee.address)">
+                  <angular-blockies [options]="{ seed: req.payee.address.toLowerCase(),size:5, scale:8 }" class="blockies"></angular-blockies>
                   <div class="address-label-outer">
-                    {{ req.payeeLabel ? req.payeeLabel : req.payee.substring(0, 6) + '...' + req.payee.substring(36, 42) }}
+                    {{ req.payee.label ? req.payee.label : req.payee.address.substring(0, 6) + '...' + req.payee.address.substring(36, 42) }}
                   </div>
                 </span>
               </div>
               <ng-template #payeeSpanBroadcasting>
-                <span (click)="openAddressModal(req.payee, req.payeeLabel ? req.payeeLabel : req.payee)">
-                  <angular-blockies [options]="{ seed: req.payee.toLowerCase(), size:5, scale:8 }" class="blockies"></angular-blockies>
+                <span (click)="openAddressModal(req.payee.address, req.payee.label ? req.payee.label : req.payee.address)">
+                  <angular-blockies [options]="{ seed: req.payee.address.toLowerCase(), size:5, scale:8 }" class="blockies"></angular-blockies>
                   <div class="address-label-outer owner">
-                    {{ req.payeeLabel ? req.payeeLabel : req.payee.substring(0, 6) + '...' + req.payee.substring(36, 42) }}
+                    {{ req.payee.label ? req.payee.label : req.payee.address.substring(0, 6) + '...' + req.payee.address.substring(36, 42) }}
                   </div>
                 </span>
               </ng-template>
@@ -138,7 +138,7 @@
             </div>
             <ng-template #broadcastingRequest>
               <div *ngIf="req.amount && req.currency; else spinSpan">
-                <span *ngIf="req.payee != searchValue; else payeeSpan">
+                <span *ngIf="req.payee.address != searchValue; else payeeSpan">
                   <div class="amount-dashboard negative">
                     - {{ req.amount }} {{ req.currency }}
                   </div>
