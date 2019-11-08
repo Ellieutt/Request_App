@@ -159,6 +159,8 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
         }
 
         this.dataSource.data = resultsList;
+
+        this.checkCreations();
         this.loading = false;
       }
     );
@@ -169,6 +171,34 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
           this.route.snapshot.params['searchValue']
         )
       );
+    }
+  }
+
+  private checkCreations() {
+    var stillSomePending = true;
+    if (this.cookieService.get('processing_requests')) {
+      var cookieList = JSON.parse(
+        this.cookieService.get('processing_requests')
+      )
+      stillSomePending = cookieList.filter(pendingReq => { return pendingReq.status == 'broadcasting';}).length > 0;
+      cookieList = cookieList.filter(pendingReq => { return pendingReq.status == 'created';});
+      cookieList.forEach(cookieElement => {
+        let txId = cookieElement.txid.split('?')[0];
+        if (window.localStorage && window.localStorage.getItem("CreatedTX"+txId)) {
+          let onscreenRows = this.dataSource.data.filter(r => {return r['txid'] == cookieElement.txid});
+          onscreenRows.forEach(thisRow => {
+              this.dataSource.data.splice(this.dataSource.data.indexOf(thisRow), 1);
+          });                    
+          window.localStorage.removeItem("CreatedTX"+cookieElement.txid.split('?')[0]);
+        }    
+        this.dataSource._updateChangeSubscription();
+      });
+    }
+
+    if (stillSomePending) {
+      setTimeout(() => {
+        this.checkCreations();
+      }, 1000);
     }
   }
 
@@ -186,12 +216,18 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
                   this.cookieService.get('request_label_tags')
                 );
                 labelList.forEach(element => {
-                  if (element.hasOwnProperty(requestObject.requestData.payee.address.toLowerCase())) {
-                    requestObject.requestData.payee.label = element[requestObject.requestData.payee.address.toLowerCase()];
+                  try {
+                    if (element.hasOwnProperty(requestObject.requestData.payee.address.toLowerCase())) {
+                      requestObject.requestData.payee.label = element[requestObject.requestData.payee.address.toLowerCase()];
+                    }
+                    if (element.hasOwnProperty(requestObject.requestData.payer.toLowerCase())) {
+                      requestObject.requestData.payerLabel = element[requestObject.requestData.payer.toLowerCase()];
+                    }
+                  } catch (error) {
+                    console.error(error);
+                    console.log(element);
                   }
-                  if (element.hasOwnProperty(requestObject.requestData.payer.toLowerCase())) {
-                    requestObject.requestData.payerLabel = element[requestObject.requestData.payer.toLowerCase()];
-                  }
+                  
                 });
               }
 

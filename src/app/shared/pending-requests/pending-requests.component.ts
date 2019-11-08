@@ -40,6 +40,7 @@ export class PendingRequestsComponent implements OnInit {
     }
   }
 
+  // User manually removes one request from his history
   removeRequestFromCookie(txid) {
     if (this.cookieService.get('processing_requests')) {
       const newCookieList = [];
@@ -95,7 +96,6 @@ export class PendingRequestsComponent implements OnInit {
   }
 
   checkForNotifications() {
-    const that = this;
     if (this.cookieService.get('processing_requests')) {
       let newNotificationCount = 0;
       const cookieList = JSON.parse(
