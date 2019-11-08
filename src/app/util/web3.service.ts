@@ -66,8 +66,7 @@ export class Web3Service {
       console.log('web3service instantiate web3');
       await this.checkAndInstantiateWeb3();
       setInterval(async () => await this.refreshAccounts(), 1000);
-      setInterval(async () => await this.updateBroadcastingStatusCookies(), 1000);
-      //this.updateBroadcastingStatusCookies();
+      setInterval(async () => await this.checkCookies(), 10000);
       this.web3Ready = true;
     });
     window.addEventListener('load', () => {
@@ -75,7 +74,7 @@ export class Web3Service {
     });
   }
 
-  public async updateBroadcastingStatusCookies() {
+  public async checkCookies() {
     if (this.cookieService.get('processing_requests')) {
       const cookieList = JSON.parse(
         this.cookieService.get('processing_requests')
@@ -94,9 +93,6 @@ export class Web3Service {
               element.status = 'created';
               element.unread = true;
               hasChanged = true;
-              if (window.localStorage) {
-                window.localStorage.setItem("CreatedTX"+txidToCheck, result.request.requestId);
-              }
             }
             updatedCookieList.push(element);
           } else if (
