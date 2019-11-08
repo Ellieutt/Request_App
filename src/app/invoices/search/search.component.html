@@ -99,7 +99,7 @@
             </div>
             <div *ngIf="req.payer">
               <div *ngIf="req.payer != searchValue; else payerSpan">
-                <span (click)="openAddressModal(req.payerLabel, req.payerLabel ? req.payerLabel : req.payer)">
+                <span (click)="openAddressModal(req.payer, req.payerLabel ? req.payerLabel : req.payer)">
                   <angular-blockies [options]="{ seed: req.payer.toLowerCase(), size:5, scale:8 }" class="blockies"></angular-blockies>
                   <div class="address-label-outer">
                     {{ req.payerLabel ? req.payerLabel : req.payer.substring(0, 6) + '...' + req.payer.substring(36, 42) }}
@@ -107,7 +107,7 @@
                 </span>
               </div>
               <ng-template #payerSpan>
-                <span (click)="openAddressModal(req.payerLabel, req.payerLabel ? req.payerLabel : req.payer)">
+                <span (click)="openAddressModal(req.payer, req.payerLabel ? req.payerLabel : req.payer)">
                   <angular-blockies [options]="{ seed: req.payer.toLowerCase(), size:5, scale:8 }" class="blockies"></angular-blockies>
                   <div class="address-label-outer owner">
                     {{ req.payerLabel ? req.payerLabel : req.payer.substring(0, 6) + '...' + req.payer.substring(36, 42) }}
