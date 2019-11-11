@@ -24,6 +24,7 @@ import { ConstantPool } from '@angular/compiler';
 })
 export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
   searchValue: string;
+  financialFilter: string = 'all';
   pageEvent: PageEvent;
   subscription;
   displayedColumns = [
@@ -220,5 +221,29 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
     if (this.subscription) {
       this.subscription.unsubscribe();
     }
+  }
+
+  filterAll() {
+
+  }
+
+  filterPaid() {
+    console.log(this.dataSource.data[0]['request']['status']);
+    this.financialFilter = 'paid';
+    this.dataSource.data = this.dataSource.data.filter(req => {
+      if (req['request']) {
+        return req['request']['status'] == 'paid';
+      } else {
+        console.log(req);
+      }
+    });
+    this.dataSource._updateChangeSubscription();
+  }
+  
+  filterOutstanding() {
+    console.log(this.dataSource.data[0]['request']['status']);
+    this.financialFilter = 'outstanding';
+    this.dataSource.data = this.dataSource.data.filter(req => req['request'] && req['request']['status'] == 'created');
+    this.dataSource._updateChangeSubscription();
   }
 }

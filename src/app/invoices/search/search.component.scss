@@ -1,5 +1,63 @@
 @import 'variables';
 
+div.network {
+	border-bottom-width: 1px;
+	border-bottom-color: #FFB95F;
+	box-sizing: border-box;
+	
+	text-align: center;
+	left: 50%;
+}
+
+
+.network span {
+	display: inline-block;
+	width: 120px;
+	height: 28px;
+	background: #FFB95F;
+
+	font-family: Beatrice;
+	font-style: normal;
+	font-weight: 500;
+	font-size: 12px;
+	line-height: 28px;
+
+	text-align: center;
+
+	color: #FFFFFF;
+}
+
+div.top-filters {
+	display: table;
+	height: 66px;
+	width: 100%;
+	box-shadow: inset 0px -1px 0px #EBEBEB;
+}
+
+div.top-filters div {
+	height: 100%;
+	width: 33%;
+	display: table-cell;
+
+	background: #FAFAFA;
+	border: 1px solid #EBEBEB;
+	border-top-color: #FFB95F;;
+	border-top-width: 1px;
+
+	vertical-align: middle;
+	text-align: center;
+	font-family: Beatrice;
+	font-style: normal;
+	font-weight: 500;
+	font-size: 14px;
+}
+
+div.top-filters div.active {
+	border-bottom: #00E6A0;
+	border-bottom-width: 3px;
+	border-bottom-style: solid;
+}
+
 .mat-table {
 	overflow: auto;
 	max-height: 528px;
