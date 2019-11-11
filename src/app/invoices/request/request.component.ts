@@ -131,7 +131,7 @@ export class RequestComponent implements OnInit, OnDestroy, AfterContentInit {
         'amount': this.web3Service.BNToAmount(request.payee.expectedAmount, request.currency),
         'currency': request.currency,
         'network': 4,
-        'status': 'broadcasting',
+        'status': 'pending',
         'unread': true
       });
       this.cookieService.set('processing_requests', JSON.stringify(cookieList), 1);
@@ -194,6 +194,21 @@ export class RequestComponent implements OnInit, OnDestroy, AfterContentInit {
       if (blockNumber - result.transaction.blockNumber > 0) {
         return this.utilService.setSearchValue(result.request.requestId);
       }
+    } else if (result.message === 'Contract is not supported by request') {
+      return await this.setRequest({
+        errorTxHash:
+          'Sorry, we are unable to locate any request matching this transaction hash',
+      });
+    } else if (result.transaction) {
+      const request = await this.web3Service.buildRequestFromCreateRequestTransactionParams(
+        result.transaction
+      );
+      await this.setRequest(request);
+    } else if (this.tries === 50) {
+      this.tries = 0;
+      return await this.setRequest({
+        errorTxHash: 'Sorry, we are unable to locate this transaction hash',
+      });
     } else if (this.route.snapshot.queryParams.request) {
       if (!this.request || !this.request.waitingMsg) {
         const queryParamRequest = JSON.parse(
@@ -215,9 +230,7 @@ export class RequestComponent implements OnInit, OnDestroy, AfterContentInit {
             queryParamRequest.payee.expectedAmount,
             queryParamRequest.currency
           );
-
           let cookieList = [];
-          const newCookieList = [];
           if (this.cookieService.get('processing_requests')) {
             cookieList = JSON.parse(
               this.cookieService.get('processing_requests')
@@ -226,35 +239,16 @@ export class RequestComponent implements OnInit, OnDestroy, AfterContentInit {
           const that = this;
           cookieList.forEach(element => {
             if (element.txid.split('&')[0] !== that.txHash) {
-              if (result == 'Error: transaction not found' && element.status !== 'failed') {
-                if (this.tries === 7) {
-                  request.status = 'failed';
-                  element.status = 'failed';
-                  element.unread = true;
-                }
+              if (result == 'Error: transaction not found') {
                 this.tries++;
-              } else {
-                request.status = element.status;
               }
             }
-            newCookieList.push(element);
           });
-          this.cookieService.set('processing_requests', JSON.stringify(newCookieList), 1);
 
           await this.setRequest(request);
           this.addPendingRequestToCookie(request);
         }
       }
-    } else if (result.message === 'Contract is not supported by request') {
-      return await this.setRequest({
-        errorTxHash:
-          'Sorry, we are unable to locate any request matching this transaction hash',
-      });
-    } else if (result.transaction) {
-      const request = await this.web3Service.buildRequestFromCreateRequestTransactionParams(
-        result.transaction
-      );
-      await this.setRequest(request);
     } else {
       return await this.setRequest({
         errorTxHash: 'Sorry, we are unable to locate this transaction hash',

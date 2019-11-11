@@ -86,13 +86,13 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
           if (requestObject['request'].payer.toLowerCase() === event.address) {
             requestObject['request'].payerLabel = event.label;
           }
-        } else if (requestObject['payee'] && requestObject['payerLabel']) {
-          // For pending requests
-          if (requestObject['payee'].address.toLowerCase() === event.address) {
-            requestObject['payee'].label = event.label;
-          }
+        } else if (requestObject['txid']) {
+          // Cookie item
           if (requestObject['payer'].toLowerCase() === event.address) {
             requestObject['payerLabel'] = event.label;
+          }
+          if (requestObject['payee'].toLowerCase() === event.address) {
+            requestObject['payeeLabel'] = event.label;
           }
         }
       });

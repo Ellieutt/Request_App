@@ -171,7 +171,7 @@ header {
   background-color: $orange;
 }
 
-.status-broadcasting {
+.status-pending {
   @extend .status;
   background-color: #953AB5;
 }
@@ -1100,7 +1100,7 @@ ul {
   }
 }
 #request-invoice-right {
-  .failed-container, .broadcasting-message-container {
+  .failed-container, .pending-message-container {
     .semi-bold {
       margin-bottom: 16px;
     }
@@ -1134,7 +1134,7 @@ ul {
   background: #FAFAFA;
 }
 
-.broadcasting-message-container {
+.pending-message-container {
   position: relative;
 
   .request-spinner {
@@ -1167,11 +1167,11 @@ i.dash:after {
   top: 17px;
 }
 
-.broadcasting-message-container button {
+.pending-message-container button {
   display: block;
 }
 
-.broadcasting-message-container hr {
+.pending-message-container hr {
   margin-top: 2.5rem !important;
   margin-bottom: 2.5rem !important;
 }
