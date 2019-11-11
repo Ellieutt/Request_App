@@ -79,11 +79,20 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
     if (event && event.address && event.label) {
       this.dataSource.data.forEach(function(requestObject) {
         if (requestObject['request']) {
+          // For existing requests
           if (requestObject['request'].payee.address.toLowerCase() === event.address) {
             requestObject['request'].payee.label = event.label;
           }
           if (requestObject['request'].payer.toLowerCase() === event.address) {
             requestObject['request'].payerLabel = event.label;
+          }
+        } else if (requestObject['payee'] && requestObject['payerLabel']) {
+          // For pending requests
+          if (requestObject['payee'].address.toLowerCase() === event.address) {
+            requestObject['payee'].label = event.label;
+          }
+          if (requestObject['payer'].toLowerCase() === event.address) {
+            requestObject['payerLabel'] = event.label;
           }
         }
       });
