@@ -29,11 +29,7 @@
       </div>
       <ng-template #requestBlock>
         <div class="mr-lg-auto col-lg-6 col-xl-5 mr-xl-auto request-invoice-container">
-          <div *ngIf="web3Service.networkIdObservable.value == 4" class="network-identifier-outer">
-            <div class="network-identifier">
-              Rinkeby
-            </div>
-          </div>
+          <network-identifier [isRinkeby]="web3Service.networkIdObservable.value == 4"></network-identifier>
           <mat-card class="p-0 br-7 sh-blue" id="request-invoice-outer">
             <div class="request-invoice-inner-pdf">
               <div class="d-flex p-4 btr-7">

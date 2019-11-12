@@ -47,6 +47,7 @@ import { RequestAmountComponent } from './request-amount/request-amount.componen
 import { RequestAddressComponent } from './request-address/request-address.component';
 import { AddressBookComponent } from './address-book/address-book.component';
 import { ClipboardModule } from 'ngx-clipboard';
+import { NetworkIdentifierComponent } from './network-identifier/network-identifier.component';
 
 @NgModule({
   imports: [
@@ -99,6 +100,7 @@ import { ClipboardModule } from 'ngx-clipboard';
     RequestAmountComponent,
     RequestAddressComponent,
     AddressBookComponent,
+    NetworkIdentifierComponent,
   ],
   exports: [
     FormsModule,
@@ -144,6 +146,7 @@ import { ClipboardModule } from 'ngx-clipboard';
     MatDatepickerModule,
     MatMomentDateModule,
     MatTreeModule,
+    NetworkIdentifierComponent
   ],
 })
 export class SharedModule {}

@@ -1361,12 +1361,18 @@ i.dash:after {
 .network-identifier-outer {
   text-align: center;
   border-bottom: 1px solid #ffb95f;
+
+  &+.br-7 {
+    border-top-left-radius: 0 !important;
+    border-top-right-radius: 0 !important;
+  }
 }
 
 .network-identifier {
   display: inline-block;
   background: #ffb95f;
   color: #fff;
-  padding: 10px 30px;
+  padding: 8px 38px;
   margin-bottom: -1px;
+  font-size: 14px;
 }
