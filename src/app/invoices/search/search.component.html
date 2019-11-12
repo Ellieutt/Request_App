@@ -1,4 +1,6 @@
-<address-book *ngIf="openAddressBookModal" (emitNewLabel)="updateTableWithNewLabel($event)" (emitHideAddressBook)="closedModal($event)" addressToAdd="{{addressToAdd}}" addressLabel="{{addressLabel}}"></address-book>
+<address-book *ngIf="openAddressBookModal" (emitNewLabel)="updateTableWithNewLabel($event)"
+  (emitHideAddressBook)="closedModal($event)" addressToAdd="{{addressToAdd}}" addressLabel="{{addressLabel}}">
+</address-book>
 
 <div class="container">
   <div class="row my-5 mt-6">
@@ -14,6 +16,7 @@
 
     <!-- <div class="col-md-3">&nbsp;</div> -->
     <div class="col-md-12 d-flex flex-column">
+      <network-identifier [isRinkeby]="this.web3Service.networkIdObservable.value == 4"></network-identifier>
       <mat-table #table matSort [dataSource]="dataSource">
 
         <!-- Age Column -->
@@ -27,9 +30,10 @@
         <ng-container matColumnDef="requestId">
           <mat-header-cell *matHeaderCellDef mat-sort-header></mat-header-cell>
           <mat-cell *matCellDef="let req">
-            <a *ngIf="req.requestId" routerLink="/request/requestId/{{req.requestId}}"
+            <a *ngIf="req.requestId" routerLink="/request/requestId/{{req.requestId}}" class="fc-accent-secondary">View
+              Request</a>
+            <a *ngIf="req.txid" (click)="utilService.redirectToPage('/request/txHash/' + req.txid)"
               class="fc-accent-secondary">View Request</a>
-            <a *ngIf="req.txid" (click)="utilService.redirectToPage('/request/txHash/' + req.txid)" class="fc-accent-secondary">View Request</a>
           </mat-cell>
         </ng-container>
         <!-- From Column -->
@@ -37,17 +41,23 @@
           <mat-header-cell *matHeaderCellDef mat-sort-header>From</mat-header-cell>
           <mat-cell *matCellDef="let req">
             <div *ngIf="req.request">
-              <span (click)="openAddressModal(req.request.payee.address, req.request.payee.label ? req.request.payee.label : req.request.payee.address)">
-                <angular-blockies [options]="{ seed: req.request.payee.address.toLowerCase(), size:5, scale:8 }" class="blockies"></angular-blockies>
-                <div class="address-label-outer"  [ngClass]="{'owner': req.request.payee.address == this.web3Service.accountObservable.value}">
+              <span
+                (click)="openAddressModal(req.request.payee.address, req.request.payee.label ? req.request.payee.label : req.request.payee.address)">
+                <angular-blockies [options]="{ seed: req.request.payee.address.toLowerCase(), size:5, scale:8 }"
+                  class="blockies"></angular-blockies>
+                <div class="address-label-outer"
+                  [ngClass]="{'owner': req.request.payee.address == this.web3Service.accountObservable.value}">
                   {{ req.request.payee.label ? req.request.payee.label : req.request.payee.address.substring(0, 6) + '...' + req.request.payee.address.substring(36, 42) }}
                 </div>
               </span>
             </div>
             <div *ngIf="req.payee">
-              <span (click)="openAddressModal(req.payee.address, req.payee.label ? req.payee.label : req.payee.address)">
-                <angular-blockies [options]="{ seed: req.payee.address.toLowerCase(),size:5, scale:8 }" class="blockies"></angular-blockies>
-                <div class="address-label-outer" [ngClass]="{'owner': req.payee.address == this.web3Service.accountObservable.value}">
+              <span
+                (click)="openAddressModal(req.payee.address, req.payee.label ? req.payee.label : req.payee.address)">
+                <angular-blockies [options]="{ seed: req.payee.address.toLowerCase(),size:5, scale:8 }"
+                  class="blockies"></angular-blockies>
+                <div class="address-label-outer"
+                  [ngClass]="{'owner': req.payee.address == this.web3Service.accountObservable.value}">
                   {{ req.payee.label ? req.payee.label : req.payee.address.substring(0, 6) + '...' + req.payee.address.substring(36, 42) }}
                 </div>
               </span>
@@ -59,17 +69,22 @@
           <mat-header-cell *matHeaderCellDef mat-sort-header>To</mat-header-cell>
           <mat-cell *matCellDef="let req">
             <div *ngIf="req.request">
-              <span (click)="openAddressModal(req.request.payer, req.request.payerLabel ? req.request.payerLabel : req.request.payer)">
-                <angular-blockies [options]="{ seed: req.request.payer.toLowerCase(), size:5, scale:8 }" class="blockies"></angular-blockies>
-                <div class="address-label-outer" [ngClass]="{'owner': req.request.payer == this.web3Service.accountObservable.value}">
+              <span
+                (click)="openAddressModal(req.request.payer, req.request.payerLabel ? req.request.payerLabel : req.request.payer)">
+                <angular-blockies [options]="{ seed: req.request.payer.toLowerCase(), size:5, scale:8 }"
+                  class="blockies"></angular-blockies>
+                <div class="address-label-outer"
+                  [ngClass]="{'owner': req.request.payer == this.web3Service.accountObservable.value}">
                   {{ req.request.payerLabel ? req.request.payerLabel : req.request.payer.substring(0, 6) + '...' + req.request.payer.substring(36, 42) }}
                 </div>
               </span>
             </div>
             <div *ngIf="req.payer">
               <span (click)="openAddressModal(req.payer, req.payerLabel ? req.payerLabel : req.payer)">
-                <angular-blockies [options]="{ seed: req.payer.toLowerCase(), size:5, scale:8 }" class="blockies"></angular-blockies>
-                <div class="address-label-outer" [ngClass]="{'owner': req.payer == this.web3Service.accountObservable.value}">
+                <angular-blockies [options]="{ seed: req.payer.toLowerCase(), size:5, scale:8 }" class="blockies">
+                </angular-blockies>
+                <div class="address-label-outer"
+                  [ngClass]="{'owner': req.payer == this.web3Service.accountObservable.value}">
                   {{ req.payerLabel ? req.payerLabel : req.payer.substring(0, 6) + '...' + req.payer.substring(36, 42) }}
                 </div>
               </span>

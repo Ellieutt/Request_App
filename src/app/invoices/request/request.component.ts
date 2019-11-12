@@ -276,7 +276,6 @@ export class RequestComponent implements OnInit, OnDestroy, AfterContentInit {
           this.request.requestId &&
           this.request.requestId !== request.requestId))
     ) {
-
       if (this.cookieService.get('processing_requests')) {
         const newCookieList = [];
         const that = this;
@@ -329,7 +328,6 @@ export class RequestComponent implements OnInit, OnDestroy, AfterContentInit {
         }
       });
     }
-
     this.request = request;
     this.getRequestMode();
     if (request && request.payee) {

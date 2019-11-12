@@ -8,10 +8,12 @@
         <li><b>Easy-to-use</b><br />No signup or personal information needed to get started</li>
         <li><b>Multiple currency support</b><br />11+ currencies including ETH & DAI</li>
       </ul>
-      <a target="_blank" class="d-inline-block mt-3 outline-button" href="https://share.hsforms.com/1rVnhlW9ZRhSFoZPcexgHNQ2nz19">Schedule a demo</a>
+      <a target="_blank" class="d-inline-block mt-3 outline-button"
+        href="https://share.hsforms.com/1rVnhlW9ZRhSFoZPcexgHNQ2nz19">Schedule a demo</a>
       <!-- <a routerLink="/invoice" class="d-inline-block mt-3 fs-14" style="color: #3E82F7">Create a new invoice Request</a> -->
     </div>
     <div class="col-md-6 ml-md-auto">
+      <network-identifier [isRinkeby]="this.web3Service.networkIdObservable.value == 4"></network-identifier>
       <mat-card class="p-0 br-7 sh-blue">
         <div class="d-flex p-4 btr-7 home-invoice-header">
           <img class="px-3" [style.max-height]="'50px'" src="assets/img/request-logo.png">
@@ -153,8 +155,8 @@
     </div>
     <div class="col-md-6 home-item">
       <h1>1200+</h1>
-      <p>Requests for payment <br/>
-          already created</p>
+      <p>Requests for payment <br />
+        already created</p>
     </div>
   </div>
 </div>
