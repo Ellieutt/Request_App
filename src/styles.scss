@@ -1346,3 +1346,16 @@ i.dash:after {
     }
   }
 }
+
+.network-identifier-outer {
+  text-align: center;
+  border-bottom: 1px solid #ffb95f;
+}
+
+.network-identifier {
+  display: inline-block;
+  background: #ffb95f;
+  color: #fff;
+  padding: 10px 30px;
+  margin-bottom: -1px;
+}
