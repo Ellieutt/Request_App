@@ -62,14 +62,22 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   // on page change we preload the next page to ensure a smooth UX
-  handlePageChange(e) {
-    const pageIndex = e.pageIndex;
-    const pageSize = e.pageSize;
-    const start = pageIndex * pageSize + this.preLoadAmount;
-    const end = start + pageSize + this.preLoadAmount;
+  handlePageChange() {
+    this.getRequestsFromIds(
+      this.dataSource.data.slice(
+        this.paginator.pageIndex * this.paginator.pageSize,
+        (this.paginator.pageIndex + 1) * this.paginator.pageSize,
+      )
+    ).then(() => {
+      this.getRequestsFromIds(
+        this.dataSource.data.slice(
+          (this.paginator.pageIndex + 1) * this.paginator.pageSize + 1,
+          (this.paginator.pageIndex + 1) * this.paginator.pageSize + 1 + this.preLoadAmount
+        )
+      )
+    });
 
-    this.getRequestsFromIds(this.dataSource.data.slice(start, end));
-    return pageIndex;
+    return this.paginator.pageIndex;
   }
 
   closedModal(event) {
@@ -128,46 +136,33 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
         resultsList = resultsList.sort(
           (a, b) => b._meta.timestamp - a._meta.timestamp
         );
-        // We load the first 10 requests (default page of 10, immediately after we pre-load the next page)
-        this.getRequestsFromIds(
-          resultsList.slice(
-            this.paginator.pageIndex * this.paginator.pageSize,
-            this.paginator.pageSize
-          )
-        ).then(() => {
-          this.getRequestsFromIds(
-            resultsList.slice(
-              this.preLoadAmount,
-              this.paginator.pageSize + this.preLoadAmount
-            )
-          );
-        });
-
+        
         if (this.cookieService.get('processing_requests')) {
           const cookieList = JSON.parse(
             this.cookieService.get('processing_requests')
-          );
-          cookieList.forEach(element => {
-            if (element.status !== 'created') {
-              if (this.cookieService.get('request_label_tags')) {
-                const labelList = JSON.parse(
-                  this.cookieService.get('request_label_tags')
-                );
-                labelList.forEach(label => {
-                  if (label.hasOwnProperty(element.payer.toLowerCase())) {
-                    element.payerLabel = label[element.payer.toLowerCase()];
+            );
+            cookieList.forEach(element => {
+              if (element.status !== 'created') {
+                if (this.cookieService.get('request_label_tags')) {
+                  const labelList = JSON.parse(
+                    this.cookieService.get('request_label_tags')
+                    );
+                    labelList.forEach(label => {
+                      if (label.hasOwnProperty(element.payer.toLowerCase())) {
+                        element.payerLabel = label[element.payer.toLowerCase()];
+                      }
+                      if (label.hasOwnProperty(element.payee.toLowerCase())) {
+                        element.payeeLabel = label[element.payee.toLowerCase()];
+                      }
+                    });
                   }
-                  if (label.hasOwnProperty(element.payee.toLowerCase())) {
-                    element.payeeLabel = label[element.payee.toLowerCase()];
-                  }
-                });
-              }
-              resultsList.unshift(element);
+                  resultsList.unshift(element);
+                }
+              });
             }
-          });
-        }
-
-        this.dataSource.data = resultsList;
+            
+            this.dataSource.data = resultsList;
+            this.handlePageChange();
         this.loading = false;
       }
     );
@@ -179,6 +174,10 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
         )
       );
     }
+  }
+
+  async fetchSearchResults() {
+    
   }
 
   getRequestsFromIds(resultsList) {
