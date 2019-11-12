@@ -146,7 +146,6 @@ export class CurrencySelectorComponent
             'RSR',
             'BAT',
             'DGX',
-            'KIN',
             'KNC',
             'LINK',
             'OMG',

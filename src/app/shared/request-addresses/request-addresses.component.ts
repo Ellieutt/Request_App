@@ -8,6 +8,8 @@ import { Component, OnInit, Input } from '@angular/core';
 export class RequestAddressesComponent implements OnInit {
   @Input()
   request: any;
+  @Input()
+  account: string;
   payer: string;
   currency: string;
   max: number = 0;
@@ -23,7 +25,7 @@ export class RequestAddressesComponent implements OnInit {
         const paymentAddress = this.request.payeesPaymentAddress[i];
         return {
           id,
-          payment: paymentAddress == id ? null : paymentAddress,
+          payment: paymentAddress === id ? null : paymentAddress,
         };
       });
     } else {
@@ -32,7 +34,7 @@ export class RequestAddressesComponent implements OnInit {
       this.payees = [
         {
           id,
-          payment: paymentAddress == id ? null : paymentAddress,
+          payment: paymentAddress === id ? null : paymentAddress,
         },
       ];
       this.payer = this.request.payer;

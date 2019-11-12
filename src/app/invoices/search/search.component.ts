@@ -14,6 +14,8 @@ import {
   PageEvent,
 } from '@angular/material';
 import { UtilService } from '../../util/util.service';
+import { CookieService } from 'ngx-cookie-service';
+import { ConstantPool } from '@angular/compiler';
 
 @Component({
   selector: 'app-search',
@@ -25,16 +27,18 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
   pageEvent: PageEvent;
   subscription;
   displayedColumns = [
-    'request.arrow',
-    'requestId',
     '_meta.timestamp',
     'request.payee.address',
     'request.payer',
     'request.payee.expectedAmount',
     'request.status',
+    'requestId',
   ];
   dataSource = new MatTableDataSource();
   loading = true;
+  openAddressBookModal = false;
+  addressToAdd = '';
+  addressLabel = '';
   preLoadAmount = 10; // default page is 10, so we load the next page
 
   @ViewChild(MatPaginator)
@@ -46,8 +50,15 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
     private web3Service: Web3Service,
     private router: Router,
     private route: ActivatedRoute,
-    private utilService: UtilService
-  ) {}
+    private utilService: UtilService,
+    private cookieService: CookieService
+  ) { }
+
+  openAddressModal(address, label) {
+    this.openAddressBookModal = true;
+    this.addressToAdd = address;
+    this.addressLabel = label;
+  }
 
   // on page change we preload the next page to ensure a smooth UX
   handlePageChange(e) {
@@ -58,6 +69,34 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.getRequestsFromIds(this.dataSource.data.slice(start, end));
     return pageIndex;
+  }
+
+  closedModal(event) {
+    this.openAddressBookModal = event;
+  }
+
+  updateTableWithNewLabel(event) {
+    if (event && event.address && event.label) {
+      this.dataSource.data.forEach(function (requestObject) {
+        if (requestObject['request']) {
+          // For existing requests
+          if (requestObject['request'].payee.address.toLowerCase() === event.address) {
+            requestObject['request'].payee.label = event.label;
+          }
+          if (requestObject['request'].payer.toLowerCase() === event.address) {
+            requestObject['request'].payerLabel = event.label;
+          }
+        } else if (requestObject['txid']) {
+          // Cookie item
+          if (requestObject['payer'].toLowerCase() === event.address) {
+            requestObject['payerLabel'] = event.label;
+          }
+          if (requestObject['payee'].toLowerCase() === event.address) {
+            requestObject['payeeLabel'] = event.label;
+          }
+        }
+      });
+    }
   }
 
   async ngOnInit() {
@@ -105,6 +144,7 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
         });
         this.dataSource.data = resultsList;
         this.loading = false;
+        this.updateAndShowPendingRequests();
       }
     );
 
@@ -125,12 +165,56 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
           this.web3Service
             .getRequestByRequestId(result.requestId)
             .then(requestObject => {
+
+              if (this.cookieService.get('request_label_tags')) {
+                const labelList = JSON.parse(
+                  this.cookieService.get('request_label_tags')
+                );
+                labelList.forEach(element => {
+                  if (element.hasOwnProperty(requestObject.requestData.payee.address.toLowerCase())) {
+                    requestObject.requestData.payee.label = element[requestObject.requestData.payee.address.toLowerCase()];
+                  }
+                  if (element.hasOwnProperty(requestObject.requestData.payer.toLowerCase())) {
+                    requestObject.requestData.payerLabel = element[requestObject.requestData.payer.toLowerCase()];
+                  }
+                });
+              }
+
               result.request = requestObject.requestData;
             })
         );
       }
     }
     return Promise.all(promises);
+  }
+
+  private updateAndShowPendingRequests() {
+    // Updating the status of requests that were broadcasting before displaying them
+    this.web3Service.checkCookies().then(() => {
+      if (this.cookieService.get('processing_requests')) {
+        const pendingCookieList = JSON.parse(
+          this.cookieService.get('processing_requests')
+        ).filter(e =>  { return e.status == 'pending' });
+        // For requests that are still pending, fetch the label and add them to the data source
+        pendingCookieList.forEach(pendingRequest => {
+          if (this.cookieService.get('request_label_tags')) {
+            const labelList = JSON.parse(
+              this.cookieService.get('request_label_tags')
+            );
+            labelList.forEach(label => {
+              if (label.hasOwnProperty(pendingRequest.payer.toLowerCase())) {
+                pendingRequest.payerLabel = label[pendingRequest.payer.toLowerCase()];
+              }
+              if (label.hasOwnProperty(pendingRequest.payee.address.toLowerCase())) {
+                pendingRequest.payee.label = label[pendingRequest.payee.address.toLowerCase()];
+              }
+            });
+          }
+          this.dataSource.data.unshift(pendingRequest);
+        });
+      }
+      this.dataSource._updateChangeSubscription();
+    });
   }
 
   ngAfterViewInit() {

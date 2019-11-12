@@ -40,10 +40,14 @@ import { QRCodeModule } from 'angularx-qrcode';
 import { CurrencyConverterComponent } from './currency-converter/currency-converter.component';
 import { RequestMetadataComponent } from './request-metadata/request-metadata.component';
 import { RequestAddressesComponent } from './request-addresses/request-addresses.component';
+import { PendingRequestsComponent } from './pending-requests/pending-requests.component';
 import { ShortAddressPipe } from './short-address.pipe';
 import { BlockiesComponent } from './blockies/blockies.component';
 import { RequestAmountComponent } from './request-amount/request-amount.component';
 import { RequestAddressComponent } from './request-address/request-address.component';
+import { AddressBookComponent } from './address-book/address-book.component';
+import { ClipboardModule } from 'ngx-clipboard';
+import { NetworkIdentifierComponent } from './network-identifier/network-identifier.component';
 
 @NgModule({
   imports: [
@@ -54,7 +58,7 @@ import { RequestAddressComponent } from './request-address/request-address.compo
     BlockiesModule,
     PopoverModule,
     QRCodeModule,
-
+    ClipboardModule,
     MatButtonModule,
     MatCardModule,
     // MatCheckboxModule,
@@ -90,10 +94,13 @@ import { RequestAddressComponent } from './request-address/request-address.compo
     RequestMetadataComponent,
     CurrencyConverterComponent,
     RequestAddressesComponent,
+    PendingRequestsComponent,
     ShortAddressPipe,
     BlockiesComponent,
     RequestAmountComponent,
     RequestAddressComponent,
+    AddressBookComponent,
+    NetworkIdentifierComponent,
   ],
   exports: [
     FormsModule,
@@ -111,6 +118,8 @@ import { RequestAddressComponent } from './request-address/request-address.compo
     RequestAddressComponent,
     CurrencyConverterComponent,
     RequestAddressesComponent,
+    PendingRequestsComponent,
+    AddressBookComponent,
     MatButtonModule,
     MatCardModule,
     // MatCheckboxModule,
@@ -137,6 +146,7 @@ import { RequestAddressComponent } from './request-address/request-address.compo
     MatDatepickerModule,
     MatMomentDateModule,
     MatTreeModule,
+    NetworkIdentifierComponent
   ],
 })
 export class SharedModule {}

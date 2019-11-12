@@ -16,6 +16,7 @@ import { RefundDialogComponent } from '../../util/dialogs/refund-dialog.componen
 import { DisplayPayDialogComponent } from '../../util/dialogs/display-pay-dialog.component';
 import { EmailService } from '../../util/email.service';
 import { SendEmailDialogComponent } from '../../util/dialogs/send-email-dialog.component';
+import { CookieService } from 'ngx-cookie-service';
 
 @Component({
   selector: 'app-request',
@@ -37,14 +38,16 @@ export class RequestComponent implements OnInit, OnDestroy, AfterContentInit {
   timeOuts = [];
   loading = false;
   ipfsData: any;
+  tries = 0;
 
   constructor(
     public web3Service: Web3Service,
     private route: ActivatedRoute,
     private dialog: MatDialog,
     private utilService: UtilService,
-    private emailService: EmailService
-  ) {}
+    private emailService: EmailService,
+    private cookieService: CookieService
+  ) { }
 
   get amount() {
     return this.web3Service.BNToAmount(
@@ -80,7 +83,6 @@ export class RequestComponent implements OnInit, OnDestroy, AfterContentInit {
           await this.setRequest(this.requestObject.requestData || {});
           this.loadIpfsData(this.request.data.hash);
           this.loading = false;
-          console.log(this.request.data);
         }
       }
     );
@@ -95,8 +97,7 @@ export class RequestComponent implements OnInit, OnDestroy, AfterContentInit {
     // watch Request in background
     this.timerInterval = setInterval(async () => {
       if (
-        !this.requestObject &&
-        !this.requestObject.requestId &&
+        !this.requestObject ||
         this.loading
       ) {
         return;
@@ -107,10 +108,40 @@ export class RequestComponent implements OnInit, OnDestroy, AfterContentInit {
     }, 10000);
   }
 
+  addPendingRequestToCookie(request) {
+    let cookieList = [];
+    if (this.cookieService.get('processing_requests')) {
+      cookieList = JSON.parse(
+        this.cookieService.get('processing_requests')
+      );
+    }
+    let isNewRequest = true;
+    const that = this;
+    cookieList.forEach(element => {
+      if (element.txid.split('?')[0] === that.txHash) {
+        isNewRequest = false;
+      }
+    });
+    if (isNewRequest) {
+      cookieList.push({
+        'txid': that.txHash + '?request=' + this.route.snapshot.queryParams.request,
+        'timestamp': request.data.data.date,
+        'payee': { 'address': request.payee.address },
+        'payer': request.payer,
+        'amount': this.web3Service.BNToAmount(request.payee.expectedAmount, request.currency),
+        'currency': request.currency,
+        'network': 4,
+        'status': 'pending',
+        'unread': true
+      });
+      this.cookieService.set('processing_requests', JSON.stringify(cookieList), 1);
+    }
+  }
+
   async ngAfterContentInit() {
     const that = this;
 
-    const loadReceiptJs = setInterval(function() {
+    const loadReceiptJs = setInterval(function () {
       if (document.getElementById('download-receipt')) {
         that.loadScript('../assets/js/receipt.js');
         clearInterval(loadReceiptJs);
@@ -168,11 +199,11 @@ export class RequestComponent implements OnInit, OnDestroy, AfterContentInit {
         errorTxHash:
           'Sorry, we are unable to locate any request matching this transaction hash',
       });
-    } else if (result.transaction) {
-      const request = await this.web3Service.buildRequestFromCreateRequestTransactionParams(
-        result.transaction
-      );
-      await this.setRequest(request);
+    } else if (this.tries === 50) {
+      this.tries = 0;
+      return await this.setRequest({
+        errorTxHash: 'Sorry, we are unable to locate this transaction hash',
+      });
     } else if (this.route.snapshot.queryParams.request) {
       if (!this.request || !this.request.waitingMsg) {
         const queryParamRequest = JSON.parse(
@@ -194,9 +225,29 @@ export class RequestComponent implements OnInit, OnDestroy, AfterContentInit {
             queryParamRequest.payee.expectedAmount,
             queryParamRequest.currency
           );
+          let cookieList = [];
+          if (this.cookieService.get('processing_requests')) {
+            cookieList = JSON.parse(
+              this.cookieService.get('processing_requests')
+            );
+          }
+          const that = this;
+          cookieList.forEach(element => {
+            if (element.txid.split('&')[0] !== that.txHash) {
+              if (result == 'Error: transaction not found') {
+                this.tries++;
+              }
+            }
+          });
           await this.setRequest(request);
+          this.addPendingRequestToCookie(request);
         }
       }
+    } else if (result.transaction) {
+      const request = await this.web3Service.buildRequestFromCreateRequestTransactionParams(
+        result.transaction
+      );
+      await this.setRequest(request);
     } else {
       return await this.setRequest({
         errorTxHash: 'Sorry, we are unable to locate this transaction hash',
@@ -224,7 +275,24 @@ export class RequestComponent implements OnInit, OnDestroy, AfterContentInit {
           this.request.requestId &&
           this.request.requestId !== request.requestId))
     ) {
-      // this.request = null;
+      if (this.cookieService.get('processing_requests')) {
+        const newCookieList = [];
+        const that = this;
+        const cookieList = JSON.parse(
+          this.cookieService.get('processing_requests')
+        );
+        cookieList.forEach(element => {
+          const txidToCheck = element.txid.split('?')[0];
+          if (txidToCheck === that.route.snapshot.params['txHash']) {
+            element.status = 'created';
+          }
+          newCookieList.push(element);
+        });
+        this.cookieService.set('processing_requests', JSON.stringify(newCookieList), 1);
+      }
+
+
+      this.request = null;
       history.pushState(
         null,
         null,
@@ -232,7 +300,7 @@ export class RequestComponent implements OnInit, OnDestroy, AfterContentInit {
       );
       this.url = `${window.location.protocol}//${
         window.location.host
-      }/#/request/requestId/${request.requestId}`;
+        }/#/request/requestId/${request.requestId}`;
     }
     if (request && !request.status && request.state !== undefined) {
       this.web3Service.setRequestStatus(request);
@@ -246,6 +314,18 @@ export class RequestComponent implements OnInit, OnDestroy, AfterContentInit {
       request.events = await this.web3Service.getRequestEvents(
         request.requestId
       );
+    }
+    if (request.events) {
+      request.events.forEach(event => {
+        if (event.name === 'Created') {
+          request.createdTimestamp = event._meta.timestamp;
+        }
+        if (event.name === 'UpdateBalance') {
+          if (request.status === 'paid') {
+            request.paymentTimestamp = event._meta.timestamp;
+          }
+        }
+      });
     }
     this.request = request;
     this.getRequestMode();
