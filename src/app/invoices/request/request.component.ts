@@ -83,7 +83,6 @@ export class RequestComponent implements OnInit, OnDestroy, AfterContentInit {
           await this.setRequest(this.requestObject.requestData || {});
           this.loadIpfsData(this.request.data.hash);
           this.loading = false;
-          console.log(this.request.data);
         }
       }
     );
@@ -127,7 +126,7 @@ export class RequestComponent implements OnInit, OnDestroy, AfterContentInit {
       cookieList.push({
         'txid': that.txHash + '?request=' + this.route.snapshot.queryParams.request,
         'timestamp': request.data.data.date,
-        'payee': request.payee.address,
+        'payee': {'address': request.payee.address},
         'payer': request.payer,
         'amount': this.web3Service.BNToAmount(request.payee.expectedAmount, request.currency),
         'currency': request.currency,
