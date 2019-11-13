@@ -15,9 +15,9 @@
     </div>
 
     <div class="top-filters">
-      <div [ngClass]="{'class': financialFilter=='all'}">All Requests</div>
-      <div [ngClass]="{'class': financialFilter=='outstanding'}"><a (click)="filterOutstanding()">Outstanding</a></div>
-      <div [ngClass]="{'class': financialFilter=='paid'}"><a (click)="filterPaid()">Paid</a></div>
+      <div [ngClass]="{'class': financialFilter=='all'}"><a (click)="this.dataSource.filter = 'all';">All Requests</a></div>
+      <div [ngClass]="{'class': financialFilter=='outstanding'}"><a (click)="this.dataSource.filter = 'outstanding';">Outstanding</a></div>
+      <div [ngClass]="{'class': financialFilter=='paid'}"><a (click)="this.dataSource.filter = 'paid';">Paid</a></div>
     </div>
       
       

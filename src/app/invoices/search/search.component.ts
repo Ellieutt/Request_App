@@ -140,29 +140,46 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
         if (this.cookieService.get('processing_requests')) {
           const cookieList = JSON.parse(
             this.cookieService.get('processing_requests')
-            );
-            cookieList.forEach(element => {
-              if (element.status !== 'created') {
-                if (this.cookieService.get('request_label_tags')) {
-                  const labelList = JSON.parse(
-                    this.cookieService.get('request_label_tags')
-                    );
-                    labelList.forEach(label => {
-                      if (label.hasOwnProperty(element.payer.toLowerCase())) {
-                        element.payerLabel = label[element.payer.toLowerCase()];
-                      }
-                      if (label.hasOwnProperty(element.payee.toLowerCase())) {
-                        element.payeeLabel = label[element.payee.toLowerCase()];
-                      }
-                    });
-                  }
-                  resultsList.unshift(element);
+          );
+          cookieList.forEach(element => {
+            if (element.status !== 'created') {
+              if (this.cookieService.get('request_label_tags')) {
+                const labelList = JSON.parse(
+                  this.cookieService.get('request_label_tags')
+                  );
+                  labelList.forEach(label => {
+                    if (label.hasOwnProperty(element.payer.toLowerCase())) {
+                      element.payerLabel = label[element.payer.toLowerCase()];
+                    }
+                    if (label.hasOwnProperty(element.payee.toLowerCase())) {
+                      element.payeeLabel = label[element.payee.toLowerCase()];
+                    }
+                  });
                 }
-              });
-            }
+                resultsList.unshift(element);
+              }
+            });
+          }
+          
+          this.dataSource.data = resultsList;
             
-            this.dataSource.data = resultsList;
-            this.handlePageChange();
+          // Financial-level filters logic for the top buttons
+          this.dataSource.filterPredicate = (data: Array<any>, filter: string) => {
+            switch (filter) {
+              case "paid":
+                return (data['request'] && data['request']['status'] == 'paid');
+              case "outstanding":
+                  const outstandingStatuses = ['created', 'pending', 'accepted'];
+                  if (data['request']) {
+                    return outstandingStatuses.includes( data['request']['status'] );
+                  } else {
+                    return data['status'] && outstandingStatuses.includes( data['statuses'] );
+                  }
+              default:
+                return true;
+          }
+        }
+        this.handlePageChange();
         this.loading = false;
       }
     );
@@ -220,23 +237,6 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
     if (this.subscription) {
       this.subscription.unsubscribe();
     }
-  }
-
-  filterAll() {
-
-  }
-
-  filterPaid() {
-    console.log(this.dataSource.data[0]['request']['status']);
-    this.financialFilter = 'paid';
-    this.dataSource.data = this.dataSource.data.filter(req => {
-      if (req['request']) {
-        return req['request']['status'] == 'paid';
-      } else {
-        console.log(req);
-      }
-    });
-    this.dataSource._updateChangeSubscription();
   }
   
   filterOutstanding() {
