@@ -15,7 +15,6 @@ import {
 } from '@angular/material';
 import { UtilService } from '../../util/util.service';
 import { CookieService } from 'ngx-cookie-service';
-import { ConstantPool } from '@angular/compiler';
 
 @Component({
   selector: 'app-search',
@@ -36,10 +35,12 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
   ];
   dataSource = new MatTableDataSource();
   loading = true;
+  backgroundLoading = false;
   openAddressBookModal = false;
   addressToAdd = '';
   addressLabel = '';
-  preLoadAmount = 10; // default page is 10, so we load the next page
+  preLoadBatchSize = 10;  // default page is 10, so we load the next page
+  maxPreLoad = 100;       // 10 default pages in advance, loaded in the background
 
   @ViewChild(MatPaginator)
   paginator: MatPaginator;
@@ -58,51 +59,6 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
     this.openAddressBookModal = true;
     this.addressToAdd = address;
     this.addressLabel = label;
-  }
-
-  // TODO: stop the loop if user leaves index
-  private searchingIndex(data: Array<any>, searchingIndex: number) {
-    const onScreenRequests = this.dataSource.filteredData.filter(f => {return f['request'] && f['request']['status'] !== undefined;}).length;
-    if (onScreenRequests < this.paginator.pageSize && searchingIndex < data.length) {
-      this.getRequestsFromIds([data[searchingIndex]]
-      ).then(() => {
-        this.searchingIndex(data, searchingIndex + 1);
-        console.log('Refreshing view, searchingIndex=' + searchingIndex);
-        this.dataSource._updateChangeSubscription();
-      });
-    }
-  }
-
-  // on page change we preload the next page to ensure a smooth UX
-  handlePageChange() {
-    console.log(this.dataSource.data.length);
-    console.log(this.dataSource.filteredData.length);
-    let data = this.dataSource.data;
-    if (this.dataSource.filter != 'all') {
-      data = this.dataSource.filteredData;
-    }
-    this.getRequestsFromIds(
-      data.slice(
-        this.paginator.pageIndex * this.paginator.pageSize,
-        (this.paginator.pageIndex + 1) * this.paginator.pageSize,
-      )
-    ).then(() => {
-      console.log('Fetched.');
-      if (this.dataSource.filter != 'all') {
-        this.dataSource._updateChangeSubscription();
-        let searchingIndex = (this.paginator.pageIndex + 1) * this.paginator.pageSize;
-        this.searchingIndex(data, searchingIndex);
-      } else {
-        this.getRequestsFromIds(
-        data.slice(
-          (this.paginator.pageIndex + 1) * this.paginator.pageSize + 1,
-          (this.paginator.pageIndex + 2) * this.paginator.pageSize + 1
-          )
-      )
-      }
-    });
-
-    return this.paginator.pageIndex;
   }
 
   closedModal(event) {
@@ -210,9 +166,7 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   async financialFilter(filter: string) {
-    this.dataSource.data.forEach(request => {
-      request['forcedHidden'] = false;
-    });
+    this.backgroundLoading = false;
     this.dataSource.filter = filter;
     this.paginator.firstPage();
     this.handlePageChange();
@@ -271,7 +225,6 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
                 pendingRequest.payee.label = label[pendingRequest.payee.address.toLowerCase()];
               }
             });
-            pendingRequest.forcedHidden = false;
           }
           this.dataSource.data.unshift(pendingRequest);
         });
@@ -280,12 +233,62 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
+  // Function handlePageChange
+  // Called at every filter change and page change to refresh the visible results list.
+  // In case of a search, makes sure to fetch rows one by one to avoid brief appearance of wrong results.
+  // Once the page is full of results, pre-load next results.
+  handlePageChange() {
+    const pageStart = this.paginator.pageIndex * this.paginator.pageSize;
+    const pageEnd = pageStart + this.paginator.pageSize - 1;
+    let data = this.dataSource.data;
+    if (this.dataSource.filter != 'all') {
+      data = this.dataSource.filteredData;
+    }
+    // this.getRequestsFromIds(
+    //   data.slice(
+    //     this.paginator.pageIndex * this.paginator.pageSize,
+    //     (this.paginator.pageIndex + 1) * this.paginator.pageSize,
+    //   )
+    this.backgroundLoading = true;
+    this.loadInBackground(data, pageStart, this.paginator.pageSize, this.paginator.pageSize
+    ).then(() => {
+      console.log('Fetched.');
+      if (this.dataSource.filter != 'all') {
+        this.backgroundLoading = true;
+        this.loadInBackground(data, pageEnd + 1, this.paginator.pageSize, data.length);
+      } else {
+        // Cache next page for UX & performance
+        this.backgroundLoading = true;
+        this.loadInBackground(data, pageEnd + 1, this.preLoadBatchSize, this.maxPreLoad);
+      }
+    });
+
+    return this.paginator.pageIndex;
+  }
+
+  private async loadInBackground(data: Array<any>, startIndex: number, batchSize: number, loadingLimit: number) {
+    if (
+      this.backgroundLoading &&
+      loadingLimit > 0 &&
+      startIndex < data.length
+    ) {
+      const endIndex = startIndex + batchSize - 1;
+      console.log('Background loading:' + startIndex + '-' + endIndex);
+      this.getRequestsFromIds(data.slice(startIndex, endIndex + 1)
+      ).then(() => {
+        this.dataSource._updateChangeSubscription();
+        this.loadInBackground(data, endIndex + 1, batchSize, loadingLimit - batchSize);
+      });
+    }
+  }
+
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
   }
 
   ngOnDestroy() {
+    this.backgroundLoading = false;
     if (this.subscription) {
       this.subscription.unsubscribe();
     }
