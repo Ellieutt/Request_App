@@ -47,7 +47,7 @@ export class RequestComponent implements OnInit, OnDestroy, AfterContentInit {
     private utilService: UtilService,
     private emailService: EmailService,
     private cookieService: CookieService
-  ) {}
+  ) { }
 
   get amount() {
     return this.web3Service.BNToAmount(
@@ -83,7 +83,6 @@ export class RequestComponent implements OnInit, OnDestroy, AfterContentInit {
           await this.setRequest(this.requestObject.requestData || {});
           this.loadIpfsData(this.request.data.hash);
           this.loading = false;
-          console.log(this.request.data);
         }
       }
     );
@@ -127,7 +126,7 @@ export class RequestComponent implements OnInit, OnDestroy, AfterContentInit {
       cookieList.push({
         'txid': that.txHash + '?request=' + this.route.snapshot.queryParams.request,
         'timestamp': request.data.data.date,
-        'payee': request.payee.address,
+        'payee': { 'address': request.payee.address },
         'payer': request.payer,
         'amount': this.web3Service.BNToAmount(request.payee.expectedAmount, request.currency),
         'currency': request.currency,
@@ -200,11 +199,6 @@ export class RequestComponent implements OnInit, OnDestroy, AfterContentInit {
         errorTxHash:
           'Sorry, we are unable to locate any request matching this transaction hash',
       });
-    } else if (result.transaction) {
-      const request = await this.web3Service.buildRequestFromCreateRequestTransactionParams(
-        result.transaction
-      );
-      await this.setRequest(request);
     } else if (this.tries === 50) {
       this.tries = 0;
       return await this.setRequest({
@@ -245,11 +239,15 @@ export class RequestComponent implements OnInit, OnDestroy, AfterContentInit {
               }
             }
           });
-
           await this.setRequest(request);
           this.addPendingRequestToCookie(request);
         }
       }
+    } else if (result.transaction) {
+      const request = await this.web3Service.buildRequestFromCreateRequestTransactionParams(
+        result.transaction
+      );
+      await this.setRequest(request);
     } else {
       return await this.setRequest({
         errorTxHash: 'Sorry, we are unable to locate this transaction hash',
@@ -277,7 +275,6 @@ export class RequestComponent implements OnInit, OnDestroy, AfterContentInit {
           this.request.requestId &&
           this.request.requestId !== request.requestId))
     ) {
-
       if (this.cookieService.get('processing_requests')) {
         const newCookieList = [];
         const that = this;
@@ -303,7 +300,7 @@ export class RequestComponent implements OnInit, OnDestroy, AfterContentInit {
       );
       this.url = `${window.location.protocol}//${
         window.location.host
-      }/#/request/requestId/${request.requestId}`;
+        }/#/request/requestId/${request.requestId}`;
     }
     if (request && !request.status && request.state !== undefined) {
       this.web3Service.setRequestStatus(request);
@@ -330,7 +327,6 @@ export class RequestComponent implements OnInit, OnDestroy, AfterContentInit {
         }
       });
     }
-
     this.request = request;
     this.getRequestMode();
     if (request && request.payee) {
