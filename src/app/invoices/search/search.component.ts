@@ -244,11 +244,6 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
     if (this.dataSource.filter != 'all') {
       data = this.dataSource.filteredData;
     }
-    // this.getRequestsFromIds(
-    //   data.slice(
-    //     this.paginator.pageIndex * this.paginator.pageSize,
-    //     (this.paginator.pageIndex + 1) * this.paginator.pageSize,
-    //   )
     this.backgroundLoading = true;
     this.loadInBackground(data, pageStart, this.paginator.pageSize, this.paginator.pageSize
     ).then(() => {
