@@ -11,21 +11,17 @@
       <span class="ml-auto semi-bold" *ngIf="!loading && dataSource && dataSource.data.length == 0">&nbsp;0 result found
         for this address</span>
     </div>
-      
-    <div class="network test">
-      <span>MAN-Rinkeby</span>
-    </div>
 
+    <network-identifier [isRinkeby]="this.web3Service.networkIdObservable.value == 4"></network-identifier>
     <div class="top-filters">
-      <div [ngClass]="{'class': financialFilter=='all'}"><a (click)="this.dataSource.filter = 'all';">All Requests</a></div>
-      <div [ngClass]="{'class': financialFilter=='outstanding'}"><a (click)="this.dataSource.filter = 'outstanding';">Outstanding</a></div>
-      <div [ngClass]="{'class': financialFilter=='paid'}"><a (click)="this.dataSource.filter = 'paid';">Paid</a></div>
+      <div [ngClass]="{'active': this.dataSource.filter=='all'}"><a (click)="this.financialFilter('all')">All Requests</a></div>
+      <div [ngClass]="{'active': this.dataSource.filter=='outstanding'}"><a (click)="this.dataSource.filter = 'outstanding';">Outstanding</a></div>
+      <div [ngClass]="{'active': this.dataSource.filter=='paid'}"><a (click)="this.financialFilter('paid')">Paid</a></div>
     </div>
       
       
     <!-- <div class="col-md-3">&nbsp;</div> -->
     <div class="col-md-12 d-flex flex-column">
-      <network-identifier [isRinkeby]="this.web3Service.networkIdObservable.value == 4"></network-identifier>
       <mat-table #table matSort [dataSource]="dataSource">
 
         <!-- Age Column -->
@@ -157,7 +153,7 @@
         <mat-row *matRowDef="let row; columns: displayedColumns;">
         </mat-row>
       </mat-table>
-      <mat-paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 20]" (page)="pageEvent = handlePageChange()">
+      <mat-paginator [length]="this.dataSource.filteredData.length" [pageSize]="10" [pageSizeOptions]="[5, 10, 20]" (page)="pageEvent = handlePageChange()">
       </mat-paginator>
     </div>
   </div>

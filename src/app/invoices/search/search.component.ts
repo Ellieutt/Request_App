@@ -24,7 +24,6 @@ import { ConstantPool } from '@angular/compiler';
 })
 export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
   searchValue: string;
-  financialFilter: string = 'all';
   pageEvent: PageEvent;
   subscription;
   displayedColumns = [
@@ -61,20 +60,46 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
     this.addressLabel = label;
   }
 
+  // TODO: stop the loop if user leaves index
+  private searchingIndex(data: Array<any>, searchingIndex: number) {
+    const onScreenRequests = this.dataSource.filteredData.filter(f => {return f['request'] && f['request']['status'] !== undefined;}).length;
+    if (onScreenRequests < this.paginator.pageSize && searchingIndex < data.length) {
+      this.getRequestsFromIds([data[searchingIndex]]
+      ).then(() => {
+        this.searchingIndex(data, searchingIndex + 1);
+        console.log('Refreshing view, searchingIndex=' + searchingIndex);
+        this.dataSource._updateChangeSubscription();
+      });
+    }
+  }
+
   // on page change we preload the next page to ensure a smooth UX
   handlePageChange() {
+    console.log(this.dataSource.data.length);
+    console.log(this.dataSource.filteredData.length);
+    let data = this.dataSource.data;
+    if (this.dataSource.filter != 'all') {
+      data = this.dataSource.filteredData;
+    }
     this.getRequestsFromIds(
-      this.dataSource.data.slice(
+      data.slice(
         this.paginator.pageIndex * this.paginator.pageSize,
         (this.paginator.pageIndex + 1) * this.paginator.pageSize,
       )
     ).then(() => {
-      this.getRequestsFromIds(
-        this.dataSource.data.slice(
+      console.log('Fetched.');
+      if (this.dataSource.filter != 'all') {
+        this.dataSource._updateChangeSubscription();
+        let searchingIndex = (this.paginator.pageIndex + 1) * this.paginator.pageSize;
+        this.searchingIndex(data, searchingIndex);
+      } else {
+        this.getRequestsFromIds(
+        data.slice(
           (this.paginator.pageIndex + 1) * this.paginator.pageSize + 1,
-          (this.paginator.pageIndex + 1) * this.paginator.pageSize + 1 + this.preLoadAmount
-        )
+          (this.paginator.pageIndex + 2) * this.paginator.pageSize + 1
+          )
       )
+      }
     });
 
     return this.paginator.pageIndex;
@@ -119,6 +144,7 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
       path: window.location.href,
     });
 
+    
     this.subscription = this.utilService.searchValue.subscribe(
       async searchValue => {
         this.searchValue = searchValue;
@@ -137,42 +163,43 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
         resultsList = resultsList.sort(
           (a, b) => b._meta.timestamp - a._meta.timestamp
         );
-        // We load the first 10 requests (default page of 10, immediately after we pre-load the next page)
-        this.getRequestsFromIds(
-          resultsList.slice(
-            this.paginator.pageIndex * this.paginator.pageSize,
-            this.paginator.pageSize
-          )
-        ).then(() => {
-          this.getRequestsFromIds(
-            resultsList.slice(
-              this.preLoadAmount,
-              this.paginator.pageSize + this.preLoadAmount
-            )
-          );
-        });
-        this.dataSource.data = resultsList;
-
+            
+        this.dataSource = new MatTableDataSource(resultsList);
+        this.dataSource.filter = 'all';
+      
         // Financial-level filters logic for the top buttons
-        this.dataSource.filterPredicate = (data: Array<any>, filter: string) => {
+        this.dataSource.filterPredicate = (data: any, filter: string) => {
+          if (!data['txid'] && (
+            !data['request']
+            || !data['request']['status']
+          )) {
+            return true; // Loading result could match
+          }
           switch (filter) {
             case "paid":
               return (data['request'] && data['request']['status'] == 'paid');
             case "outstanding":
-                const outstandingStatuses = ['created', 'pending', 'accepted'];
+                const outstandingStatuses = ['created', 'pending', 'accepted', 'in progress'];
                 if (data['request']) {
                   return outstandingStatuses.includes( data['request']['status'] );
                 } else {
-                  return data['status'] && outstandingStatuses.includes( data['statuses'] );
+                  return data['status'] && outstandingStatuses.includes( data['status'] );
                 }
             default:
               return true;
+          }
         }
+
+        this.handlePageChange();
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+
         this.loading = false;
         this.updateAndShowPendingRequests();
       }
-    );
+      );
 
+    // TODO active tab when searching for a new address
     if (this.route.snapshot.params['searchValue']) {
       setTimeout(() =>
         this.utilService.setSearchValue(
@@ -182,19 +209,26 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  async fetchSearchResults() {
+  async financialFilter(filter: string) {
+    this.dataSource.data.forEach(request => {
+      request['forcedHidden'] = false;
+    });
+    this.dataSource.filter = filter;
+    this.paginator.firstPage();
+    this.handlePageChange();
 
+    //this.dataSource = new MatTableDataSource(resultsList);
   }
 
   getRequestsFromIds(resultsList) {
+    console.log('Fetching:' + resultsList.length);
     const promises = [];
-    for (const result of resultsList) {
-      if (!result.request) {
+    for (const result of resultsList.filter(f => {return f.txid === undefined && f.request === undefined;})) {
+      //if (!result.request) {
         promises.push(
           this.web3Service
             .getRequestByRequestId(result.requestId)
             .then(requestObject => {
-
               if (this.cookieService.get('request_label_tags')) {
                 const labelList = JSON.parse(
                   this.cookieService.get('request_label_tags')
@@ -208,12 +242,11 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
                   }
                 });
               }
-
               result.request = requestObject.requestData;
             })
         );
       }
-    }
+    //}
     return Promise.all(promises);
   }
 
@@ -238,6 +271,7 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
                 pendingRequest.payee.label = label[pendingRequest.payee.address.toLowerCase()];
               }
             });
+            pendingRequest.forcedHidden = false;
           }
           this.dataSource.data.unshift(pendingRequest);
         });
@@ -255,12 +289,5 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
     if (this.subscription) {
       this.subscription.unsubscribe();
     }
-  }
-
-  filterOutstanding() {
-    console.log(this.dataSource.data[0]['request']['status']);
-    this.financialFilter = 'outstanding';
-    this.dataSource.data = this.dataSource.data.filter(req => req['request'] && req['request']['status'] == 'created');
-    this.dataSource._updateChangeSubscription();
   }
 }

@@ -1,32 +1,5 @@
 @import 'variables';
 
-div.network {
-	border-bottom-width: 1px;
-	border-bottom-color: #FFB95F;
-	box-sizing: border-box;
-	
-	text-align: center;
-	left: 50%;
-}
-
-
-.network span {
-	display: inline-block;
-	width: 120px;
-	height: 28px;
-	background: #FFB95F;
-
-	font-family: Beatrice;
-	font-style: normal;
-	font-weight: 500;
-	font-size: 12px;
-	line-height: 28px;
-
-	text-align: center;
-
-	color: #FFFFFF;
-}
-
 div.top-filters {
 	display: table;
 	height: 66px;
