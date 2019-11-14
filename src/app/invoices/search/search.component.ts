@@ -52,7 +52,7 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
     private route: ActivatedRoute,
     private utilService: UtilService,
     private cookieService: CookieService
-  ) {}
+  ) { }
 
   openAddressModal(address, label) {
     this.openAddressBookModal = true;
@@ -77,8 +77,9 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
 
   updateTableWithNewLabel(event) {
     if (event && event.address && event.label) {
-      this.dataSource.data.forEach(function(requestObject) {
+      this.dataSource.data.forEach(function (requestObject) {
         if (requestObject['request']) {
+          // For existing requests
           if (requestObject['request'].payee.address.toLowerCase() === event.address) {
             requestObject['request'].payee.label = event.label;
           }
@@ -141,33 +142,9 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
             )
           );
         });
-
-        if (this.cookieService.get('processing_requests')) {
-          const cookieList = JSON.parse(
-            this.cookieService.get('processing_requests')
-          );
-          cookieList.forEach(element => {
-            if (element.status !== 'created') {
-              if (this.cookieService.get('request_label_tags')) {
-                const labelList = JSON.parse(
-                  this.cookieService.get('request_label_tags')
-                );
-                labelList.forEach(label => {
-                  if (label.hasOwnProperty(element.payer.toLowerCase())) {
-                    element.payerLabel = label[element.payer.toLowerCase()];
-                  }
-                  if (label.hasOwnProperty(element.payee.toLowerCase())) {
-                    element.payeeLabel = label[element.payee.toLowerCase()];
-                  }
-                });
-              }
-              resultsList.unshift(element);
-            }
-          });
-        }
-
         this.dataSource.data = resultsList;
         this.loading = false;
+        this.updateAndShowPendingRequests();
       }
     );
 
@@ -178,6 +155,10 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
         )
       );
     }
+  }
+
+  getNetworkValue() {
+    return this.web3Service.networkIdObservable.value;
   }
 
   getRequestsFromIds(resultsList) {
@@ -209,6 +190,35 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
       }
     }
     return Promise.all(promises);
+  }
+
+  private updateAndShowPendingRequests() {
+    // Updating the status of requests that were broadcasting before displaying them
+    this.web3Service.checkCookies().then(() => {
+      if (this.cookieService.get('processing_requests')) {
+        const pendingCookieList = JSON.parse(
+          this.cookieService.get('processing_requests')
+        ).filter(e =>  { return e.status == 'pending' });
+        // For requests that are still pending, fetch the label and add them to the data source
+        pendingCookieList.forEach(pendingRequest => {
+          if (this.cookieService.get('request_label_tags')) {
+            const labelList = JSON.parse(
+              this.cookieService.get('request_label_tags')
+            );
+            labelList.forEach(label => {
+              if (label.hasOwnProperty(pendingRequest.payer.toLowerCase())) {
+                pendingRequest.payerLabel = label[pendingRequest.payer.toLowerCase()];
+              }
+              if (label.hasOwnProperty(pendingRequest.payee.address.toLowerCase())) {
+                pendingRequest.payee.label = label[pendingRequest.payee.address.toLowerCase()];
+              }
+            });
+          }
+          this.dataSource.data.unshift(pendingRequest);
+        });
+      }
+      this.dataSource._updateChangeSubscription();
+    });
   }
 
   ngAfterViewInit() {

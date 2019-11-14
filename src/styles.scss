@@ -1339,10 +1339,40 @@ i.dash:after {
   }
 }
 
+.outline-button {
+  border: 1px solid #00E6A0;
+  border-radius: 4px;
+  padding: 18px 42px;
+  color: #00E6A0;
+}
+
+.outline-button:hover {
+  background: #00E6A0;
+}
+
 .blockies-outer {
   .blockies {
     canvas {
       border-radius: 0;
     }
   }
+}
+
+.network-identifier-outer {
+  text-align: center;
+  border-bottom: 1px solid #ffb95f;
+
+  &+.br-7 {
+    border-top-left-radius: 0 !important;
+    border-top-right-radius: 0 !important;
+  }
+}
+
+.network-identifier {
+  display: inline-block;
+  background: #ffb95f;
+  color: #fff;
+  padding: 8px 38px;
+  margin-bottom: -1px;
+  font-size: 14px;
 }

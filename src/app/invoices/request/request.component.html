@@ -29,6 +29,7 @@
       </div>
       <ng-template #requestBlock>
         <div class="mr-lg-auto col-lg-6 col-xl-5 mr-xl-auto request-invoice-container">
+          <network-identifier [isRinkeby]="web3Service.networkIdObservable.value == 4"></network-identifier>
           <mat-card class="p-0 br-7 sh-blue" id="request-invoice-outer">
             <div class="request-invoice-inner-pdf">
               <div class="d-flex p-4 btr-7">
@@ -84,7 +85,8 @@
                 </div>
               </ng-template>
               <div class="hidden-if-empty p-4 my-3 progress-container">
-                <div *ngIf="request.status && request.state != 2 && request.status != 'pending' && request.status != 'failed'"
+                <div
+                  *ngIf="request.status && request.state != 2 && request.status != 'pending' && request.status != 'failed'"
                   class="fs-14 mx-auto w-50 text-center progress-bar-{{request.status.replace(' ','-')}}">
                   <div>
                     <i><strong>{{progress | number: '1.0-2'}}%</strong> of the request has been paid</i></div>
@@ -196,7 +198,8 @@
                   fill="#CAD1D8" />
               </svg>
             </div>
-            <div *ngIf="request.status && request.state != 2 && request.status != 'failed' && request.status != 'pending'">
+            <div
+              *ngIf="request.status && request.state != 2 && request.status != 'failed' && request.status != 'pending'">
               <div class="fs-16 lh-14">
                 <div id="share-request-item" class="semi-bold">
                   SHARE THIS REQUEST FOR PAYMENT
@@ -208,24 +211,25 @@
             </div>
             <div *ngIf="request.status == 'failed'" class="fs-16 mb-5 lh-14 failed-container">
               <div class="failed-message">
-              <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path
-                  d="M31.5 36L21.052 29.4339H2.25C1.00745 29.4339 0 28.4201 0 27.1698V2.26415C0 1.01378 1.00745 0 2.25 0H33.75C34.9926 0 36 1.01378 36 2.26415V27.1698C36 28.4201 34.9926 29.4339 33.75 29.4339H31.5V36Z"
-                  fill="#FF7761" />
-                <path
-                  d="M19.7143 17.8776H17.1428V7.95919C17.1428 7.35059 17.7185 6.85715 18.4285 6.85715C19.1386 6.85715 19.7143 7.35059 19.7143 7.95919V17.8776Z"
-                  fill="white" />
-                <path d="M17.1428 20.0816H19.7143V22.2857H17.1428V20.0816Z" fill="white" />
-              </svg>
-              <p>
-                The request has not successfully posted. Please try again.
-              </p>
+                <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    d="M31.5 36L21.052 29.4339H2.25C1.00745 29.4339 0 28.4201 0 27.1698V2.26415C0 1.01378 1.00745 0 2.25 0H33.75C34.9926 0 36 1.01378 36 2.26415V27.1698C36 28.4201 34.9926 29.4339 33.75 29.4339H31.5V36Z"
+                    fill="#FF7761" />
+                  <path
+                    d="M19.7143 17.8776H17.1428V7.95919C17.1428 7.35059 17.7185 6.85715 18.4285 6.85715C19.1386 6.85715 19.7143 7.35059 19.7143 7.95919V17.8776Z"
+                    fill="white" />
+                  <path d="M17.1428 20.0816H19.7143V22.2857H17.1428V20.0816Z" fill="white" />
+                </svg>
+                <p>
+                  The request has not successfully posted. Please try again.
+                </p>
               </div>
               <div class="fs-16 lh-14">
                 <div class="semi-bold">
                   OTHER ACTIONS
                 </div>
-                <button routerLink="/" [queryParams]="{amount: amount, currency: currency, payer: request.payer}" class="fs-16 bor-accent my-3" color="accent" type="button">
+                <button routerLink="/" [queryParams]="{amount: amount, currency: currency, payer: request.payer}"
+                  class="fs-16 bor-accent my-3" color="accent" type="button">
                   <i class="dash"></i>
                   Retry the request
                 </button>
@@ -271,29 +275,29 @@
                 </div>
               </div>
               <ng-template #errorBlock>
-                  <div class="failed-message">
-                      <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path
-                          d="M31.5 36L21.052 29.4339H2.25C1.00745 29.4339 0 28.4201 0 27.1698V2.26415C0 1.01378 1.00745 0 2.25 0H33.75C34.9926 0 36 1.01378 36 2.26415V27.1698C36 28.4201 34.9926 29.4339 33.75 29.4339H31.5V36Z"
-                          fill="#FF7761" />
-                        <path
-                          d="M19.7143 17.8776H17.1428V7.95919C17.1428 7.35059 17.7185 6.85715 18.4285 6.85715C19.1386 6.85715 19.7143 7.35059 19.7143 7.95919V17.8776Z"
-                          fill="white" />
-                        <path d="M17.1428 20.0816H19.7143V22.2857H17.1428V20.0816Z" fill="white" />
-                      </svg>
-                      <p>
-                        The request has not successfully posted. Please try again.
-                      </p>
-                      </div>
-                      <div class="fs-16 lh-14">
-                        <div class="semi-bold">
-                          OTHER ACTIONS
-                        </div>
-                        <button routerLink="/" class="fs-16 bor-accent my-3" color="accent" type="button">
-                          <i class="dash"></i>
-                          Create a new request
-                        </button>
-                      </div>
+                <div class="failed-message">
+                  <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      d="M31.5 36L21.052 29.4339H2.25C1.00745 29.4339 0 28.4201 0 27.1698V2.26415C0 1.01378 1.00745 0 2.25 0H33.75C34.9926 0 36 1.01378 36 2.26415V27.1698C36 28.4201 34.9926 29.4339 33.75 29.4339H31.5V36Z"
+                      fill="#FF7761" />
+                    <path
+                      d="M19.7143 17.8776H17.1428V7.95919C17.1428 7.35059 17.7185 6.85715 18.4285 6.85715C19.1386 6.85715 19.7143 7.35059 19.7143 7.95919V17.8776Z"
+                      fill="white" />
+                    <path d="M17.1428 20.0816H19.7143V22.2857H17.1428V20.0816Z" fill="white" />
+                  </svg>
+                  <p>
+                    The request has not successfully posted. Please try again.
+                  </p>
+                </div>
+                <div class="fs-16 lh-14">
+                  <div class="semi-bold">
+                    OTHER ACTIONS
+                  </div>
+                  <button routerLink="/" class="fs-16 bor-accent my-3" color="accent" type="button">
+                    <i class="dash"></i>
+                    Create a new request
+                  </button>
+                </div>
               </ng-template>
             </div>
             <div *ngIf="request.state == 2; else defaultBlock">
@@ -313,7 +317,6 @@
                   request.</p>
               </div>
             </ng-template>
-
             <div *ngIf="request.status && request.status != 'failed' && request.status != 'pending'">
               <input mat-button class="url-box fc-blue-grey fs-14 px-3 w-100 hidden" [value]="url" disabled>
               <button class="fs-16 bor-accent my-3" style="height: 50px" type="button" ngxClipboard [cbContent]="url"
@@ -324,8 +327,9 @@
                 <p class="semi-bold mb-2 fs-16">History</p>
                 <div *ngIf="request && request.events && request.events.length > 0">
                   <div *ngFor="let e of request.events" class="fs-14 d-flex mb-1 justify-content-between">
-                    <span>{{ spaceBeforeCapital(e.name) === 'Canceled' ? 'Cancelled' : spaceBeforeCapital(e.name) }} </span>
-                    <span>{{ utilService.getAgeFromTimeStamp(e._meta.timestamp) }}</span>
+                    <span>{{ spaceBeforeCapital(e.name) === 'Canceled' ? 'Cancelled' : spaceBeforeCapital(e.name) }}
+                    </span>
+                    <span>{{ e._meta.timestamp * 1000 | date: 'MMMM d, y' }}</span>
                   </div>
                 </div>
               </div>
