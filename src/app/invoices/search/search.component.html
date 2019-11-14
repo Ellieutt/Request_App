@@ -17,10 +17,11 @@
       <div [ngClass]="{'active': this.dataSource.filter=='outstanding'}"><a (click)="this.dataSource.filter = 'outstanding';">Outstanding</a></div>
       <div [ngClass]="{'active': this.dataSource.filter=='paid'}"><a (click)="this.financialFilter('paid')">Paid</a></div>
     </div>
-      
-      
+
+
     <!-- <div class="col-md-3">&nbsp;</div> -->
     <div class="d-flex flex-column">
+      <network-identifier [isRinkeby]="getNetworkValue() == 4"></network-identifier>
       <mat-table #table matSort [dataSource]="dataSource">
 
         <!-- Age Column -->

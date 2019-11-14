@@ -100,7 +100,7 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
       path: window.location.href,
     });
 
-    
+
     this.subscription = this.utilService.searchValue.subscribe(
       async searchValue => {
         this.searchValue = searchValue;
@@ -119,10 +119,10 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
         resultsList = resultsList.sort(
           (a, b) => b._meta.timestamp - a._meta.timestamp
         );
-            
+
         this.dataSource = new MatTableDataSource(resultsList);
         this.dataSource.filter = 'all';
-      
+
         // Financial-level filters logic for the top buttons
         this.dataSource.filterPredicate = (data: any, filter: string) => {
           if (!data['txid'] && (
@@ -170,8 +170,10 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
     this.dataSource.filter = filter;
     this.paginator.firstPage();
     this.handlePageChange();
+  }
 
-    //this.dataSource = new MatTableDataSource(resultsList);
+  getNetworkValue() {
+    return this.web3Service.networkIdObservable.value;
   }
 
   getRequestsFromIds(resultsList) {
