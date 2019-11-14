@@ -24,11 +24,11 @@
             </div>
           </div>
         </div>
-        <form [formGroup]="requestForm" (ngSubmit)="createRequest()" autocomplete="off">
+        <form [formGroup]="requestForm" autocomplete="off">
           <div class="p-4 mb-5">
             <mat-form-field class="w-100 mb-1">
               <input matInput type="text" name="ETHAddress"
-                [placeholder]="'On which ' + getBlockchainSymbol() + ' address do you want to receive the funds?'"
+                [placeholder]="'Your Address'"
                 [formControl]="payeePaymentAddressFormControl">
               <mat-error *ngIf="payeePaymentAddressFormControl.hasError('required')">
                 Payment address is
@@ -40,7 +40,7 @@
             </mat-form-field>
             <div class="d-flex w-100 mb-1">
               <mat-form-field class="w-100">
-                <input matInput type="text" name="expectedAmount" placeholder="Request amount"
+                <input matInput type="text" name="expectedAmount" placeholder="Amount"
                   [formControl]="expectedAmountFormControl">
                 <mat-error *ngIf="expectedAmountFormControl.hasError('required')">
                   amount is
@@ -59,7 +59,7 @@
               </mat-form-field>
             </div>
             <mat-form-field class="w-100 mb-1">
-              <input matInput type="text" name="payerETHAddress" placeholder="Payer's ETH address"
+              <input matInput type="text" name="payerETHAddress" placeholder="To: Wallet Address"
                 [formControl]="payerAddressFormControl">
               <mat-error *ngIf="payerAddressFormControl.hasError('required')">
                 payer's address is
@@ -96,15 +96,19 @@
               </mat-error>
             </mat-form-field>
             <mat-form-field class="w-100" hintLabel="Max 256 characters">
-              <input matInput type="text" name="reason" placeholder="Reason (optional)" maxlength="256"
+              <input matInput type="text" name="reason" placeholder="For: Bounty, Salary, Expense, etc… (optional)" maxlength="256"
                 [formControl]="reasonFormControl">
               <mat-hint align="end">{{ reasonFormControl?.value.length || 0 }}/256</mat-hint>
             </mat-form-field>
           </div>
           <mat-toolbar class="p-0 bbr-7 cta-toolbar" [style.height]="'70px'">
-            <div></div>
-            <button class="fs-18" id="create-request-button" mat-raised-button color="accent" type="submit">Create
-              a Request&nbsp;
+            <!-- <div></div> -->
+            <button class="fs-18" id="create-request-button" mat-raised-button color="accent" (click)="clickRequest()">
+                Request&nbsp;
+                <i *ngIf="createLoading" class="fa fa-circle-o-notch fa-spin"></i>
+              </button>
+            <button class="fs-18" id="send-request-button" mat-raised-button color="accent" (click)="clickSend()">
+              Send&nbsp;
               <i *ngIf="createLoading" class="fa fa-circle-o-notch fa-spin"></i>
             </button>
           </mat-toolbar>

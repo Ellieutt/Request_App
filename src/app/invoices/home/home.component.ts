@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit  } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
   FormGroup,
@@ -29,23 +29,24 @@ export class HomeComponent implements OnInit {
   dateFormControl: FormControl;
   currencyFormControl: FormControl;
   BTCRefundAddress;
+  payeeOrPayer: string;
 
   sameAddressValidator(control: FormControl) {
-    if (control.value) {
-      if (
-        this.payeeIdAddressFormControl.value &&
-        this.payeeIdAddressFormControl.value.toLowerCase() ===
-          control.value.toLowerCase()
-      ) {
-        return { sameAddressAsPayeeAddress: true };
-      } else if (
-        this.payeePaymentAddressFormControl.value &&
-        this.payeePaymentAddressFormControl.value.toLowerCase() ===
-          control.value.toLowerCase()
-      ) {
-        return { sameAddressAsPaymentAddress: true };
-      }
-    }
+    // if (control.value) {
+    //   if (
+    //     this.payeeIdAddressFormControl.value &&
+    //     this.payeeIdAddressFormControl.value.toLowerCase() ===
+    //       control.value.toLowerCase()
+    //   ) {
+    //     return { sameAddressAsPayeeAddress: true };
+    //   } else if (
+    //     this.payeePaymentAddressFormControl.value &&
+    //     this.payeePaymentAddressFormControl.value.toLowerCase() ===
+    //       control.value.toLowerCase()
+    //   ) {
+    //     return { sameAddressAsPaymentAddress: true };
+    //   }
+    // }
     return null;
   }
 
@@ -61,7 +62,9 @@ export class HomeComponent implements OnInit {
     }, 5000);
     this.utilService.setSearchValue('');
 
-    this.currencyFormControl = new FormControl('ETH', [Validators.required]);
+    this.currencyFormControl = new FormControl('ETH', [
+      Validators.required,
+    ]);
     this.payeeIdAddressFormControl = new FormControl('', [Validators.required]);
     this.payeePaymentAddressFormControl = new FormControl('', [
       Validators.required,
@@ -97,6 +100,36 @@ export class HomeComponent implements OnInit {
       date: this.dateFormControl,
       reason: this.reasonFormControl,
     });
+
+  }
+
+  clickRequest() {
+    this.payeeOrPayer = 'Payee';
+    this.createRequest();
+  }
+
+  clickSend() {
+    this.payeeOrPayer = 'Payer';
+    this.sendTrigger();
+  }
+
+  async sendTrigger() {
+    const contract = '0xc77ceefa6960174accca0c6fdecb5dbd95042cda';
+    const allowance = await this.web3Service.getAllowance(
+      contract
+    );
+    alert(allowance);
+    if (allowance >= this.expectedAmountFormControl.value) {
+      // Create Request
+      this.createRequest();
+    } else {
+      // this.web3Service.allow(contract, this.expectedAmountFormControl.value, null);
+      this.web3Service.allowContract(
+        contract,
+        this.expectedAmountFormControl.value,
+        this.payerAddressFormControl.value
+      );
+    }
   }
 
   getNetworkValue() {
@@ -157,7 +190,6 @@ export class HomeComponent implements OnInit {
       return;
     }
     this.createLoading = true;
-
     if (!this.requestForm.valid) {
       if (this.expectedAmountFormControl.hasError('required')) {
         this.expectedAmountFormControl.markAsTouched();
@@ -247,13 +279,14 @@ export class HomeComponent implements OnInit {
 
     this.web3Service
       .createRequest(
-        'Payee',
+        this.payeeOrPayer,
         this.payerAddressFormControl.value,
         this.expectedAmountFormControl.value,
         this.currencyFormControl.value,
         this.payeePaymentAddressFormControl.value,
         { data },
-        this.payerRefundAddressFormControl.value
+        this.payerRefundAddressFormControl.value,
+        '0x8f8221afbb33998d8584a2b05749ba73c37a938a'
       )
       .on('broadcasted', response => {
         callback(response);

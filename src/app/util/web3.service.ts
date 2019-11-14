@@ -173,7 +173,7 @@ export class Web3Service {
 
     return `${negative ? '-' : ''}${whole}${
       fraction === '0' ? '' : `.${fraction}`
-    }`;
+      }`;
   }
 
   public getTotalBNFromAmounts(amountsArray: any[]) {
@@ -390,7 +390,8 @@ export class Web3Service {
     currency: string,
     paymentAddress: string,
     requestOptions: any = {},
-    refundAddress?: string
+    refundAddress?: string,
+    contract?: string,
   ) {
     if (this.watchDog()) {
       return;
@@ -401,22 +402,57 @@ export class Web3Service {
     };
 
     this.confirmTxOnLedgerMsg();
-    return this.requestNetwork.createRequest(
-      Types.Role[role],
-      Types.Currency[currency],
-      [
-        {
-          idAddress: this.accountObservable.value,
+    if (Types.Role[role] == 0) {
+      if (currency === "ETH") {
+        return this.requestNetwork.requestEthereumService.createRequestAsPayer(
+          [
+            payerAddress
+          ],
+          [this.amountToBN(expectedAmount, currency)],
           paymentAddress,
-          expectedAmount: this.amountToBN(expectedAmount, currency),
+          [this.amountToBN(expectedAmount, currency)],
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          requestOptions,
+        );
+      } else {
+        return this.requestNetwork.requestERC20Service.createRequestAsPayer(
+          contract,
+          [
+            payerAddress
+          ],
+          [this.amountToBN(expectedAmount, currency)],
+          paymentAddress,
+          [this.amountToBN(expectedAmount, currency)],
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          requestOptions,
+        );
+
+      }
+    } else {
+      return this.requestNetwork.createRequest(
+        Types.Role[role],
+        Types.Currency[currency],
+        [
+          {
+            idAddress: this.accountObservable.value,
+            paymentAddress,
+            expectedAmount: this.amountToBN(expectedAmount, currency),
+          },
+        ],
+        {
+          idAddress: payerAddress,
+          bitcoinRefundAddresses: refundAddress ? [refundAddress] : undefined,
         },
-      ],
-      {
-        idAddress: payerAddress,
-        bitcoinRefundAddresses: refundAddress ? [refundAddress] : undefined,
-      },
-      requestOptions
-    );
+        requestOptions
+      );
+    }
+
   }
 
   public cancel(
@@ -543,6 +579,22 @@ export class Web3Service {
     );
   }
 
+  public allowContract(
+    currencyContract: string,
+    amount: string,
+    paymentAddress: string,
+  ) {
+    if (this.watchDog()) {
+      return;
+    }
+    this.confirmTxOnLedgerMsg();
+    return this.requestNetwork.requestERC20Service.approveTokenFromTokenAddress(
+      currencyContract,
+      amount,
+      { from: paymentAddress }
+    );
+  }
+
   public getAllowance(contractAddress: string) {
     if (this.watchDog()) {
       return;
@@ -652,8 +704,8 @@ export class Web3Service {
         )
           ? transaction.method.parameters._payeesPaymentAddress[0]
           : this.web3.utils.hexToAscii(
-              transaction.method.parameters._payeesPaymentAddress.slice(4)
-            ),
+            transaction.method.parameters._payeesPaymentAddress.slice(4)
+          ),
         payerRefundAddress: transaction.method.parameters._payerRefundAddress,
         subPayeesPaymentAddress: transaction.method.parameters._payeesPaymentAddress.slice(
           1
