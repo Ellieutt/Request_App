@@ -157,6 +157,10 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
+  getNetworkValue() {
+    return this.web3Service.networkIdObservable.value;
+  }
+
   getRequestsFromIds(resultsList) {
     const promises = [];
     for (const result of resultsList) {
