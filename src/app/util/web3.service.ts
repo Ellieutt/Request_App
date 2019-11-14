@@ -109,7 +109,7 @@ export class Web3Service {
         }
       });
       if (hasChanged) {
-        //this.cookieService.set('processing_requests', JSON.stringify(updatedCookieList), 1);
+        this.cookieService.set('processing_requests', JSON.stringify(updatedCookieList), 1);
       }
     }
   }
