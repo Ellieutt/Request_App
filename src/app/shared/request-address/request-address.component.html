@@ -5,16 +5,9 @@
       <app-blockies [address]="address.toLowerCase()"></app-blockies>
     </div>
     <div class="request-address-item-outer {{ primaryLabel ? 'primary-label' : '' }}">
-      <div *ngIf="showLongAddress">
-        <span *ngIf="!label">
-          {{address}}
+        <span>
+          {{label ? label : address}}
         </span>
-        <span *ngIf="label">
-          {{label}}
-        </span>
-      </div>
-      <div *ngIf="!showLongAddress">
-        {{address | shortAddress}}
       </div>
     </div>
   </div>

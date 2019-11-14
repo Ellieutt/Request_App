@@ -10,8 +10,6 @@ export class RequestAddressComponent implements OnInit {
   @Input()
   address: string;
   @Input()
-  showLongAddress: boolean;
-  @Input()
   title: string;
   @Input()
   primaryLabel: boolean;
@@ -30,7 +28,6 @@ export class RequestAddressComponent implements OnInit {
       labelList.forEach(element => {
         if (element.hasOwnProperty(this.address.toLowerCase())) {
           this.label = element[this.address.toLowerCase()];
-          this.showLongAddress = true;
           return;
         }
       });

@@ -54,12 +54,6 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
     private cookieService: CookieService
   ) { }
 
-  openAddressModal(address, label) {
-    this.openAddressBookModal = true;
-    this.addressToAdd = address;
-    this.addressLabel = label;
-  }
-
   // on page change we preload the next page to ensure a smooth UX
   handlePageChange(e) {
     const pageIndex = e.pageIndex;
@@ -71,12 +65,17 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
     return pageIndex;
   }
 
+  openAddressModal(address) {
+    this.addressToAdd = address;
+    this.openAddressBookModal = true;
+  }
+
   closedModal(event) {
     this.openAddressBookModal = event;
   }
 
   updateTableWithNewLabel(event) {
-    if (event && event.address && event.label) {
+    if (event && event.address) {
       this.dataSource.data.forEach(function (requestObject) {
         if (requestObject['request']) {
           // For existing requests

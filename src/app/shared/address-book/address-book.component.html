@@ -9,7 +9,7 @@
             <p>This name will be shown instead of the address below.</p>
             <p style="font-weight: 500;">If you clear your local storage, it will be lost.</p>
         </div>
-        <p *ngIf="!editLabel" class="address-book-new-body-title">{{addressLabel}}</p>
+        <p *ngIf="!editLabel" class="address-book-new-body-title">{{addressLabel ? addressLabel : 'Address'}}</p>
     </div>
     
     <div class="address-book-new-user">
@@ -30,10 +30,19 @@
         </a>
         <a (click)="utilService.redirectToPage('/search/' + addressToAdd)" class="right-link">View Address</a>
     </div>
-    <input *ngIf="editLabel" value="{{addressLabel}}" (input)="onNameChangeInput($event.target.value)" class="address-book-new-label" placeholder="Custom name">
-    <div *ngIf="editLabel" class="form-buttons">
-        <button mat-button (click)="onSave(addressToAdd.toLowerCase())" class="form-buttons">Save</button>
-        <a (click)="toggleEdition()">Cancel</a>
-    </div>
+    <form *ngIf="editLabel" (ngSubmit)="onSave(addressToAdd.toLowerCase())">
+        <input  
+            #addressLabelField
+            [value]="addressLabel" 
+            [(ngModel)]="addressLabel"
+            class="address-book-new-label" 
+            placeholder="Custom name"
+            name="addressLabel"
+            autofocus>
+        <div class="form-buttons">
+            <button mat-button type="submit" class="form-buttons">Save</button>
+            <a (click)="toggleEdition()">Cancel</a>
+        </div>
+    </form>
     
 </div>
