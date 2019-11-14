@@ -99,6 +99,10 @@ export class HomeComponent implements OnInit {
     });
   }
 
+  getNetworkValue() {
+    return this.web3Service.networkIdObservable.value;
+  }
+
   onCurrencyChange(event) {
     this.payerRefundAddressFormControl.setValue('');
     this.payerRefundAddressFormControl.updateValueAndValidity();

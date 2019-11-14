@@ -16,7 +16,7 @@
 
     <!-- <div class="col-md-3">&nbsp;</div> -->
     <div class="col-md-12 d-flex flex-column">
-      <network-identifier [isRinkeby]="this.web3Service.networkIdObservable.value == 4"></network-identifier>
+      <network-identifier [isRinkeby]="getNetworkValue() == 4"></network-identifier>
       <mat-table #table matSort [dataSource]="dataSource">
 
         <!-- Age Column -->
