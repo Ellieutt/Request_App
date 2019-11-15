@@ -155,7 +155,6 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
       }
       );
 
-    // TODO active tab when searching for a new address
     if (this.route.snapshot.params['searchValue']) {
       setTimeout(() =>
         this.utilService.setSearchValue(
@@ -177,32 +176,29 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   getRequestsFromIds(resultsList) {
-    console.log('Fetching:' + resultsList.length);
     const promises = [];
     for (const result of resultsList.filter(f => {return f.txid === undefined && f.request === undefined;})) {
-      //if (!result.request) {
-        promises.push(
-          this.web3Service
-            .getRequestByRequestId(result.requestId)
-            .then(requestObject => {
-              if (this.cookieService.get('request_label_tags')) {
-                const labelList = JSON.parse(
-                  this.cookieService.get('request_label_tags')
-                );
-                labelList.forEach(element => {
-                  if (element.hasOwnProperty(requestObject.requestData.payee.address.toLowerCase())) {
-                    requestObject.requestData.payee.label = element[requestObject.requestData.payee.address.toLowerCase()];
-                  }
-                  if (element.hasOwnProperty(requestObject.requestData.payer.toLowerCase())) {
-                    requestObject.requestData.payerLabel = element[requestObject.requestData.payer.toLowerCase()];
-                  }
-                });
-              }
-              result.request = requestObject.requestData;
-            })
-        );
-      }
-    //}
+      promises.push(
+        this.web3Service
+          .getRequestByRequestId(result.requestId)
+          .then(requestObject => {
+            if (this.cookieService.get('request_label_tags')) {
+              const labelList = JSON.parse(
+                this.cookieService.get('request_label_tags')
+              );
+              labelList.forEach(element => {
+                if (element.hasOwnProperty(requestObject.requestData.payee.address.toLowerCase())) {
+                  requestObject.requestData.payee.label = element[requestObject.requestData.payee.address.toLowerCase()];
+                }
+                if (element.hasOwnProperty(requestObject.requestData.payer.toLowerCase())) {
+                  requestObject.requestData.payerLabel = element[requestObject.requestData.payer.toLowerCase()];
+                }
+              });
+            }
+            result.request = requestObject.requestData;
+          })
+      );
+    }
     return Promise.all(promises);
   }
 
@@ -249,12 +245,12 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
     this.backgroundLoading = true;
     this.loadInBackground(data, pageStart, this.paginator.pageSize, this.paginator.pageSize
     ).then(() => {
-      console.log('Fetched.');
+      // When there is a filter, we preload the whole data to be sure we fetch the relevant info
       if (this.dataSource.filter != 'all') {
         this.backgroundLoading = true;
         this.loadInBackground(data, pageEnd + 1, this.paginator.pageSize, data.length);
       } else {
-        // Cache next page for UX & performance
+        // When there is no filter, we limit the query with maxPreload
         this.backgroundLoading = true;
         this.loadInBackground(data, pageEnd + 1, this.preLoadBatchSize, this.maxPreLoad);
       }
@@ -270,7 +266,6 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
       startIndex < data.length
     ) {
       const endIndex = startIndex + batchSize - 1;
-      console.log('Background loading:' + startIndex + '-' + endIndex);
       this.getRequestsFromIds(data.slice(startIndex, endIndex + 1)
       ).then(() => {
         this.dataSource._updateChangeSubscription();

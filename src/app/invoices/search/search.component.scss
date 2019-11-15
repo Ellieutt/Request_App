@@ -7,7 +7,7 @@ div.top-filters {
 	box-shadow: inset 0px -1px 0px #EBEBEB;
 }
 
-div.top-filters div {
+div.top-filters > div {
 	height: 100%;
 	width: 33%;
 	display: table-cell;

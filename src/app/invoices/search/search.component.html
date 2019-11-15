@@ -3,7 +3,6 @@
 </address-book>
 
 <div class="container">
-  <div>
     <div class="d-flex mb-4">
       <mat-spinner class="ml-3" [diameter]="20"
       *ngIf="searchValue &&  loading && (!dataSource || dataSource.data.length < 1)"></mat-spinner>
@@ -156,5 +155,5 @@
       <mat-paginator [length]="this.dataSource.filteredData.length" [pageSize]="10" [pageSizeOptions]="[5, 10, 20]" (page)="pageEvent = handlePageChange()">
       </mat-paginator>
     </div>
-  </div>
+
 </div>
