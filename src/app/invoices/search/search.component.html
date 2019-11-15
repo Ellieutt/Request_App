@@ -3,20 +3,23 @@
 </address-book>
 
 <div class="container">
-  <div class="row my-5 mt-6">
-    <div class="col-12 fs-22 d-flex mb-4">
-      <span *ngIf="searchValue" class="semi-bold">ETH address:</span>&nbsp;<span>{{ searchValue }}</span>
+    <div class="d-flex mb-4">
       <mat-spinner class="ml-3" [diameter]="20"
-        *ngIf="searchValue &&  loading && (!dataSource || dataSource.data.length < 1)"></mat-spinner>
+      *ngIf="searchValue &&  loading && (!dataSource || dataSource.data.length < 1)"></mat-spinner>
       <span class="ml-auto semi-bold" *ngIf="!loading && dataSource && dataSource.data.length == 0">&nbsp;0 result found
         for this address</span>
     </div>
 
+    <network-identifier [isRinkeby]="getNetworkValue() == 4"></network-identifier>
+    <div class="top-filters">
+      <div [ngClass]="{'active': this.dataSource.filter=='all'}" (click)="this.financialFilter('all')"><a>All Requests</a></div>
+      <div [ngClass]="{'active': this.dataSource.filter=='outstanding'}" (click)="this.dataSource.filter = 'outstanding';"><a>Outstanding</a></div>
+      <div [ngClass]="{'active': this.dataSource.filter=='paid'}" (click)="this.financialFilter('paid')"><a>Paid</a></div>
+    </div>
 
 
     <!-- <div class="col-md-3">&nbsp;</div> -->
-    <div class="col-md-12 d-flex flex-column">
-      <network-identifier [isRinkeby]="getNetworkValue() == 4"></network-identifier>
+    <div class="d-flex flex-column">
       <mat-table #table matSort [dataSource]="dataSource">
 
         <!-- Age Column -->
@@ -27,6 +30,7 @@
             <span *ngIf="req.timestamp">{{ req.timestamp | date: 'y/MM/dd'  }}</span>
           </mat-cell>
         </ng-container>
+        <!-- Access Request Column -->
         <ng-container matColumnDef="requestId">
           <mat-header-cell *matHeaderCellDef mat-sort-header></mat-header-cell>
           <mat-cell *matCellDef="let req">
@@ -148,8 +152,8 @@
         <mat-row *matRowDef="let row; columns: displayedColumns;">
         </mat-row>
       </mat-table>
-      <mat-paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 20]" (page)="pageEvent = handlePageChange($event)">
+      <mat-paginator [length]="this.dataSource.filteredData.length" [pageSize]="10" [pageSizeOptions]="[5, 10, 20]" (page)="pageEvent = handlePageChange()">
       </mat-paginator>
     </div>
-  </div>
+
 </div>
