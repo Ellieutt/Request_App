@@ -1,5 +1,5 @@
 <!-- ACCOUNT BLOCK -->
-<button mat-button class="account-menu-button no-focus-overlay py-1" [matMenuTriggerFor]="accountMenu" *ngIf="web3Service.web3Ready; else loadingAccount">
+<button mat-button class="account-menu-button no-focus-overlay py-1" [matMenuTriggerFor]="accountMenu">
   <div *ngIf="web3Service.accountObservable | async as account; else accountLocked" class="d-flex justify-content-between align-items-center">
     <angular-blockies [options]="{ seed: account.toLowerCase() }" class="blockies"></angular-blockies>
     <div class="d-flex flex-column align-items-start px-2" [style.lineHeight]="'14px'" [style.borderRight]="'1px solid #617B9F'">
@@ -29,27 +29,30 @@
     </div>
   </ng-template>
   <mat-menu #accountMenu="matMenu" [overlapTrigger]="false" class="mat-menu-custom">
-    <div *ngIf="web3Service.accountObservable | async as account">
+    <div *ngIf="web3Service.accountObservable | async as account; else accountLost">
       <a routerLink="/search/{{ account }}" (click)="utilService.setSearchValue(account)" mat-menu-item>
         <i class="fa fa-search" aria-hidden="true"></i>
         <small>&nbsp;{{ account }}</small>
       </a>
       <hr class="m-0" style="border-color: #617B9F; opacity: 0.1;" />
     </div>
+    <ng-template #accountLost>
+        <button class="d-flex align-items-center" (click)="web3Service.checkAndInstantiateWeb3()" *ngIf="web3Service.metamask" mat-menu-item>
+          <img style="width: 20px; position: relative; top: -4px; margin: 0 0.5rem" src="assets/img/metamask-icon.png">
+          <span>&nbsp;Connect Metamask</span>
+        </button>
+      </ng-template>
     <button class="d-flex align-items-center" (click)="openLedgerDialog()" mat-menu-item>
       <img style="width: 36px; position: relative; top: -2px" src="assets/img/ledger-icon.png">
       <span>&nbsp;Connect Ledger Nano S</span>
     </button>
-    <button class="d-flex align-items-center" (click)="web3Service.checkAndInstantiateWeb3()" *ngIf="web3Service.metamask && web3Service.ledgerConnected" mat-menu-item>
+    <button class="d-flex align-items-center" (click)="web3Service.checkAndInstantiateWeb3()" *ngIf="!web3Service.metamask" mat-menu-item>
       <img style="width: 20px; position: relative; top: -4px; margin: 0 0.5rem" src="assets/img/metamask-icon.png">
-      <span>&nbsp;Connect metamask</span>
+      <span>&nbsp;Connect Metamask</span>
     </button>
     <a class="fs-14 d-flex align-items-center" href="https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn" target="_blank" *ngIf="!web3Service.metamask" mat-menu-item>
       <img style="width: 20px; position: relative; top: -4px; margin: 0 0.5rem" src="assets/img/metamask-icon.png">
-      <span>&nbsp;Download metamask</span>
+      <span>&nbsp;Download Metamask</span>
     </a>
   </mat-menu>
 </button>
-<ng-template #loadingAccount>
-  <mat-spinner class="pull-right mr-3" [diameter]="20"></mat-spinner>
-</ng-template>
