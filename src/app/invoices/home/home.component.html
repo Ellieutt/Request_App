@@ -17,16 +17,21 @@
       <mat-card class="p-0 br-7 sh-blue">
         <div class="d-flex p-4 btr-7 home-invoice-header">
           <img class="px-3" [style.max-height]="'50px'" src="assets/img/request-logo.png">
+          <div class="request-home-address"> 
+              <h4 class="fs-16 semi-bold">Your Address</h4>
+              <request-address *ngIf="!this.web3Service.accountObservable.value" [noAddress]="true" [showLongAddress]="true" [address]="'Wallet not connected'"></request-address>
+              <request-address *ngIf="this.web3Service.accountObservable.value" [showLongAddress]="true" [address]="this.web3Service.accountObservable.value" [primaryLabel]="this.web3Service.accountObservable.value"></request-address>
+          </div>
           <div class="ml-auto text-right">
-            <h4 class="fs-18 semi-bold">New Request</h4>
+            <h4>&nbsp;</h4>
             <div class="fs-14" [style.opacity]="'0.5'">
-              <i>{{date | date: 'fullDate'}}</i>
+              <i class="request-home-date">{{date | date: 'fullDate'}}</i>
             </div>
           </div>
         </div>
         <form [formGroup]="requestForm" autocomplete="off">
           <div class="p-4 mb-5">
-            <mat-form-field class="w-100 mb-1">
+            <mat-form-field class="w-100 mb-1 hidden">
               <input matInput type="text" name="ETHAddress" readonly
                 [placeholder]="'Your Address'"
                 [formControl]="payeePaymentAddressFormControl">
