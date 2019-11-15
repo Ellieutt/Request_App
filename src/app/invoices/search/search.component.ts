@@ -146,7 +146,7 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
           }
         }
 
-        this.handlePageChange();
+        this.handlePageChange(undefined);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
 
@@ -168,7 +168,7 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
     this.backgroundLoading = false;
     this.dataSource.filter = filter;
     this.paginator.firstPage();
-    this.handlePageChange();
+    this.handlePageChange(undefined);
   }
 
   getNetworkValue() {
@@ -235,7 +235,8 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
   // Called at every filter change and page change to refresh the visible results list.
   // In case of a search, makes sure to fetch rows one by one to avoid brief appearance of wrong results.
   // Once the page is full of results, pre-load next results.
-  handlePageChange() {
+  // Parameter: unused, mandatory for usage in mat-paginator
+  handlePageChange(unused?:PageEvent) {
     const pageStart = this.paginator.pageIndex * this.paginator.pageSize;
     const pageEnd = pageStart + this.paginator.pageSize - 1;
     let data = this.dataSource.data;
