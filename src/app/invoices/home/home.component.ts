@@ -109,6 +109,7 @@ export class HomeComponent implements OnInit {
     if (!this.isFormValid()) {
       return;
     }
+    this.createLoading = false;
     this.payeeOrPayer = 'Payer';
     this.sendTrigger();
   }

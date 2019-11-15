@@ -246,6 +246,11 @@ mat-toolbar.cta-toolbar {
     border-radius: 0;
     box-shadow: none !important;
     height: 100%;
+
+    &.disabled {
+      opacity: 0.3;
+      background: grey;
+    }
   }
   &:empty {
     display: none;
