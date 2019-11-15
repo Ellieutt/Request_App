@@ -18,9 +18,7 @@ export class RequestAddressComponent implements OnInit {
 
   label: string;
 
-  constructor(
-    private cookieService: CookieService
-  ) {}
+  constructor(private cookieService: CookieService) {}
 
   ngOnInit() {
     if (this.cookieService.get('request_label_tags')) {

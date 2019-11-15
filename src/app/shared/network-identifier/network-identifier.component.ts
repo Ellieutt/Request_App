@@ -5,6 +5,6 @@ import { Component, Input } from '@angular/core';
   templateUrl: './network-identifier.component.html',
 })
 export class NetworkIdentifierComponent {
-    @Input()
-    isRinkeby: boolean;
+  @Input()
+  isRinkeby: boolean;
 }

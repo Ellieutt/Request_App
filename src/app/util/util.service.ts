@@ -7,8 +7,7 @@ import { Location } from '@angular/common';
 export class UtilService {
   public searchValue = new Subject<string>();
 
-  constructor(private snackBar: MatSnackBar, private location: Location) {
-   }
+  constructor(private snackBar: MatSnackBar, private location: Location) {}
 
   public setSearchValue(searchValue: string) {
     this.searchValue.next(searchValue);

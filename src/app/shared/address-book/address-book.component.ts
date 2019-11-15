@@ -7,7 +7,6 @@ import { UtilService } from '../../util/util.service';
   templateUrl: './address-book.component.html',
   styleUrls: ['./address-book.component.scss'],
 })
-
 export class AddressBookComponent implements OnInit {
   editLabel = false;
   @Input()
@@ -17,13 +16,13 @@ export class AddressBookComponent implements OnInit {
   @Output()
   emitHideAddressBook = new EventEmitter<boolean>();
   @Output()
-  emitNewLabel = new EventEmitter<{ address: string, label: string }>();
+  emitNewLabel = new EventEmitter<{ address: string; label: string }>();
   newLabelValue: string;
 
   constructor(
     private cookieService: CookieService,
-    private utilService: UtilService,
-  ) { }
+    private utilService: UtilService
+  ) {}
 
   ngOnInit() {
     if (!this.addressLabel) {
@@ -62,20 +61,20 @@ export class AddressBookComponent implements OnInit {
     }
     if (isNew) {
       requestLabelList.push({
-        [address]: this.newLabelValue
+        [address]: this.newLabelValue,
       });
     }
 
     this.emitNewLabel.emit({ address, label: this.newLabelValue });
 
-    this.cookieService.set('request_label_tags', JSON.stringify(requestLabelList), 9999);
+    this.cookieService.set(
+      'request_label_tags',
+      JSON.stringify(requestLabelList),
+      9999
+    );
   }
 
   copyToClipboard() {
-    this.utilService.openSnackBar(
-      'Address copied.',
-      null,
-      'success-snackbar'
-    );
+    this.utilService.openSnackBar('Address copied.', null, 'success-snackbar');
   }
 }

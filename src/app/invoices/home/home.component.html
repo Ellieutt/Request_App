@@ -27,7 +27,7 @@
         <form [formGroup]="requestForm" autocomplete="off">
           <div class="p-4 mb-5">
             <mat-form-field class="w-100 mb-1">
-              <input matInput type="text" name="ETHAddress"
+              <input matInput type="text" name="ETHAddress" readonly
                 [placeholder]="'Your Address'"
                 [formControl]="payeePaymentAddressFormControl">
               <mat-error *ngIf="payeePaymentAddressFormControl.hasError('required')">

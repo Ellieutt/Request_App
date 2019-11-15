@@ -1,4 +1,4 @@
-import { Component, OnInit  } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
   FormGroup,
@@ -32,21 +32,21 @@ export class HomeComponent implements OnInit {
   payeeOrPayer: string;
 
   sameAddressValidator(control: FormControl) {
-    // if (control.value) {
-    //   if (
-    //     this.payeeIdAddressFormControl.value &&
-    //     this.payeeIdAddressFormControl.value.toLowerCase() ===
-    //       control.value.toLowerCase()
-    //   ) {
-    //     return { sameAddressAsPayeeAddress: true };
-    //   } else if (
-    //     this.payeePaymentAddressFormControl.value &&
-    //     this.payeePaymentAddressFormControl.value.toLowerCase() ===
-    //       control.value.toLowerCase()
-    //   ) {
-    //     return { sameAddressAsPaymentAddress: true };
-    //   }
-    // }
+    if (control.value) {
+      if (
+        this.payeeIdAddressFormControl.value &&
+        this.payeeIdAddressFormControl.value.toLowerCase() ===
+          control.value.toLowerCase()
+      ) {
+        return { sameAddressAsPayeeAddress: true };
+      } else if (
+        this.payeePaymentAddressFormControl.value &&
+        this.payeePaymentAddressFormControl.value.toLowerCase() ===
+          control.value.toLowerCase()
+      ) {
+        return { sameAddressAsPaymentAddress: true };
+      }
+    }
     return null;
   }
 
@@ -62,9 +62,7 @@ export class HomeComponent implements OnInit {
     }, 5000);
     this.utilService.setSearchValue('');
 
-    this.currencyFormControl = new FormControl('ETH', [
-      Validators.required,
-    ]);
+    this.currencyFormControl = new FormControl('ETH', [Validators.required]);
     this.payeeIdAddressFormControl = new FormControl('', [Validators.required]);
     this.payeePaymentAddressFormControl = new FormControl('', [
       Validators.required,
@@ -100,7 +98,6 @@ export class HomeComponent implements OnInit {
       date: this.dateFormControl,
       reason: this.reasonFormControl,
     });
-
   }
 
   clickRequest() {
@@ -109,26 +106,57 @@ export class HomeComponent implements OnInit {
   }
 
   clickSend() {
+    if (!this.isFormValid()) {
+      return;
+    }
     this.payeeOrPayer = 'Payer';
     this.sendTrigger();
   }
 
   async sendTrigger() {
-    const contract = '0xc77ceefa6960174accca0c6fdecb5dbd95042cda';
-    const allowance = await this.web3Service.getAllowance(
-      contract
-    );
-    alert(allowance);
-    if (allowance >= this.expectedAmountFormControl.value) {
-      // Create Request
-      this.createRequest();
+    const currency = this.currencyFormControl.value;
+    if (currency === 'ETH') {
+      const balance = await this.web3Service.getBalance(currency);
+      if (balance >= this.expectedAmountFormControl.value) {
+        return this.createRequest();
+      } else {
+        this.createLoading = false;
+        return this.utilService.openSnackBar('You do not have enough ' + currency + ' to make this payment.');
+      }
     } else {
-      // this.web3Service.allow(contract, this.expectedAmountFormControl.value, null);
-      this.web3Service.allowContract(
-        contract,
+      const balance = await this.web3Service.getBalance(currency);
+
+      const contract = this.web3Service.getCurrencyAddress(currency).erc20;
+      const main = this.web3Service.getCurrencyAddress(currency).main;
+      const allowance = await this.web3Service.getAllowance(contract);
+      const allowanceNeeded = this.web3Service.amountToBN(
         this.expectedAmountFormControl.value,
-        this.payerAddressFormControl.value
+        this.currencyFormControl.value
       );
+      if (balance.gte(allowanceNeeded)) {
+        if (allowance >= allowanceNeeded) {
+          // Create Request
+          this.createRequest();
+        } else {
+          // this.web3Service.allow(contract, this.expectedAmountFormControl.value, null);
+          this.web3Service
+            .allowContract(
+              main,
+              allowanceNeeded,
+              this.payeePaymentAddressFormControl.value
+            )
+            .on('broadcasted', txHash => {
+              this.createRequest();
+            })
+            .catch(err => {
+              this.createLoading = false;
+              return this.utilService.openSnackBar(err.message);
+            });
+        }
+      } else {
+        this.createLoading = false;
+        return this.utilService.openSnackBar('You do not have enough ' + currency + ' to make this payment.');
+      }
     }
   }
 
@@ -185,10 +213,7 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  createRequest() {
-    if (this.createLoading || this.web3Service.watchDog()) {
-      return;
-    }
+  isFormValid() {
     this.createLoading = true;
     if (!this.requestForm.valid) {
       if (this.expectedAmountFormControl.hasError('required')) {
@@ -200,6 +225,16 @@ export class HomeComponent implements OnInit {
         this.payerAddressFormControl.setErrors({ required: true });
       }
       this.createLoading = false;
+      return false;
+    }
+    return true;
+  }
+
+  createRequest() {
+    if (this.createLoading || this.web3Service.watchDog()) {
+      return;
+    }
+    if (!this.isFormValid()) {
       return;
     }
     this.dateFormControl.setValue(this.date);
