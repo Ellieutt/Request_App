@@ -237,6 +237,7 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
   // Once the page is full of results, pre-load next results.
   // Parameter: unused, mandatory for usage in mat-paginator
   handlePageChange(unused?:PageEvent) {
+
     const pageStart = this.paginator.pageIndex * this.paginator.pageSize;
     const pageEnd = pageStart + this.paginator.pageSize - 1;
     let data = this.dataSource.data;
