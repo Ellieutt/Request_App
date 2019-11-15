@@ -13,6 +13,7 @@ export class RequestAddressComponent implements OnInit {
   title: string;
   @Input()
   primaryLabel: boolean;
+  openAddressBookModal:boolean = false;
 
   label: string;
 
@@ -32,5 +33,17 @@ export class RequestAddressComponent implements OnInit {
         }
       });
     }
+  }
+
+  openAddressModal() {
+    this.openAddressBookModal = true;
+  }
+
+  updateLabel(labelledAddress) {
+    this.label = labelledAddress.label;
+  }
+
+  closedModal(event) {
+    this.openAddressBookModal = event;
   }
 }
