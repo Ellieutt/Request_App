@@ -146,7 +146,7 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
           }
         }
 
-        this.handlePageChange(undefined);
+        this.handlePageLoading();
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
 
@@ -168,7 +168,7 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
     this.backgroundLoading = false;
     this.dataSource.filter = filter;
     this.paginator.firstPage();
-    this.handlePageChange(undefined);
+    this.handlePageLoading();
   }
 
   getNetworkValue() {
@@ -231,15 +231,16 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
-  // Function handlePageChange
+  // Function handlePageLoading
   // Called at every filter change and page change to refresh the visible results list.
   // In case of a search, makes sure to fetch rows one by one to avoid brief appearance of wrong results.
   // Once the page is full of results, pre-load next results.
   // Parameter: unused, mandatory for usage in mat-paginator
-  handlePageChange(unused?:PageEvent) {
+  handlePageLoading() {
     const pageStart = this.paginator.pageIndex * this.paginator.pageSize;
     const pageEnd = pageStart + this.paginator.pageSize - 1;
     let data = this.dataSource.data;
+
     if (this.dataSource.filter != 'all') {
       data = this.dataSource.filteredData;
     }
@@ -256,8 +257,11 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
         this.loadInBackground(data, pageEnd + 1, this.preLoadBatchSize, this.maxPreLoad);
       }
     });
+  }
 
-    return this.paginator.pageIndex;
+  handlePageChange(pageEvent?:PageEvent) {
+    this.pageEvent = pageEvent;
+    this.handlePageLoading();
   }
 
   private async loadInBackground(data: Array<any>, startIndex: number, batchSize: number, loadingLimit: number) {
