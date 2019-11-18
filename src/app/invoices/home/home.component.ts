@@ -104,6 +104,11 @@ export class HomeComponent implements OnInit {
   }
 
   onCurrencyChange(event) {
+    if (event.value === 'SAI') {
+      this.utilService.openSnackBar(
+        'Note: This is single-collatoral Dai (SAI). We will be adding support for Multi-Collateral Dai (MCD) soon.'
+      );
+    }
     this.payerRefundAddressFormControl.setValue('');
     this.payerRefundAddressFormControl.updateValueAndValidity();
     this.payeePaymentAddressFormControl.updateValueAndValidity();
