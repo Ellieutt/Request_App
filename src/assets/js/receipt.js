@@ -12,7 +12,8 @@ $('#download-receipt').click(function () {
         payerLabel = $('#payerAddressPdf .pdf-label').html(),
         amount = $('#request-expected-amount').html(),
         amountUSD = $('#amount-usd div').html(),
-        rinkeby = $('.network-identifier').html() !== undefined;
+        rinkeby = $('.network-identifier').html() !== undefined,
+        currentAddress = $('#current-selected-address').html();
 
     var doc = new jsPDF({
         unit: 'pt',
@@ -68,7 +69,12 @@ $('#download-receipt').click(function () {
     var paymentY = 155;
     if (payeeLabel) {
         paymentY = 140;
-        doc.setFillColor(194, 232, 255);
+        if (payeeLabel == currentAddress) {
+            doc.setFillColor(194, 232, 255);
+        } else {
+            doc.setFillColor(243, 243, 243);
+        }
+        
         doc.rect(46, 150, (payeeLabel.length * 8) + 20, 26, "F");
         doc.addImage(payeeImage, 'PNG', 20, 150, 26, 26, undefined, 'FAST');
         doc.text(58, 168, payeeLabel);
@@ -86,7 +92,11 @@ $('#download-receipt').click(function () {
     
     var paymentX = 220;
     if (payerLabel) {
-        doc.setFillColor(243, 243, 243);
+        if (payerLabel == currentAddress) {
+            doc.setFillColor(194, 232, 255);
+        } else {
+            doc.setFillColor(243, 243, 243);
+        }
         doc.rect(46, 230, (payerLabel.length * 8) + 20, 26, "F");
         doc.addImage(payerImage, 'PNG', 20, 230, 26, 26, undefined, 'FAST');
         doc.text(58, 248, payerLabel);
