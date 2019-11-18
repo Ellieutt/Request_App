@@ -108,12 +108,12 @@
           </div>
           <mat-toolbar class="p-0 bbr-7 cta-toolbar" [style.height]="'70px'">
             <!-- <div></div> -->
-            <button class="fs-18" [ngClass]="createLoading ? 'disabled': ''" id="create-request-button" mat-raised-button color="accent" (click)="clickRequest()">
-                Request&nbsp;
-              </button>
             <button class="fs-18" [ngClass]="createLoading ? 'disabled': ''" id="send-request-button" mat-raised-button color="accent" (click)="clickSend()">
-              Send&nbsp;
-            </button>
+                Send Payment&nbsp;
+              </button>
+            <button class="fs-18" [ngClass]="createLoading ? 'disabled': ''" id="create-request-button" mat-raised-button color="accent" (click)="clickRequest()">
+                Request Payment&nbsp;
+              </button>
           </mat-toolbar>
         </form>
       </mat-card>
