@@ -1,7 +1,8 @@
 <address-book *ngIf="openAddressBookModal" 
   (emitNewLabel)="updateLabel($event)"
   (emitHideAddressBook)="closedModal()"
-  [addressToAdd]="address">
+  [addressToAdd]="address"
+  [owner]="primaryLabel">
 </address-book>
 
 <div class="request-address-outer" [popover]="address" popoverPlacement="bottom" [popoverOnHover]="true" [popoverCloseOnMouseOutside]="true"

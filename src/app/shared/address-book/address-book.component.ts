@@ -11,6 +11,8 @@ import { UtilService } from '../../util/util.service';
 export class AddressBookComponent implements OnInit {
   @Input()
   addressToAdd: string;
+  @Input()
+  owner: boolean;
   addressLabel: string;
   @Output()
   emitHideAddressBook = new EventEmitter<boolean>();

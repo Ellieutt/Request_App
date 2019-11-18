@@ -14,7 +14,7 @@
     
     <div class="address-book-new-user">
         <angular-blockies [options]="{ seed: addressToAdd.toLowerCase(), size:5, scale:8 }" class="address-book-new-blockie"></angular-blockies>
-        <input class="address-book-new-address" value="{{addressToAdd}}">
+        <input class="address-book-new-address" [ngClass]="{'owner': owner}" value="{{addressToAdd}}">
         <svg ngxClipboard [cbContent]="addressToAdd.toLowerCase()" (cbOnSuccess)="copyToClipboard()" width="18" height="22" viewBox="0 0 18 22" fill="none" xmlns="http://www.w3.org/2000/svg" class="copy-address">
             <path fill-rule="evenodd" clip-rule="evenodd" d="M1.70552 3.71069H11.5689C12.49 3.71069 13.2417 4.46239 13.2461 5.38789V19.5398C13.2461 20.4653 12.4944 21.217 11.5689 21.217H1.70552C0.780019 21.217 0.0283203 20.4653 0.0283203 19.5398V5.38789C0.0283203 4.46239 0.780019 3.71069 1.70552 3.71069ZM11.5645 20.0395C11.8426 20.0395 12.0685 19.8136 12.0685 19.5355V5.38789C12.0685 5.10981 11.8426 4.88387 11.5645 4.88387H1.70118C1.42309 4.88387 1.19715 5.10981 1.19715 5.38789V19.5355C1.19715 19.8136 1.42309 20.0395 1.70118 20.0395H11.5645Z" fill="black"/>
             <path d="M15.3403 0H5.47701C4.5515 0 3.7998 0.751699 3.7998 1.6772C3.7998 2.00308 4.06051 2.26379 4.38639 2.26379C4.71227 2.26379 4.97298 2.00308 4.97298 1.6772C4.97298 1.39912 5.19892 1.17317 5.47701 1.17317H15.3403C15.6184 1.17317 15.8444 1.39912 15.8444 1.6772V15.8291C15.8444 16.1072 15.6184 16.3332 15.3403 16.3332C15.0145 16.3332 14.7538 16.5939 14.7538 16.9197C14.7538 17.2456 15.0145 17.5063 15.3403 17.5063C16.2658 17.5063 17.0175 16.7546 17.0175 15.8291V1.6772C17.0175 0.751699 16.2658 0 15.3403 0Z" fill="black"/>
