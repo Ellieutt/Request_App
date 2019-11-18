@@ -69,7 +69,7 @@ $('#download-receipt').click(function () {
     var paymentY = 155;
     if (payeeLabel) {
         paymentY = 140;
-        if (payeeLabel == currentAddress) {
+        if (payeeAddress == currentAddress) {
             doc.setFillColor(194, 232, 255);
         } else {
             doc.setFillColor(243, 243, 243);
@@ -92,7 +92,7 @@ $('#download-receipt').click(function () {
     
     var paymentX = 220;
     if (payerLabel) {
-        if (payerLabel == currentAddress) {
+        if (payerAddress == currentAddress) {
             doc.setFillColor(194, 232, 255);
         } else {
             doc.setFillColor(243, 243, 243);
