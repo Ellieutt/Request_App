@@ -44,8 +44,8 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @ViewChild(MatPaginator)
   paginator: MatPaginator;
-  @ViewChild(MatSort)
-  sort: MatSort;
+  /*@ViewChild(MatSort)
+  sort: MatSort;*/
 
   constructor(
     private web3Service: Web3Service,
