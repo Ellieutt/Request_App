@@ -10,11 +10,10 @@ export class RequestAddressComponent implements OnInit {
   @Input()
   address: string;
   @Input()
-  showLongAddress: boolean;
-  @Input()
   title: string;
   @Input()
   primaryLabel: boolean;
+  openAddressBookModal:boolean = false;
 
   label: string;
 
@@ -30,10 +29,21 @@ export class RequestAddressComponent implements OnInit {
       labelList.forEach(element => {
         if (element.hasOwnProperty(this.address.toLowerCase())) {
           this.label = element[this.address.toLowerCase()];
-          this.showLongAddress = true;
           return;
         }
       });
     }
+  }
+
+  openAddressModal() {
+    this.openAddressBookModal = true;
+  }
+
+  updateLabel(labelledAddress) {
+    this.label = labelledAddress.label;
+  }
+
+  closedModal(event) {
+    this.openAddressBookModal = event;
   }
 }

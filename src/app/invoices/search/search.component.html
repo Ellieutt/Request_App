@@ -1,5 +1,7 @@
-<address-book *ngIf="openAddressBookModal" (emitNewLabel)="updateTableWithNewLabel($event)"
-  (emitHideAddressBook)="closedModal($event)" addressToAdd="{{addressToAdd}}" addressLabel="{{addressLabel}}">
+<address-book *ngIf="openAddressBookModal" 
+  (emitNewLabel)="updateTableWithNewLabel($event)"
+  (emitHideAddressBook)="closedModal()"
+  [addressToAdd]="addressToAdd">
 </address-book>
 
 <div class="container">
@@ -46,7 +48,7 @@
           <mat-cell *matCellDef="let req">
             <div *ngIf="req.request">
               <span
-                (click)="openAddressModal(req.request.payee.address, req.request.payee.label ? req.request.payee.label : req.request.payee.address)">
+                (click)="openAddressModal(req.request.payee.address)">
                 <angular-blockies [options]="{ seed: req.request.payee.address.toLowerCase(), size:5, scale:8 }"
                   class="blockies"></angular-blockies>
                 <div class="address-label-outer"
@@ -57,7 +59,7 @@
             </div>
             <div *ngIf="req.payee">
               <span
-                (click)="openAddressModal(req.payee.address, req.payee.label ? req.payee.label : req.payee.address)">
+                (click)="openAddressModal(req.payee.address)">
                 <angular-blockies [options]="{ seed: req.payee.address.toLowerCase(),size:5, scale:8 }"
                   class="blockies"></angular-blockies>
                 <div class="address-label-outer"
@@ -74,7 +76,7 @@
           <mat-cell *matCellDef="let req">
             <div *ngIf="req.request">
               <span
-                (click)="openAddressModal(req.request.payer, req.request.payerLabel ? req.request.payerLabel : req.request.payer)">
+                (click)="openAddressModal(req.request.payer)">
                 <angular-blockies [options]="{ seed: req.request.payer.toLowerCase(), size:5, scale:8 }"
                   class="blockies"></angular-blockies>
                 <div class="address-label-outer"
@@ -84,7 +86,7 @@
               </span>
             </div>
             <div *ngIf="req.payer">
-              <span (click)="openAddressModal(req.payer, req.payerLabel ? req.payerLabel : req.payer)">
+              <span (click)="openAddressModal(req.payer)">
                 <angular-blockies [options]="{ seed: req.payer.toLowerCase(), size:5, scale:8 }" class="blockies">
                 </angular-blockies>
                 <div class="address-label-outer"
