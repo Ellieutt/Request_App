@@ -834,7 +834,7 @@ export class Web3Service {
         main: '0x4f3afec4e5a3f2a6a1a411def7d7dfe50ee057bf',
         erc20: '0x891a1f07cbf6325192d830f4399932d4d1d66e89',
       },
-      DAI: {
+      SAI: {
         main: '0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359',
         erc20: '0x3baa64a4401bbe18865547e916a9be8e6dd89a5a',
       },
@@ -858,6 +858,10 @@ export class Web3Service {
         main: '0x8762db106b2c2a0bccb3a80d1ed41273552616e8',
         erc20: '0x548ac0ec13b132f3b58bd8afd83ebd2e225eb1a6',
       },
+      DAI: {
+        main: '0x6b175474e89094c44da98b954eedeac495271d0f',
+        erc20: '0x62b37F0547047D99cC59e2F0db549Ab1D97149B5',
+      }
     };
 
     return allContractAddresses[currency];
