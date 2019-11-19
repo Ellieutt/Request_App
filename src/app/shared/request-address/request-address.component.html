@@ -14,9 +14,17 @@
       <div *ngIf="noAddress" class="grey-block"></div>
     </div>
     <div class="request-address-item-outer {{ primaryLabel ? 'primary-label' : '' }}">
-      <span>
-        {{label ? label : address}}
-      </span>
+      <div *ngIf="showLongAddress">	    
+        <span *ngIf="!label">	        
+          {{address}}	 
+        </span>	
+        <span *ngIf="label">	
+          {{label}}	
+        </span>	
+      </div>	
+      <div *ngIf="!showLongAddress">	
+        {{address | shortAddress}}	
+      </div>
     </div>
   </div>
 </div>

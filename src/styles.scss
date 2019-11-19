@@ -1440,3 +1440,17 @@ i.dash:after {
   top: 3px;
   right: -5px;
 }
+
+#send-request-button {
+  position: relative;
+
+  &:after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 1px;
+    height: 100%;
+    background: #fff;
+  }
+}

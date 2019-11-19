@@ -51,7 +51,7 @@ export class HomeComponent implements OnInit {
   }
 
   constructor(
-    private web3Service: Web3Service,
+    public web3Service: Web3Service,
     private utilService: UtilService,
     private formBuilder: FormBuilder,
     private router: Router,

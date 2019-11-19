@@ -13,6 +13,10 @@ export class RequestAddressComponent implements OnInit {
   title: string;
   @Input()
   primaryLabel: boolean;
+  @Input()
+  noAddress: boolean;
+  @Input()
+  showLongAddress: boolean;
   openAddressBookModal = false;
 
   label: string;
