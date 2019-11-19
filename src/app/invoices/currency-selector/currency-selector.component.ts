@@ -141,10 +141,10 @@ export class CurrencySelectorComponent
         case 1:
           this.currencies = [
             'ETH',
-            'SAI',
-            // 'DAI',
+            'DAI',
             'REQ',
             'RSR',
+            'SAI',
             'BAT',
             'DGX',
             'KNC',
