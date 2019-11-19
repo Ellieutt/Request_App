@@ -1,4 +1,5 @@
 <div class="container fc-primary request-container">
+  <span id="current-selected-address" class="hidden">{{ account }}</span>
   <div class="row my-5 mt-6">
     <div class="col-12" *ngIf="!request; else resultBlock">
       <mat-spinner class="mx-auto"></mat-spinner>

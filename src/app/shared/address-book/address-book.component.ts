@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
 import { UtilService } from '../../util/util.service';
 
@@ -8,34 +8,58 @@ import { UtilService } from '../../util/util.service';
   styleUrls: ['./address-book.component.scss'],
 })
 export class AddressBookComponent implements OnInit {
-  editLabel = false;
   @Input()
   addressToAdd: string;
   @Input()
+  owner: boolean;
   addressLabel: string;
   @Output()
   emitHideAddressBook = new EventEmitter<boolean>();
   @Output()
-  emitNewLabel = new EventEmitter<{ address: string; label: string }>();
-  newLabelValue: string;
+  emitNewLabel = new EventEmitter<{ address: string, label: string }>();
+  @ViewChild("addressLabelField")
+  addressLabelElement: ElementRef;
+  editLabel = false;
 
   constructor(
     private cookieService: CookieService,
     private utilService: UtilService
   ) {}
 
-  ngOnInit() {
-    if (!this.addressLabel) {
-      this.addressLabel = 'Address';
+  fetchLabelOrEmpty(address: string) {
+    if (this.cookieService.get('request_label_tags')) {
+      const labelList = JSON.parse(
+        this.cookieService.get('request_label_tags')
+      ).filter(label => {return label.hasOwnProperty(address.toLowerCase());}
+      );
+      if (labelList.length == 1) {
+        return labelList[0][address.toLowerCase()];
+      } else {
+        return address;
+      }
+    } else {
+      return address;
     }
   }
 
-  toggleEdition() {
-    this.editLabel = !this.editLabel;
+  fetchDisplay(address: string) {
+    const result = this.fetchLabelOrEmpty(address);
+    if (result == '') {
+      return address;
+    } else {
+      return result;
+    }
   }
 
-  onNameChangeInput(label) {
-    this.newLabelValue = label;
+  ngOnInit() {
+    this.addressLabel = this.fetchLabelOrEmpty(this.addressToAdd);
+  }
+  
+  toggleEdition() {
+    this.editLabel = !this.editLabel;
+    if (this.editLabel) {
+      setTimeout(() => {this.addressLabelElement.nativeElement.focus()}, 0);
+    }
   }
 
   closeModal() {
@@ -44,7 +68,6 @@ export class AddressBookComponent implements OnInit {
 
   onSave(address) {
     this.toggleEdition();
-    this.addressLabel = this.newLabelValue;
     const requestLabelList = [];
     let isNew = true;
     if (this.cookieService.get('request_label_tags')) {
@@ -54,18 +77,17 @@ export class AddressBookComponent implements OnInit {
       labelList.forEach(element => {
         if (element.hasOwnProperty(address)) {
           isNew = false;
-          element[address] = this.newLabelValue;
+          element[address] = this.addressLabel;
         }
         requestLabelList.push(element);
       });
     }
     if (isNew) {
       requestLabelList.push({
-        [address]: this.newLabelValue,
+        [address]: this.addressLabel
       });
     }
-
-    this.emitNewLabel.emit({ address, label: this.newLabelValue });
+    this.emitNewLabel.emit({ address, label: this.addressLabel ? this.addressLabel : address });
 
     this.cookieService.set(
       'request_label_tags',

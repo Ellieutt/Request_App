@@ -166,6 +166,11 @@ export class HomeComponent implements OnInit {
   }
 
   onCurrencyChange(event) {
+    if (event.value === 'DAI') {
+      this.utilService.openSnackBar(
+        'Note: You have selected Multi-Collateral Dai (MCD). If you would like to use Single-Collateral Dai, please select SAI.'
+      );
+    }
     this.payerRefundAddressFormControl.setValue('');
     this.payerRefundAddressFormControl.updateValueAndValidity();
     this.payeePaymentAddressFormControl.updateValueAndValidity();

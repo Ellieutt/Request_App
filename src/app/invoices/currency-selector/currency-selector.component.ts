@@ -144,6 +144,7 @@ export class CurrencySelectorComponent
             'DAI',
             'REQ',
             'RSR',
+            'SAI',
             'BAT',
             'DGX',
             'KNC',
