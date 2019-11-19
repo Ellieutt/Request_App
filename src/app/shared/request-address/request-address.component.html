@@ -14,7 +14,7 @@
     </div>
     <div class="request-address-item-outer {{ primaryLabel ? 'primary-label' : '' }}">
       <span>
-        {{label ? label : address}}
+        {{label ? label : (address | shortAddress)}}
       </span>
     </div>
   </div>
