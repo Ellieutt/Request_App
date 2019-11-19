@@ -46,7 +46,7 @@
     "@angular/platform-browser-dynamic": "^6.1.4",
     "@angular/platform-server": "^6.1.4",
     "@angular/router": "^6.1.4",
-    "@requestnetwork/request-network.js": "0.13.0",
+    "@requestnetwork/request-network.js": "0.14.1",
     "angular-blockies": "1.1.1",
     "angularx-qrcode": "^1.2.2",
     "bootstrap": "^4.1.3",
