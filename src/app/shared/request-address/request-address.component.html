@@ -23,7 +23,7 @@
         </span>	
       </div>	
       <div *ngIf="!showLongAddress">	
-        {{address | shortAddress}}	
+        {{label ? label : shortAddress}}	
       </div>
     </div>
   </div>
