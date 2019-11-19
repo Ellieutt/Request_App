@@ -120,6 +120,8 @@ import { NetworkIdentifierComponent } from './network-identifier/network-identif
     RequestAddressesComponent,
     PendingRequestsComponent,
     AddressBookComponent,
+    ShortAddressPipe,
+
     MatButtonModule,
     MatCardModule,
     // MatCheckboxModule,
