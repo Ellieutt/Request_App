@@ -147,7 +147,7 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
 
         this.handlePageLoading();
         this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
+        //this.dataSource.sort = this.sort;
 
         this.loading = false;
         this.updateAndShowPendingRequests();
@@ -280,7 +280,7 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
+    //this.dataSource.sort = this.sort;
   }
 
   ngOnDestroy() {
