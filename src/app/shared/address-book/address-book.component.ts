@@ -7,7 +7,6 @@ import { UtilService } from '../../util/util.service';
   templateUrl: './address-book.component.html',
   styleUrls: ['./address-book.component.scss'],
 })
-
 export class AddressBookComponent implements OnInit {
   @Input()
   addressToAdd: string;
@@ -24,8 +23,8 @@ export class AddressBookComponent implements OnInit {
 
   constructor(
     private cookieService: CookieService,
-    private utilService: UtilService,
-  ) { }
+    private utilService: UtilService
+  ) {}
 
   fetchLabelOrEmpty(address: string) {
     if (this.cookieService.get('request_label_tags')) {
@@ -90,14 +89,14 @@ export class AddressBookComponent implements OnInit {
     }
     this.emitNewLabel.emit({ address, label: this.addressLabel ? this.addressLabel : "" });
 
-    this.cookieService.set('request_label_tags', JSON.stringify(requestLabelList), 9999);
+    this.cookieService.set(
+      'request_label_tags',
+      JSON.stringify(requestLabelList),
+      9999
+    );
   }
 
   copyToClipboard() {
-    this.utilService.openSnackBar(
-      'Address copied.',
-      null,
-      'success-snackbar'
-    );
+    this.utilService.openSnackBar('Address copied.', null, 'success-snackbar');
   }
 }

@@ -53,7 +53,7 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
     private route: ActivatedRoute,
     private utilService: UtilService,
     private cookieService: CookieService
-  ) { }
+  ) {}
 
   openAddressModal(address) {
     this.addressToAdd = address;
@@ -69,7 +69,10 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
       this.dataSource.data.forEach(function (requestObject) {
         if (requestObject['request']) {
           // For existing requests
-          if (requestObject['request'].payee.address.toLowerCase() === event.address) {
+          if (
+            requestObject['request'].payee.address.toLowerCase() ===
+            event.address
+          ) {
             requestObject['request'].payee.label = event.label;
           }
           if (requestObject['request'].payer.toLowerCase() === event.address) {
@@ -207,7 +210,9 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
       if (this.cookieService.get('processing_requests')) {
         const pendingCookieList = JSON.parse(
           this.cookieService.get('processing_requests')
-        ).filter(e =>  { return e.status == 'pending' });
+        ).filter(e => {
+          return e.status == 'pending';
+        });
         // For requests that are still pending, fetch the label and add them to the data source
         pendingCookieList.forEach(pendingRequest => {
           if (this.cookieService.get('request_label_tags')) {
@@ -216,10 +221,14 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
             );
             labelList.forEach(label => {
               if (label.hasOwnProperty(pendingRequest.payer.toLowerCase())) {
-                pendingRequest.payerLabel = label[pendingRequest.payer.toLowerCase()];
+                pendingRequest.payerLabel =
+                  label[pendingRequest.payer.toLowerCase()];
               }
-              if (label.hasOwnProperty(pendingRequest.payee.address.toLowerCase())) {
-                pendingRequest.payee.label = label[pendingRequest.payee.address.toLowerCase()];
+              if (
+                label.hasOwnProperty(pendingRequest.payee.address.toLowerCase())
+              ) {
+                pendingRequest.payee.label =
+                  label[pendingRequest.payee.address.toLowerCase()];
               }
             });
           }

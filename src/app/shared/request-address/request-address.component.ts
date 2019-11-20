@@ -13,13 +13,15 @@ export class RequestAddressComponent implements OnInit {
   title: string;
   @Input()
   primaryLabel: boolean;
-  openAddressBookModal:boolean = false;
+  @Input()
+  noAddress: boolean;
+  @Input()
+  showLongAddress: boolean;
+  openAddressBookModal = false;
 
   label: string;
 
-  constructor(
-    private cookieService: CookieService
-  ) {}
+  constructor(private cookieService: CookieService) {}
 
   ngOnInit() {
     if (this.cookieService.get('request_label_tags')) {

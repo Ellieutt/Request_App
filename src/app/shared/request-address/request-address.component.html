@@ -10,7 +10,8 @@
   <div class="request-address-title semi-bold">{{ title }}</div>
   <div class="blockies-address-container">
     <div class="blockies-outer" [style.width]="'64px'">
-      <app-blockies [address]="address.toLowerCase()"></app-blockies>
+      <app-blockies *ngIf="!noAddress" [address]="address.toLowerCase()"></app-blockies>
+      <div *ngIf="noAddress" class="grey-block"></div>
     </div>
     <div class="request-address-item-outer {{ primaryLabel ? 'primary-label' : '' }}">
       <span>

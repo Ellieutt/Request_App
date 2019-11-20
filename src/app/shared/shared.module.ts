@@ -148,7 +148,7 @@ import { NetworkIdentifierComponent } from './network-identifier/network-identif
     MatDatepickerModule,
     MatMomentDateModule,
     MatTreeModule,
-    NetworkIdentifierComponent
+    NetworkIdentifierComponent,
   ],
 })
 export class SharedModule {}

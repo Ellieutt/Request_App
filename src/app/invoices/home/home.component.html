@@ -17,18 +17,23 @@
       <mat-card class="p-0 br-7 sh-blue">
         <div class="d-flex p-4 btr-7 home-invoice-header">
           <img class="px-3" [style.max-height]="'50px'" src="assets/img/request-logo.png">
+          <div class="request-home-address"> 
+              <h4 class="fs-16 semi-bold">Your Address</h4>
+              <request-address *ngIf="!this.web3Service.accountObservable.value" [noAddress]="true" [showLongAddress]="true" [address]="'Wallet not connected'"></request-address>
+              <request-address *ngIf="this.web3Service.accountObservable.value" [showLongAddress]="true" [address]="this.web3Service.accountObservable.value" [primaryLabel]="this.web3Service.accountObservable.value"></request-address>
+          </div>
           <div class="ml-auto text-right">
-            <h4 class="fs-18 semi-bold">New Request</h4>
+            <h4>&nbsp;</h4>
             <div class="fs-14" [style.opacity]="'0.5'">
-              <i>{{date | date: 'fullDate'}}</i>
+              <i class="request-home-date">{{date | date: 'fullDate'}}</i>
             </div>
           </div>
         </div>
-        <form [formGroup]="requestForm" (ngSubmit)="createRequest()" autocomplete="off">
+        <form [formGroup]="requestForm" autocomplete="off">
           <div class="p-4 mb-5">
-            <mat-form-field class="w-100 mb-1">
-              <input matInput type="text" name="ETHAddress"
-                [placeholder]="'On which ' + getBlockchainSymbol() + ' address do you want to receive the funds?'"
+            <mat-form-field class="w-100 mb-1 hidden">
+              <input matInput type="text" name="ETHAddress" readonly
+                [placeholder]="'Your Address'"
                 [formControl]="payeePaymentAddressFormControl">
               <mat-error *ngIf="payeePaymentAddressFormControl.hasError('required')">
                 Payment address is
@@ -40,7 +45,7 @@
             </mat-form-field>
             <div class="d-flex w-100 mb-1">
               <mat-form-field class="w-100">
-                <input matInput type="text" name="expectedAmount" placeholder="Request amount"
+                <input matInput type="text" name="expectedAmount" placeholder="Amount"
                   [formControl]="expectedAmountFormControl">
                 <mat-error *ngIf="expectedAmountFormControl.hasError('required')">
                   amount is
@@ -59,7 +64,7 @@
               </mat-form-field>
             </div>
             <mat-form-field class="w-100 mb-1">
-              <input matInput type="text" name="payerETHAddress" placeholder="Payer's ETH address"
+              <input matInput type="text" name="payerETHAddress" placeholder="To: Wallet Address"
                 [formControl]="payerAddressFormControl">
               <mat-error *ngIf="payerAddressFormControl.hasError('required')">
                 payer's address is
@@ -96,17 +101,19 @@
               </mat-error>
             </mat-form-field>
             <mat-form-field class="w-100" hintLabel="Max 256 characters">
-              <input matInput type="text" name="reason" placeholder="Reason (optional)" maxlength="256"
+              <input matInput type="text" name="reason" placeholder="For: Bounty, Salary, Expense, etc… (optional)" maxlength="256"
                 [formControl]="reasonFormControl">
               <mat-hint align="end">{{ reasonFormControl?.value.length || 0 }}/256</mat-hint>
             </mat-form-field>
           </div>
           <mat-toolbar class="p-0 bbr-7 cta-toolbar" [style.height]="'70px'">
-            <div></div>
-            <button class="fs-18" id="create-request-button" mat-raised-button color="accent" type="submit">Create
-              a Request&nbsp;
-              <i *ngIf="createLoading" class="fa fa-circle-o-notch fa-spin"></i>
-            </button>
+            <!-- <div></div> -->
+            <button class="fs-18" [ngClass]="createLoading ? 'disabled': ''" id="send-request-button" mat-raised-button color="accent" (click)="clickSend()">
+                Send Payment&nbsp;
+              </button>
+            <button class="fs-18" [ngClass]="createLoading ? 'disabled': ''" id="create-request-button" mat-raised-button color="accent" (click)="clickRequest()">
+                Request Payment&nbsp;
+              </button>
           </mat-toolbar>
         </form>
       </mat-card>

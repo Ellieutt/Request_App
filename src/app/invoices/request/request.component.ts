@@ -47,7 +47,7 @@ export class RequestComponent implements OnInit, OnDestroy, AfterContentInit {
     private utilService: UtilService,
     private emailService: EmailService,
     private cookieService: CookieService
-  ) { }
+  ) {}
 
   get amount() {
     return this.web3Service.BNToAmount(
@@ -96,10 +96,7 @@ export class RequestComponent implements OnInit, OnDestroy, AfterContentInit {
 
     // watch Request in background
     this.timerInterval = setInterval(async () => {
-      if (
-        !this.requestObject ||
-        this.loading
-      ) {
+      if (!this.requestObject || this.loading) {
         return;
       }
       const rd = await this.requestObject.getData();
@@ -111,9 +108,7 @@ export class RequestComponent implements OnInit, OnDestroy, AfterContentInit {
   addPendingRequestToCookie(request) {
     let cookieList = [];
     if (this.cookieService.get('processing_requests')) {
-      cookieList = JSON.parse(
-        this.cookieService.get('processing_requests')
-      );
+      cookieList = JSON.parse(this.cookieService.get('processing_requests'));
     }
     let isNewRequest = true;
     const that = this;
@@ -124,24 +119,32 @@ export class RequestComponent implements OnInit, OnDestroy, AfterContentInit {
     });
     if (isNewRequest) {
       cookieList.push({
-        'txid': that.txHash + '?request=' + this.route.snapshot.queryParams.request,
-        'timestamp': request.data.data.date,
-        'payee': { 'address': request.payee.address },
-        'payer': request.payer,
-        'amount': this.web3Service.BNToAmount(request.payee.expectedAmount, request.currency),
-        'currency': request.currency,
-        'network': 4,
-        'status': 'pending',
-        'unread': true
+        txid:
+          that.txHash + '?request=' + this.route.snapshot.queryParams.request,
+        timestamp: request.data.data.date,
+        payee: { address: request.payee.address },
+        payer: request.payer,
+        amount: this.web3Service.BNToAmount(
+          request.payee.expectedAmount,
+          request.currency
+        ),
+        currency: request.currency,
+        network: 4,
+        status: 'pending',
+        unread: true,
       });
-      this.cookieService.set('processing_requests', JSON.stringify(cookieList), 1);
+      this.cookieService.set(
+        'processing_requests',
+        JSON.stringify(cookieList),
+        1
+      );
     }
   }
 
   async ngAfterContentInit() {
     const that = this;
 
-    const loadReceiptJs = setInterval(function () {
+    const loadReceiptJs = setInterval(function() {
       if (document.getElementById('download-receipt')) {
         that.loadScript('../assets/js/receipt.js');
         clearInterval(loadReceiptJs);
@@ -288,9 +291,12 @@ export class RequestComponent implements OnInit, OnDestroy, AfterContentInit {
           }
           newCookieList.push(element);
         });
-        this.cookieService.set('processing_requests', JSON.stringify(newCookieList), 1);
+        this.cookieService.set(
+          'processing_requests',
+          JSON.stringify(newCookieList),
+          1
+        );
       }
-
 
       this.request = null;
       history.pushState(
@@ -300,7 +306,7 @@ export class RequestComponent implements OnInit, OnDestroy, AfterContentInit {
       );
       this.url = `${window.location.protocol}//${
         window.location.host
-        }/#/request/requestId/${request.requestId}`;
+      }/#/request/requestId/${request.requestId}`;
     }
     if (request && !request.status && request.state !== undefined) {
       this.web3Service.setRequestStatus(request);

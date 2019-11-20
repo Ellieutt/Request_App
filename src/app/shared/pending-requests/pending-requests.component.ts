@@ -8,7 +8,6 @@ import { UtilService } from '../../util/util.service';
   styleUrls: ['./pending-requests.component.scss'],
 })
 export class PendingRequestsComponent implements OnInit {
-
   notificationCount = 0;
   pendingRequestCount = 0;
   showPendingPopup = false;
@@ -18,7 +17,6 @@ export class PendingRequestsComponent implements OnInit {
     private cookieService: CookieService,
     private utilService: UtilService
   ) {
-
     this.checkForNotifications();
     this.calculatePendingRequestCount();
     this.fetchRequestsFromCookie();
@@ -51,7 +49,11 @@ export class PendingRequestsComponent implements OnInit {
           newCookieList.push(element);
         }
       });
-      this.cookieService.set('processing_requests', JSON.stringify(newCookieList), 1);
+      this.cookieService.set(
+        'processing_requests',
+        JSON.stringify(newCookieList),
+        1
+      );
       this.requestList = newCookieList;
       if (newCookieList.length === 0) {
         this.pendingRequestCount = 0;
@@ -89,7 +91,11 @@ export class PendingRequestsComponent implements OnInit {
         }
         updatedCookieList.push(element);
       });
-      this.cookieService.set('processing_requests', JSON.stringify(updatedCookieList), 1);
+      this.cookieService.set(
+        'processing_requests',
+        JSON.stringify(updatedCookieList),
+        1
+      );
     }
     this.showPendingPopup = !this.showPendingPopup;
   }
@@ -113,6 +119,5 @@ export class PendingRequestsComponent implements OnInit {
     }
   }
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 }

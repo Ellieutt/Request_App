@@ -246,6 +246,11 @@ mat-toolbar.cta-toolbar {
     border-radius: 0;
     box-shadow: none !important;
     height: 100%;
+
+    &.disabled {
+      opacity: 0.3;
+      background: grey;
+    }
   }
   &:empty {
     display: none;
@@ -1375,4 +1380,77 @@ i.dash:after {
   padding: 8px 38px;
   margin-bottom: -1px;
   font-size: 14px;
+}
+
+#create-request-button {
+  position: relative;
+  &:after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 100%;
+    width: 1px;
+    background: #fff;
+  }
+}
+
+.request-home-address {
+  h4 {
+    margin-bottom: 2px;
+    position: relative;
+    top: -3px;
+  }
+  .request-address-outer {
+    margin-left: 0 !important;
+  }
+  .blockies {
+    width: 24px !important;
+    height: 24px !important;
+  }
+  .request-address-item-outer {
+    font-size: 12px;
+  }
+  .request-address-item-outer {
+    height: 24px !important;
+    line-height: 24px !important;
+    padding-left: 36px !important;
+    padding-right: 16px !important;
+  }
+}
+
+.request-home-date {
+  position: relative;
+  top: -4px;
+}
+
+.grey-block {
+  width: 24px;
+  height: 24px;
+  background: #D8D8D8;
+}
+
+.red-circle-no-address {
+  width: 14px;
+  height: 14px;
+  background: #F21515;
+  border-radius: 50%;
+  display: inline-block;
+  position: relative;
+  top: 3px;
+  right: -5px;
+}
+
+#send-request-button {
+  position: relative;
+
+  &:after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 1px;
+    height: 100%;
+    background: #fff;
+  }
 }
