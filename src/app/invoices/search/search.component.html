@@ -22,11 +22,11 @@
 
     <!-- <div class="col-md-3">&nbsp;</div> -->
     <div class="d-flex flex-column">
-      <mat-table matSort matSortDisableClear (matSortChange)="sortData($event)"#table [dataSource]="dataSource">
+      <mat-table matSort matSortDisableClear (matSortChange)="sortData($event)" matSortActive="_meta.timestamp" matSortDirection="desc" #table [dataSource]="dataSource">
 
         <!-- Age Column -->
         <ng-container matColumnDef="_meta.timestamp">
-          <mat-header-cell *matHeaderCellDef mat-sort-header>Date</mat-header-cell>
+          <mat-header-cell *matHeaderCell Defstart="desc" mat-sort-header>Date</mat-header-cell>
           <mat-cell *matCellDef="let req">
             <span *ngIf="req._meta && req._meta.timestamp">{{ req._meta.timestamp * 1000 | date: 'y/MM/dd'  }}</span>
             <span *ngIf="req.timestamp">{{ req.timestamp | date: 'y/MM/dd'  }}</span>

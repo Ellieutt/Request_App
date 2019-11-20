@@ -119,12 +119,7 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
           return (this.dataSource.data = []);
         }
         let resultsList = results.asPayer.concat(results.asPayee);
-        /*resultsList = resultsList.sort(
-          //(a, b) => b._meta.timestamp - a._meta.timestamp
-          //(a, b) => a.request ? b.request.payee.expectedAmount - a.request.payee.expectedAmount : 1000
-          (a, b) => this.compareHardcoded(a, b, true) //does not work(this.dataSource.data.sort === 'asc')
-          //req.request.payee.expectedAmount
-        );*/
+        resultsList = this.sortRequests(resultsList, '_meta.timestamp', false);
 
         this.dataSource = new MatTableDataSource(resultsList);
         this.dataSource.filter = 'all';
@@ -171,27 +166,17 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   sortData(sort: Sort) {
-    //const data = this.dataSource.filteredData.slice();
-    /*if (!sort.active || sort.direction === '') {
-      this.sortedData = data;
-      return;
-    }
-    
-    this.sortedData = data.sort((a, b) => {
-      switch (sort.active) {
-        case 'name': return compare(a.name, b.name, isAsc);
-        case 'calories': return compare(a.calories, b.calories, isAsc);
-        case 'fat': return compare(a.fat, b.fat, isAsc);
-        case 'carbs': return compare(a.carbs, b.carbs, isAsc);
-        case 'protein': return compare(a.protein, b.protein, isAsc);
-        default: return 0;
-      }
-      
-    });*/
     const isAsc = sort.direction === 'asc';
     console.log(sort);
     console.log(this.sort);
-    this.sortRequests(this.dataSource.filteredData, sort.active, isAsc);
+    let data = this.dataSource.data;
+
+    if (this.dataSource.filter != 'all') {
+      data = this.dataSource.filteredData;
+    }
+    this.sortRequests(data, sort.active, isAsc);
+    this.paginator.firstPage();
+    this.handlePageLoading();
   }
 
   private sortRequests(data: Array<any>, activeSort: string, isAsc: boolean) {
@@ -221,11 +206,16 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
       }
     });
     console.log(activeSort + '-' + isAsc);
+    return data;
   }
 
   // Return a negative number if a comes first, a positive one if b comes first
   private compare(a: any, b: any, isAsc: boolean) {
-    return (b - a) * (isAsc ? 1 : -1);
+    if (a == b) {
+      return 0;
+    } else {
+      return (a > b ? 1 : -1) * (isAsc ? 1 : -1);
+    }
   }
 
   // The smaller the result, the higher a is displayed compared to b
@@ -360,8 +350,10 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
       const endIndex = startIndex + batchSize - 1;
       this.getRequestsFromIds(data.slice(startIndex, endIndex + 1)
       ).then(() => {
+        console.log('Loaded:');
+        console.log(data.slice(startIndex, endIndex + 1));
         //data.sort((a,b) => this.compareHardcoded(a,b,true));
-        this.sortRequests(data, this.sort.active, this.sort.direction === 'asc');
+        data = this.sortRequests(data, this.sort.active, this.sort.direction === 'asc');
         this.dataSource._updateChangeSubscription();
         //this.sortData(this.sort);
         this.loadInBackground(data, endIndex + 1, batchSize, loadingLimit - batchSize);
