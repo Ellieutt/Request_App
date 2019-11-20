@@ -420,25 +420,16 @@ export class Web3Service {
       return;
     }
 
-    requestOptions.transactionOptions = {
-      gasPrice: this.getGasPrice(),
-    };
-
-    requestOptions.skipERC20checkAllowance = true;
-
     this.confirmTxOnLedgerMsg();
     if (Types.Role[role] === 0) {
       if (currency === 'ETH') {
         return this.requestNetwork.requestEthereumService.createRequestAsPayer(
           [payerAddress],
           [this.amountToBN(expectedAmount, currency)],
-          paymentAddress,
+          undefined,
           [this.amountToBN(expectedAmount, currency)],
           undefined,
-          undefined,
-          undefined,
-          undefined,
-          requestOptions
+          JSON.stringify(requestOptions.data),
         );
       } else {
         return this.requestNetwork.requestERC20Service.createRequestAsPayer(
@@ -451,7 +442,7 @@ export class Web3Service {
           undefined,
           undefined,
           undefined,
-          requestOptions
+          JSON.stringify(requestOptions.data)
         );
       }
     } else {

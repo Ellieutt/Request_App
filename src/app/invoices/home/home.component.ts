@@ -36,13 +36,13 @@ export class HomeComponent implements OnInit {
       if (
         this.payeeIdAddressFormControl.value &&
         this.payeeIdAddressFormControl.value.toLowerCase() ===
-          control.value.toLowerCase()
+        control.value.toLowerCase()
       ) {
         return { sameAddressAsPayeeAddress: true };
       } else if (
         this.payeePaymentAddressFormControl.value &&
         this.payeePaymentAddressFormControl.value.toLowerCase() ===
-          control.value.toLowerCase()
+        control.value.toLowerCase()
       ) {
         return { sameAddressAsPaymentAddress: true };
       }
@@ -280,7 +280,7 @@ export class HomeComponent implements OnInit {
           currencyContract: {
             payeePaymentAddress:
               this.payeePaymentAddressFormControl.value &&
-              this.payeePaymentAddressFormControl.value !== this.account
+                this.payeePaymentAddressFormControl.value !== this.account
                 ? this.payeePaymentAddressFormControl.value
                 : null,
           },
@@ -320,6 +320,9 @@ export class HomeComponent implements OnInit {
       }
     };
 
+    const currencyAddress = this.currencyFormControl.value !== 'ETH' ?
+      this.web3Service.getCurrencyAddress(this.currencyFormControl.value).main : null;
+
     this.web3Service
       .createRequest(
         this.payeeOrPayer,
@@ -329,7 +332,7 @@ export class HomeComponent implements OnInit {
         this.payeePaymentAddressFormControl.value,
         { data },
         this.payerRefundAddressFormControl.value,
-        '0x8f8221afbb33998d8584a2b05749ba73c37a938a'
+        currencyAddress
       )
       .on('broadcasted', response => {
         callback(response);
