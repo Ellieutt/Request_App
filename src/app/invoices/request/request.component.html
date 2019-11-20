@@ -47,6 +47,10 @@
                     class="invoice-date fs-16">
                     {{ request.data.data.date | date: 'MMMM d, y' }}
                   </div>
+                  <div *ngIf="request.data && request.data.data && request.data.data.creationDate"
+                    id="invoice-date-created" class="invoice-date fs-16">
+                    {{ request.data.data.creationDate | date: 'MMMM d, y' }}
+                  </div>
                   <!-- <div class="mt-1">
                   <a *ngIf="txHash" class="fs-14 pr-1" style="opacity: 0.8; color: #008c62 !important;" href="{{web3Service.etherscanUrl}}tx/{{txHash}}" target="_blank">
                     <i>{{ web3Service.etherscanUrl}}tx/{{txHash.substring(0, 10) }}...{{ txHash.substring(txHash.length-5, txHash.length) }}</i>
@@ -328,6 +332,13 @@
                 <p class="semi-bold mb-2 fs-16">History</p>
                 <div *ngIf="request && request.events && request.events.length > 0">
                   <div *ngFor="let e of request.events" class="fs-14 d-flex mb-1 justify-content-between">
+                    <div class="hidden" *ngIf="e.name == 'UpdateBalance'" id="amount-usd">
+                      <span
+                        id="invoice-date-paid">{{e._meta.timestamp + '000' | date: 'MMMM d, y'}}</span>
+                      <currency-converter *ngIf="amount" [from]="currency" [to]="'USD'" [amount]="amount"
+                        [timestamp]="e._meta.timestamp">
+                      </currency-converter>
+                    </div>
                     <span>{{ spaceBeforeCapital(e.name) === 'Canceled' ? 'Cancelled' : spaceBeforeCapital(e.name) }}
                     </span>
                     <span>{{ e._meta.timestamp * 1000 | date: 'MMMM d, y' }}</span>
