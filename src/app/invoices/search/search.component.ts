@@ -12,6 +12,7 @@ import {
   MatTableDataSource,
   MatSort,
   PageEvent,
+  Sort,
 } from '@angular/material';
 import { UtilService } from '../../util/util.service';
 import { CookieService } from 'ngx-cookie-service';
@@ -44,8 +45,8 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @ViewChild(MatPaginator)
   paginator: MatPaginator;
-  /*@ViewChild(MatSort)
-  sort: MatSort;*/
+  @ViewChild(MatSort)
+  sort: MatSort;
 
   constructor(
     private web3Service: Web3Service,
@@ -118,9 +119,12 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
           return (this.dataSource.data = []);
         }
         let resultsList = results.asPayer.concat(results.asPayee);
-        resultsList = resultsList.sort(
-          (a, b) => b._meta.timestamp - a._meta.timestamp
-        );
+        /*resultsList = resultsList.sort(
+          //(a, b) => b._meta.timestamp - a._meta.timestamp
+          //(a, b) => a.request ? b.request.payee.expectedAmount - a.request.payee.expectedAmount : 1000
+          (a, b) => this.compareHardcoded(a, b, true) //does not work(this.dataSource.data.sort === 'asc')
+          //req.request.payee.expectedAmount
+        );*/
 
         this.dataSource = new MatTableDataSource(resultsList);
         this.dataSource.filter = 'all';
@@ -150,7 +154,7 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
 
         this.handlePageLoading();
         this.dataSource.paginator = this.paginator;
-        //this.dataSource.sort = this.sort;
+        this.dataSource.sort = this.sort;
 
         this.loading = false;
         this.updateAndShowPendingRequests();
@@ -166,6 +170,81 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
+  sortData(sort: Sort) {
+    //const data = this.dataSource.filteredData.slice();
+    /*if (!sort.active || sort.direction === '') {
+      this.sortedData = data;
+      return;
+    }
+    
+    this.sortedData = data.sort((a, b) => {
+      switch (sort.active) {
+        case 'name': return compare(a.name, b.name, isAsc);
+        case 'calories': return compare(a.calories, b.calories, isAsc);
+        case 'fat': return compare(a.fat, b.fat, isAsc);
+        case 'carbs': return compare(a.carbs, b.carbs, isAsc);
+        case 'protein': return compare(a.protein, b.protein, isAsc);
+        default: return 0;
+      }
+      
+    });*/
+    const isAsc = sort.direction === 'asc';
+    console.log(sort);
+    console.log(this.sort);
+    this.sortRequests(this.dataSource.filteredData, sort.active, isAsc);
+  }
+
+  private sortRequests(data: Array<any>, activeSort: string, isAsc: boolean) {
+    //this.dataSource.filteredData = data.sort((a,b) => this.compare(a,b,true));
+    data.sort((a,b) => {
+      let usedSort = activeSort;
+      switch (usedSort) {
+        case 'request.payee.expectedAmount': {
+          if(a['request'] && b['request']) {
+            return this.compare(
+              a['request'].payee.expectedAmount, 
+              b['request'].payee.expectedAmount, 
+              isAsc
+            );
+          } else if (!a['request'] && !b['request']) {
+            usedSort = '_meta.timestamp';
+          } else {
+            return a['request'] ? -1 : 1;
+          }
+        }
+        default:
+        case '_meta.timestamp': return this.compare(
+          a['_meta'].timestamp, 
+          b['_meta'].timestamp, 
+          isAsc
+        );
+      }
+    });
+    console.log(activeSort + '-' + isAsc);
+  }
+
+  // Return a negative number if a comes first, a positive one if b comes first
+  private compare(a: any, b: any, isAsc: boolean) {
+    return (b - a) * (isAsc ? 1 : -1);
+  }
+
+  // The smaller the result, the higher a is displayed compared to b
+  // Return a negative number if a comes first, a positive one if b comes first
+  private compareHardcoded(a: any, b: any, isAsc: boolean) {
+    
+    let comparison:number;
+    if (a.request && b.request) {
+      comparison = b.request.payee.expectedAmount - a.request.payee.expectedAmount;
+    } else if (a.request && !b.request) {
+      comparison = -100000;
+    } else if (!a.request && b.request) {
+      comparison = 100000;
+    } else {
+      comparison = b._meta.timestamp - a._meta.timestamp;
+    }
+    return comparison * (isAsc ? 1 : -1);
+  }
+  
   async financialFilter(filter: string) {
     this.backgroundLoading = false;
     this.dataSource.filter = filter;
@@ -281,7 +360,10 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
       const endIndex = startIndex + batchSize - 1;
       this.getRequestsFromIds(data.slice(startIndex, endIndex + 1)
       ).then(() => {
+        //data.sort((a,b) => this.compareHardcoded(a,b,true));
+        this.sortRequests(data, this.sort.active, this.sort.direction === 'asc');
         this.dataSource._updateChangeSubscription();
+        //this.sortData(this.sort);
         this.loadInBackground(data, endIndex + 1, batchSize, loadingLimit - batchSize);
       });
     }
@@ -289,7 +371,7 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
-    //this.dataSource.sort = this.sort;
+    this.dataSource.sort = this.sort;
   }
 
   ngOnDestroy() {
