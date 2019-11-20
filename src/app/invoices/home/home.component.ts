@@ -118,7 +118,9 @@ export class HomeComponent implements OnInit {
     const currency = this.currencyFormControl.value;
     if (currency === 'ETH') {
       const balance = await this.web3Service.getBalance(currency);
-      if (balance >= this.expectedAmountFormControl.value) {
+      const parsedBalance = parseFloat(balance);
+      const formBalance = parseFloat(this.expectedAmountFormControl.value);
+      if (parsedBalance >= formBalance) {
         return this.createRequest();
       } else {
         this.createLoading = false;
