@@ -85,6 +85,7 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
             requestObject['payerLabel'] = event.label;
           }
           if (requestObject['payee'].toLowerCase() === event.address) {
+            // TODO Check why it works, it should be payee.label instead of payeeLabel
             requestObject['payeeLabel'] = event.label;
           }
         }
@@ -182,57 +183,68 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
   private sortRequests(data: Array<any>, activeSort: string, isAsc: boolean) {
     //this.dataSource.filteredData = data.sort((a,b) => this.compare(a,b,true));
     data.sort((a,b) => {
-      let usedSort = activeSort;
+      let usedSort: String;
+      if (!a['request'] && !b['request']) {
+        // Compare loading requests by timestamp, whatever the filter
+        usedSort = '_meta.timestamp';
+        isAsc = false;
+      } else if (!a['request'] || !b['request']) {
+        // Loading request is always shown after a loaded one
+        return a['request'] ? 1 : -1;
+      } else {
+        usedSort = activeSort;
+      }
+
       switch (usedSort) {
         case 'request.payee.expectedAmount': {
-          if(a['request'] && b['request']) {
-            return this.compare(
-              a['request'].payee.expectedAmount, 
-              b['request'].payee.expectedAmount, 
-              isAsc
-            );
-          } else if (!a['request'] && !b['request']) {
-            usedSort = '_meta.timestamp';
-          } else {
-            return a['request'] ? -1 : 1;
+          return this.compare(a['request'].payee.expectedAmount, b['request'].payee.expectedAmount, isAsc);
+        }
+        case 'request.payee.address': {
+          const labelA = a['request'] ? a['request'].payee.label : a.payee.label;
+          const labelB = b['request'] ? b['request'].payee.label : b.payee.label;
+          
+          if (labelA && labelB) {
+            // If both have a label, sort labels
+            return this.compare(labelA, labelB, isAsc);
+            } else if (!labelA && !labelB) {
+              // If both have no label, sort addresses
+              return this.compare(a['request'].payee.address, b['request'].payee.address, isAsc);
+              } else {
+                // If only one has no label, first show labels (in Asc)
+              return (labelA ? 1 : -1) * (isAsc ? 1 : -1);
+          }
+        }
+        case 'request.payer': {
+          const labelA = a['request'] ? a['request'].payerLabel : a.payerLabel;
+          const labelB = b['request'] ? b['request'].payerLabel : b.payerLabel;
+
+          if (labelA && labelB) {
+            // If both have a label, sort labels
+            return this.compare(labelA, labelB, isAsc);
+          } else if (!labelA && !labelB) {
+            // If both have no label, sort addresses
+            return this.compare(a['request'].payer, b['request'].payer, isAsc);
+            } else {
+              // If only one has no label, first show labels (in Asc)
+              return (labelA ? 1 : -1) * (isAsc ? 1 : -1);
           }
         }
         default:
-        case '_meta.timestamp': return this.compare(
-          a['_meta'].timestamp, 
-          b['_meta'].timestamp, 
-          isAsc
-        );
+        case '_meta.timestamp': {
+          return this.compare(a['_meta'].timestamp, b['_meta'].timestamp, isAsc);
+        }
       }
     });
-    console.log(activeSort + '-' + isAsc);
     return data;
   }
 
-  // Return a negative number if a comes first, a positive one if b comes first
+  // Return a positive number if a comes first
   private compare(a: any, b: any, isAsc: boolean) {
     if (a == b) {
       return 0;
     } else {
-      return (a > b ? 1 : -1) * (isAsc ? 1 : -1);
+      return (b > a ? 1 : -1) * (isAsc ? 1 : -1);
     }
-  }
-
-  // The smaller the result, the higher a is displayed compared to b
-  // Return a negative number if a comes first, a positive one if b comes first
-  private compareHardcoded(a: any, b: any, isAsc: boolean) {
-    
-    let comparison:number;
-    if (a.request && b.request) {
-      comparison = b.request.payee.expectedAmount - a.request.payee.expectedAmount;
-    } else if (a.request && !b.request) {
-      comparison = -100000;
-    } else if (!a.request && b.request) {
-      comparison = 100000;
-    } else {
-      comparison = b._meta.timestamp - a._meta.timestamp;
-    }
-    return comparison * (isAsc ? 1 : -1);
   }
   
   async financialFilter(filter: string) {

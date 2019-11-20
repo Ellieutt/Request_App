@@ -26,7 +26,7 @@
 
         <!-- Age Column -->
         <ng-container matColumnDef="_meta.timestamp">
-          <mat-header-cell *matHeaderCell Defstart="desc" mat-sort-header>Date</mat-header-cell>
+          <mat-header-cell *matHeaderCellDef start="desc" mat-sort-header>Date</mat-header-cell>
           <mat-cell *matCellDef="let req">
             <span *ngIf="req._meta && req._meta.timestamp">{{ req._meta.timestamp * 1000 | date: 'y/MM/dd'  }}</span>
             <span *ngIf="req.timestamp">{{ req.timestamp | date: 'y/MM/dd'  }}</span>
