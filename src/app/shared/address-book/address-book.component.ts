@@ -87,7 +87,7 @@ export class AddressBookComponent implements OnInit {
         [address]: this.addressLabel
       });
     }
-    this.emitNewLabel.emit({ address, label: this.addressLabel ? this.addressLabel : address });
+    this.emitNewLabel.emit({ address, label: this.addressLabel ? this.addressLabel : "" });
 
     this.cookieService.set(
       'request_label_tags',
