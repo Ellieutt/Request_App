@@ -168,33 +168,28 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
 
   sortData(sort: Sort) {
     const isAsc = sort.direction === 'asc';
-    console.log(sort);
-    console.log(this.sort);
-    let data = this.dataSource.data;
-
-    if (this.dataSource.filter != 'all') {
-      data = this.dataSource.filteredData;
-    }
-    this.sortRequests(data, sort.active, isAsc);
+    this.dataSource.data = this.sortRequests(this.dataSource.data, sort.active, isAsc);
     this.paginator.firstPage();
     this.handlePageLoading();
   }
 
   private sortRequests(data: Array<any>, activeSort: string, isAsc: boolean) {
-    //this.dataSource.filteredData = data.sort((a,b) => this.compare(a,b,true));
     data.sort((a,b) => {
       let usedSort: String;
-      if (!a['request'] && !b['request']) {
-        // Compare loading requests by timestamp, whatever the filter
-        usedSort = '_meta.timestamp';
-        isAsc = false;
-      } else if (!a['request'] || !b['request']) {
-        // Loading request is always shown after a loaded one
-        return a['request'] ? 1 : -1;
+      if ((!a['request'] || !b['request']) && (activeSort != '_meta.timestamp')) {
+        // How to sort data based on data we don't have (any filter except timestamp) ?
+        if (!a['request'] && !b['request']) {
+          // Compare 2 loading requests by ascending timestamp, whatever the filter
+          usedSort = '_meta.timestamp';
+          isAsc = false;
+        } else {
+          // Loading request is always shown after a loaded one, except if sorted by date
+          return a['request'] ? -1 : 1;
+        }
       } else {
         usedSort = activeSort;
       }
-
+      
       switch (usedSort) {
         case 'request.payee.expectedAmount': {
           return this.compare(a['request'].payee.expectedAmount, b['request'].payee.expectedAmount, isAsc);
@@ -205,13 +200,13 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
           
           if (labelA && labelB) {
             // If both have a label, sort labels
-            return this.compare(labelA, labelB, isAsc);
+            return this.compareStrings(labelA, labelB, isAsc);
             } else if (!labelA && !labelB) {
               // If both have no label, sort addresses
-              return this.compare(a['request'].payee.address, b['request'].payee.address, isAsc);
+              return this.compareStrings(a['request'].payee.address, b['request'].payee.address, isAsc);
               } else {
                 // If only one has no label, first show labels (in Asc)
-              return (labelA ? 1 : -1) * (isAsc ? 1 : -1);
+              return (labelA ? -1 : 1) * (isAsc ? 1 : -1);
           }
         }
         case 'request.payer': {
@@ -220,13 +215,13 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
 
           if (labelA && labelB) {
             // If both have a label, sort labels
-            return this.compare(labelA, labelB, isAsc);
+            return this.compareStrings(labelA, labelB, isAsc);
           } else if (!labelA && !labelB) {
             // If both have no label, sort addresses
-            return this.compare(a['request'].payer, b['request'].payer, isAsc);
+            return this.compareStrings(a['request'].payer, b['request'].payer, isAsc);
             } else {
               // If only one has no label, first show labels (in Asc)
-              return (labelA ? 1 : -1) * (isAsc ? 1 : -1);
+              return (labelA ? -1 : 1) * (isAsc ? 1 : -1);
           }
         }
         default:
@@ -238,12 +233,22 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
     return data;
   }
 
-  // Return a positive number if a comes first
+  // Return +1 if it is greater = should be displayed after in Asc
+  private compareStrings(a: string, b: string, isAsc: boolean) {
+    if (a == b) {
+      return 0;
+    } else {
+      return (a > b ? 1 : -1) * (isAsc ? 1 : -1);
+    }
+  }
+  
+  // Return a positive number if it should be displayed after in Asc
+  //  (The greater the number, the further down if Asc)
   private compare(a: any, b: any, isAsc: boolean) {
     if (a == b) {
       return 0;
     } else {
-      return (b > a ? 1 : -1) * (isAsc ? 1 : -1);
+      return (a - b) * (isAsc ? 1 : -1);
     }
   }
   
@@ -362,12 +367,8 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
       const endIndex = startIndex + batchSize - 1;
       this.getRequestsFromIds(data.slice(startIndex, endIndex + 1)
       ).then(() => {
-        console.log('Loaded:');
-        console.log(data.slice(startIndex, endIndex + 1));
-        //data.sort((a,b) => this.compareHardcoded(a,b,true));
-        data = this.sortRequests(data, this.sort.active, this.sort.direction === 'asc');
+        this.dataSource.data = this.sortRequests(this.dataSource.data, this.dataSource.sort.active, this.dataSource.sort.direction === 'asc');
         this.dataSource._updateChangeSubscription();
-        //this.sortData(this.sort);
         this.loadInBackground(data, endIndex + 1, batchSize, loadingLimit - batchSize);
       });
     }
