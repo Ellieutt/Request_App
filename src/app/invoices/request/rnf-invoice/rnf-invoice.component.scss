@@ -8,13 +8,16 @@
 
 .invoice-items-table {
   .mat-header-row, .mat-row {
-    height: 35px;
+    height: auto;
   }
 
   .mat-cell, .mat-header-cell {
-    font-size: 14px;
+    font-size: 14px !important;
     color: $blue-grey;
     border: none;
+    span {
+      display: block;
+    }
   }
 
   .mat-cell:first-of-type, .mat-footer-cell:first-of-type, .mat-header-cell:first-of-type {
