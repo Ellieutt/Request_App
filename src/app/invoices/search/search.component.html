@@ -40,6 +40,7 @@
               Request</a>
             <a *ngIf="req.txid" (click)="utilService.redirectToPage('/request/txHash/' + req.txid)"
               class="fc-accent-secondary">View Request</a>
+            <div *ngIf="!req.requestId && !req.txid" class="placeholder"></div>
           </mat-cell>
         </ng-container>
         <!-- From Column -->
@@ -68,6 +69,7 @@
                 </div>
               </span>
             </div>
+            <div *ngIf="!req.payee && !req.request" class="placeholder"></div>
           </mat-cell>
         </ng-container>
         <!-- To Column -->
@@ -95,6 +97,7 @@
                 </div>
               </span>
             </div>
+            <div *ngIf="!req.payer && !req.request" class="placeholder"></div>
           </mat-cell>
         </ng-container>
         <!-- Amount Column -->
@@ -132,9 +135,7 @@
               </div>
             </ng-template>
             <ng-template #spinSpan>
-              <span>
-                <i class="fa fa-circle-o-notch fa-spin"></i>
-              </span>
+              <div class="placeholder"></div>
             </ng-template>
           </mat-cell>
         </ng-container>
@@ -148,6 +149,7 @@
             <div *ngIf="req.status">
               <span class="status-{{ req.status.replace(' ','-') }}">{{ req.status }}</span>
             </div>
+            <div *ngIf="!req.request && !req.status" class="placeholder"></div>
           </mat-cell>
         </ng-container>
         <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
