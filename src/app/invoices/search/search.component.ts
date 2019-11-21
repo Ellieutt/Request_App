@@ -84,9 +84,8 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
           if (requestObject['payer'].toLowerCase() === event.address) {
             requestObject['payerLabel'] = event.label;
           }
-          if (requestObject['payee'].toLowerCase() === event.address) {
-            // TODO Check why it works, it should be payee.label instead of payeeLabel
-            requestObject['payeeLabel'] = event.label;
+          if (requestObject['payee']['address'].toLowerCase() === event.address) {
+            requestObject['payee']['label'] = event.label;
           }
         }
       });
@@ -226,7 +225,9 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
         }
         default:
         case '_meta.timestamp': {
-          return this.compare(a['_meta'].timestamp, b['_meta'].timestamp, isAsc);
+          const timestampA = a['_meta'] ? a['_meta'].timestamp : a['timestamp'];
+          const timestampB = b['_meta'] ? b['_meta'].timestamp : b['timestamp'];
+          return this.compare(timestampA, timestampB, isAsc);
         }
       }
     });
