@@ -12,6 +12,7 @@ import {
   MatTableDataSource,
   MatSort,
   PageEvent,
+  Sort,
 } from '@angular/material';
 import { UtilService } from '../../util/util.service';
 import { CookieService } from 'ngx-cookie-service';
@@ -44,8 +45,8 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @ViewChild(MatPaginator)
   paginator: MatPaginator;
-  /*@ViewChild(MatSort)
-  sort: MatSort;*/
+  @ViewChild(MatSort)
+  sort: MatSort;
 
   constructor(
     private web3Service: Web3Service,
@@ -83,8 +84,8 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
           if (requestObject['payer'].toLowerCase() === event.address) {
             requestObject['payerLabel'] = event.label;
           }
-          if (requestObject['payee'].toLowerCase() === event.address) {
-            requestObject['payeeLabel'] = event.label;
+          if (requestObject['payee']['address'].toLowerCase() === event.address) {
+            requestObject['payee']['label'] = event.label;
           }
         }
       });
@@ -118,9 +119,7 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
           return (this.dataSource.data = []);
         }
         let resultsList = results.asPayer.concat(results.asPayee);
-        resultsList = resultsList.sort(
-          (a, b) => b._meta.timestamp - a._meta.timestamp
-        );
+        resultsList = this.sortRequests(resultsList, '_meta.timestamp', false);
 
         this.dataSource = new MatTableDataSource(resultsList);
         this.dataSource.filter = 'all';
@@ -150,7 +149,7 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
 
         this.handlePageLoading();
         this.dataSource.paginator = this.paginator;
-        //this.dataSource.sort = this.sort;
+        this.dataSource.sort = this.sort;
 
         this.loading = false;
         this.updateAndShowPendingRequests();
@@ -166,6 +165,94 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
+  sortData(sort: Sort) {
+    const isAsc = sort.direction === 'asc';
+    this.dataSource.data = this.sortRequests(this.dataSource.data, sort.active, isAsc);
+    this.paginator.firstPage();
+    this.handlePageLoading();
+  }
+
+  private sortRequests(data: Array<any>, activeSort: string, isAsc: boolean) {
+    data.sort((a,b) => {
+      let usedSort: String;
+      if ((!a['request'] || !b['request']) && (activeSort != '_meta.timestamp')) {
+        // How to sort data based on data we don't have (any filter except timestamp) ?
+        if (!a['request'] && !b['request']) {
+          // Compare 2 loading requests by ascending timestamp, whatever the filter
+          usedSort = '_meta.timestamp';
+          isAsc = false;
+        } else {
+          // Loading request is always shown after a loaded one, except if sorted by date
+          return a['request'] ? -1 : 1;
+        }
+      } else {
+        usedSort = activeSort;
+      }
+      
+      switch (usedSort) {
+        case 'request.payee.expectedAmount': {
+          return this.compare(a['request'].payee.expectedAmount, b['request'].payee.expectedAmount, isAsc);
+        }
+        case 'request.payee.address': {
+          const labelA = a['request'] ? a['request'].payee.label : a.payee.label;
+          const labelB = b['request'] ? b['request'].payee.label : b.payee.label;
+          
+          if (labelA && labelB) {
+            // If both have a label, sort labels
+            return this.compareStrings(labelA, labelB, isAsc);
+            } else if (!labelA && !labelB) {
+              // If both have no label, sort addresses
+              return this.compareStrings(a['request'].payee.address, b['request'].payee.address, isAsc);
+              } else {
+                // If only one has no label, first show labels (in Asc)
+              return (labelA ? -1 : 1) * (isAsc ? 1 : -1);
+          }
+        }
+        case 'request.payer': {
+          const labelA = a['request'] ? a['request'].payerLabel : a.payerLabel;
+          const labelB = b['request'] ? b['request'].payerLabel : b.payerLabel;
+
+          if (labelA && labelB) {
+            // If both have a label, sort labels
+            return this.compareStrings(labelA, labelB, isAsc);
+          } else if (!labelA && !labelB) {
+            // If both have no label, sort addresses
+            return this.compareStrings(a['request'].payer, b['request'].payer, isAsc);
+            } else {
+              // If only one has no label, first show labels (in Asc)
+              return (labelA ? -1 : 1) * (isAsc ? 1 : -1);
+          }
+        }
+        default:
+        case '_meta.timestamp': {
+          const timestampA = a['_meta'] ? a['_meta'].timestamp : a['timestamp'];
+          const timestampB = b['_meta'] ? b['_meta'].timestamp : b['timestamp'];
+          return this.compare(timestampA, timestampB, isAsc);
+        }
+      }
+    });
+    return data;
+  }
+
+  // Return +1 if it is greater = should be displayed after in Asc
+  private compareStrings(a: string, b: string, isAsc: boolean) {
+    if (a == b) {
+      return 0;
+    } else {
+      return (a > b ? 1 : -1) * (isAsc ? 1 : -1);
+    }
+  }
+  
+  // Return a positive number if it should be displayed after in Asc
+  //  (The greater the number, the further down if Asc)
+  private compare(a: any, b: any, isAsc: boolean) {
+    if (a == b) {
+      return 0;
+    } else {
+      return (a - b) * (isAsc ? 1 : -1);
+    }
+  }
+  
   async financialFilter(filter: string) {
     this.backgroundLoading = false;
     this.dataSource.filter = filter;
@@ -281,6 +368,7 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
       const endIndex = startIndex + batchSize - 1;
       this.getRequestsFromIds(data.slice(startIndex, endIndex + 1)
       ).then(() => {
+        this.dataSource.data = this.sortRequests(this.dataSource.data, this.dataSource.sort.active, this.dataSource.sort.direction === 'asc');
         this.dataSource._updateChangeSubscription();
         this.loadInBackground(data, endIndex + 1, batchSize, loadingLimit - batchSize);
       });
@@ -289,7 +377,7 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
-    //this.dataSource.sort = this.sort;
+    this.dataSource.sort = this.sort;
   }
 
   ngOnDestroy() {

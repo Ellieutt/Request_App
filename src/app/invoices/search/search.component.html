@@ -22,11 +22,11 @@
 
     <!-- <div class="col-md-3">&nbsp;</div> -->
     <div class="d-flex flex-column">
-      <mat-table #table [dataSource]="dataSource">
+      <mat-table matSort matSortDisableClear (matSortChange)="sortData($event)" matSortActive="_meta.timestamp" matSortDirection="desc" #table [dataSource]="dataSource">
 
         <!-- Age Column -->
         <ng-container matColumnDef="_meta.timestamp">
-          <mat-header-cell *matHeaderCellDef>Date</mat-header-cell>
+          <mat-header-cell *matHeaderCellDef start="desc" mat-sort-header>Date</mat-header-cell>
           <mat-cell *matCellDef="let req">
             <span *ngIf="req._meta && req._meta.timestamp">{{ req._meta.timestamp * 1000 | date: 'y/MM/dd'  }}</span>
             <span *ngIf="req.timestamp">{{ req.timestamp | date: 'y/MM/dd'  }}</span>
@@ -34,7 +34,7 @@
         </ng-container>
         <!-- Access Request Column -->
         <ng-container matColumnDef="requestId">
-          <mat-header-cell *matHeaderCellDef></mat-header-cell>
+          <mat-header-cell *matHeaderCellDef mat-sort-header></mat-header-cell>
           <mat-cell *matCellDef="let req">
             <a *ngIf="req.requestId" routerLink="/request/requestId/{{req.requestId}}" class="fc-accent-secondary">View
               Request</a>
@@ -44,7 +44,7 @@
         </ng-container>
         <!-- From Column -->
         <ng-container matColumnDef="request.payee.address">
-          <mat-header-cell *matHeaderCellDef>From</mat-header-cell>
+          <mat-header-cell *matHeaderCellDef mat-sort-header>From</mat-header-cell>
           <mat-cell *matCellDef="let req">
             <div *ngIf="req.request">
               <span
@@ -72,7 +72,7 @@
         </ng-container>
         <!-- To Column -->
         <ng-container matColumnDef="request.payer">
-          <mat-header-cell *matHeaderCellDef>To</mat-header-cell>
+          <mat-header-cell *matHeaderCellDef mat-sort-header>To</mat-header-cell>
           <mat-cell *matCellDef="let req">
             <div *ngIf="req.request">
               <span
@@ -99,7 +99,7 @@
         </ng-container>
         <!-- Amount Column -->
         <ng-container matColumnDef="request.payee.expectedAmount">
-          <mat-header-cell *matHeaderCellDef>Amount</mat-header-cell>
+          <mat-header-cell *matHeaderCellDef mat-sort-header>Amount</mat-header-cell>
           <mat-cell *matCellDef="let req">
             <div *ngIf="req.request; else pendingRequest">
               <span *ngIf="req.request.payee.address != searchValue; else payeeSpan">
@@ -140,7 +140,7 @@
         </ng-container>
         <!-- Status Column -->
         <ng-container matColumnDef="request.status">
-          <mat-header-cell *matHeaderCellDef>Status</mat-header-cell>
+          <mat-header-cell *matHeaderCellDef mat-sort-header>Status</mat-header-cell>
           <mat-cell *matCellDef="let req" class="text-center">
             <div *ngIf="req.request">
               <span class="status-{{ req.request.status.replace(' ','-') }}">{{ req.request.status }}</span>
