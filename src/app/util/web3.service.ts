@@ -316,17 +316,18 @@ export class Web3Service {
   }
 
   private async enableWeb3() {
-    if (window.ethereum) {
+    if (typeof window.ethereum !== 'undefined') {
       window.web3 = new Web3(window.ethereum);
+    } else if (window.web3) {
+      // Legacy dapp browsers...
+      window.web3 = new Web3(window.web3.currentProvider);
+    } else {
       try {
         await window.ethereum.enable();
       } catch (error) {
         this.utilService.openSnackBar('Web3 not enabled');
         console.error(error);
       }
-    } else if (window.web3) {
-      // Legacy dapp browsers...
-      window.web3 = new Web3(window.web3.currentProvider);
     }
   }
 
