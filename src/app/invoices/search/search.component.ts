@@ -190,9 +190,11 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
       }
       
       switch (usedSort) {
+        // *** Sort by AMOUNT ***
         case 'request.payee.expectedAmount': {
           return this.compare(a['request'].payee.expectedAmount, b['request'].payee.expectedAmount, isAsc);
         }
+        // *** Sort by PAYEE ***
         case 'request.payee.address': {
           const labelA = a['request'] ? a['request'].payee.label : a.payee.label;
           const labelB = b['request'] ? b['request'].payee.label : b.payee.label;
@@ -200,14 +202,15 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
           if (labelA && labelB) {
             // If both have a label, sort labels
             return this.compareStrings(labelA, labelB, isAsc);
-            } else if (!labelA && !labelB) {
-              // If both have no label, sort addresses
-              return this.compareStrings(a['request'].payee.address, b['request'].payee.address, isAsc);
-              } else {
-                // If only one has no label, first show labels (in Asc)
-              return (labelA ? -1 : 1) * (isAsc ? 1 : -1);
+          } else if (!labelA && !labelB) {
+            // If both have no label, sort addresses
+            return this.compareStrings(a['request'].payee.address, b['request'].payee.address, isAsc);
+            } else {
+              // If only one has no label, first show labels (in Asc)
+            return (labelA ? -1 : 1) * (isAsc ? 1 : -1);
           }
         }
+        // *** Sort by PAYER ***
         case 'request.payer': {
           const labelA = a['request'] ? a['request'].payerLabel : a.payerLabel;
           const labelB = b['request'] ? b['request'].payerLabel : b.payerLabel;
@@ -221,6 +224,17 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
             } else {
               // If only one has no label, first show labels (in Asc)
               return (labelA ? -1 : 1) * (isAsc ? 1 : -1);
+          }
+        }
+        // *** Sort by STATUS ***
+        case 'request.status': {
+          const statusA = a['request'] ? a['request'].status : a['status'];
+          const statusB = b['request'] ? b['request'].status : b['status'];
+          const workflowStatuses = ['pending', 'created', 'accepted', 'paid', 'cancelled'];
+          if (statusA == statusB) {
+            usedSort = '_meta.timestamp';
+          } else {
+            return this.compare(workflowStatuses.indexOf(statusA), workflowStatuses.indexOf(statusB), isAsc);
           }
         }
         default:
