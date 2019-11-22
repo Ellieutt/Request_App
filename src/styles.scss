@@ -1489,3 +1489,11 @@ i.dash:after {
   color: #FFC123;
   margin-bottom: 40px;
 }
+
+.invoice-form h3 {
+  text-transform: uppercase;
+
+  &.mt-3 {
+    margin: 2rem 0 !important;
+  }
+}

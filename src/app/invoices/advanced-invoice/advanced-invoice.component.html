@@ -1,7 +1,7 @@
 <div class="container fc-primary my-5">
   <div class="warning-box">By creating this invoice, it will be pushed to the blockchain. <br/>
       All the information will be publicly accessible. </div>
-  <form [formGroup]="invoiceData" (ngSubmit)="sendInvoice()">
+  <form class="invoice-form" [formGroup]="invoiceData" (ngSubmit)="sendInvoice()">
     <div class="row mb-3">
       <div class="col-12 col-sm-4">
         <h2 style="font-size: 1.8em;">Create a new invoice</h2>
@@ -30,14 +30,14 @@
               <label for="taxRegistration">Tax number</label>
               <input matInput type="text" name="taxRegistration" placeholder="Tax number" formControlName="taxRegistration">
             </div>
+            <div class="col-12 text-right" *ngIf="!shouldShowSellerDetails">
+                <button mat-button color="accent" class="mb-3" type="button" (click)="shouldShowSellerDetails = true">+ Add company details</button>
+              </div>
           </div>
         </div>
       </div>
 
       <div class="row" formGroupName="sellerInfo">
-        <div class="col-12 col-sm-6 col-lg-5" *ngIf="!shouldShowSellerDetails">
-          <button mat-button color="accent" class="mb-3" type="button" (click)="shouldShowSellerDetails = true">+ Add company details</button>
-        </div>
         <div class="col-12 col-sm-6 col-lg-5" *ngIf="shouldShowSellerDetails" formGroupName="address" [@displayAnim]>
           <label for="streetAddress">Address line 1</label>
           <input matInput type="text" name="streetAddress" placeholder="Street address, P.O. box, company name, c/o" formControlName="streetAddress">
@@ -79,7 +79,7 @@
           <input matInput type="text" name="payerETHAddress" placeholder="ETH address" [formControl]="payerETHAddress">
 
           <div *ngIf="!shouldShowBuyerDetails">
-            <button mat-button color="accent" class="mb-3" type="button" (click)="shouldShowBuyerDetails = true">+ Add company details</button>
+            <button mat-button color="accent" class="mb-3" type="button" (click)="shouldShowBuyerDetails = true">+ Add customer details</button>
           </div>
           <div *ngIf="shouldShowBuyerDetails" [@displayAnim] formGroupName="address">
             <label for="streetAddress">Address line 1</label>
