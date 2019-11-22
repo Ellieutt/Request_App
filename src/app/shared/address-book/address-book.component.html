@@ -30,16 +30,20 @@
         </a>
         <a (click)="utilService.redirectToPage('/search/' + addressToAdd)" class="right-link">View Address</a>
     </div>
-    <form *ngIf="editLabel" (ngSubmit)="onSave(addressToAdd.toLowerCase())">
+    <form *ngIf="editLabel" (ngSubmit)="onSave(addressToAdd.toLowerCase())" #labelForm="ngForm">
         <input  
             #addressLabelField
             [value]="addressLabel" 
             [(ngModel)]="addressLabel"
             class="address-book-new-label" 
-            placeholder="Custom name"
+            placeholder="Custom name (20 characters max)"
             name="addressLabel"
-            maxlength="10" 
+            maxlength="20" 
             autofocus>
+        <div *ngIf="labelForm.controls['addressLabel']?.invalid && (labelForm.controls['addressLabel']?.dirty || labelForm.controls['addressLabel']?.touched)"
+            class="address-book-alert">
+            Label must be max 20 characters long.
+        </div>
         <div class="form-buttons">
             <button mat-button type="submit" class="form-buttons">Save</button>
             <a (click)="toggleEdition()">Cancel</a>
