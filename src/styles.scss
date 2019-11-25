@@ -682,6 +682,12 @@ ul li:after {
 .invoice-date {
   margin-top: 26px;
 }
+.invoice-id {
+  margin-top: -6px;
+}
+.invoice-id + .invoice-date {
+  margin-top: 0;
+}
 
 .cta-toolbar .void-request-button {
   width: auto;
@@ -1137,6 +1143,8 @@ ul {
 
 .request-amount {
   background: #FAFAFA;
+  border-top: 1px solid #EFEFEF;
+  border-bottom: 1px solid #EFEFEF;
 }
 
 .pending-message-container {
@@ -1496,4 +1504,18 @@ i.dash:after {
   &.mt-3 {
     margin: 2rem 0 !important;
   }
+}
+
+.payment-note {
+  padding-top: 1.5rem;
+}
+
+.payment-terms + .payment-note {
+  padding-top: 0;
+}
+
+.payment-terms {
+  padding-bottom: 1.5rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid #EFEFEF;
 }

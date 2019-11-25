@@ -10,10 +10,12 @@
   .mat-header-row, .mat-row {
     height: auto;
   }
-
+  .mat-header-row th {
+    color: #000;
+    font-weight: bold;
+  }
   .mat-cell, .mat-header-cell {
     font-size: 14px !important;
-    color: $blue-grey;
     border: none;
     span {
       display: block;

@@ -10,6 +10,11 @@ export class RequestAddressesComponent implements OnInit {
   request: any;
   @Input()
   account: string;
+  @Input()
+  payeeExtraInformation: {};
+  @Input()
+  payerExtraInformation: {};
+
   payer: string;
   currency: string;
   max: number = 0;

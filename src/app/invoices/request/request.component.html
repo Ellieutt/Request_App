@@ -43,6 +43,10 @@
                           class="fa {{request.errorMsg ? 'fa-warning fc-warn' : 'fa-circle-o-notch fa-spin'}}"></i>&nbsp;{{ request.errorMsg || request.waitingMsg || 'searching for blockchain information...' }}</span>
                     </ng-template>
                   </h4>
+                  <div *ngIf="request.data && request.data.data && request.data.data.purchaseOrderId" 
+                    class="invoice-id fs-16">
+                    Invoice #: {{ request.data.data.purchaseOrderId }}
+                  </div>
                   <div *ngIf="request.data && request.data.data && request.data.data.date" id="invoice-date-created"
                     class="invoice-date fs-16">
                     {{ request.data.data.date | date: 'MMMM d, y' }}
@@ -50,6 +54,9 @@
                   <div *ngIf="request.data && request.data.data && request.data.data.creationDate"
                     id="invoice-date-created" class="invoice-date fs-16">
                     {{ request.data.data.creationDate | date: 'MMMM d, y' }}
+                  </div>
+                  <div *ngIf="request.data && request.data.data && request.data.data.paymentTerms.dueDate" class="fs-16">
+                    Due: {{ request.data.data.paymentTerms.dueDate | date: 'MMMM d, y' }}
                   </div>
                   <!-- <div class="mt-1">
                   <a *ngIf="txHash" class="fs-14 pr-1" style="opacity: 0.8; color: #008c62 !important;" href="{{web3Service.etherscanUrl}}tx/{{txHash}}" target="_blank">
@@ -80,6 +87,7 @@
                         <div *ngIf="e.name == 'UpdateBalance'" id="amount-usd" style="text-align: center;">
                           <span class="hidden"
                             id="invoice-date-paid">{{e._meta.timestamp + '000' | date: 'MMMM d, y'}}</span>
+                            {{ amount }} {{ currency }} {{ e._meta.timestamp }}
                           <currency-converter *ngIf="amount" [from]="currency" [to]="'USD'" [amount]="amount"
                             [timestamp]="e._meta.timestamp">
                           </currency-converter>

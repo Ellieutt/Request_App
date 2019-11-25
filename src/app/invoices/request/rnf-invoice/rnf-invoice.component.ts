@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Web3Service } from '../../../util/web3.service';
 import { IRequestData } from '@requestnetwork/request-network.js';
+import { UtilService } from '../../../util/util.service';
 
 @Component({
   selector: 'app-rnf-invoice-request',
@@ -13,6 +14,9 @@ export class RnfInvoiceComponent implements OnInit {
 
   @Input()
   blockchainName: string;
+
+  account: string;
+  amount: string;
 
   public invoiceItemsColumns = [
     'name',
@@ -28,11 +32,14 @@ export class RnfInvoiceComponent implements OnInit {
   vatTotal;
   totalWithTax;
 
-  constructor(public web3Service: Web3Service) {}
+  constructor(public web3Service: Web3Service, private utilService: UtilService,) {}
 
   ngOnInit() {
     this.data = this.request.data.data;
     this.updateTotals();
+    this.amount = this.web3Service.BNToAmount(this.request.payee.expectedAmount, this.request.currency);
+
+    this.watchAccount();
   }
 
   getTaxFreeTotal() {
@@ -46,6 +53,13 @@ export class RnfInvoiceComponent implements OnInit {
         ),
       this.web3Service.BN()
     );
+  }
+
+  watchAccount() {
+    // reload requestObject with its web3 if account has changed
+    this.web3Service.accountObservable.subscribe(account => {
+      this.account = account;
+    });
   }
 
   getVatTotal() {
