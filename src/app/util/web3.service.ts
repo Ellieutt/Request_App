@@ -331,7 +331,7 @@ export class Web3Service {
             // TODO: remove between merging on main branch, cannot test locally
             console.log(window.ethereum.selectedAddress);
           } else {
-            this.utilService.openSnackBar('Web3 not enabled but maybe we have the address?');
+            this.utilService.openSnackBar('The connection with your account has been refused by Metamask.');
             console.error(error);
           }
         }
