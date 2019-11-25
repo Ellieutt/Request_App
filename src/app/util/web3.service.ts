@@ -317,17 +317,28 @@ export class Web3Service {
 
   private async enableWeb3() {
     if (typeof window.ethereum !== 'undefined') {
-      window.web3 = new Web3(window.ethereum);
+      if (window.ethereum.selectedAddress) {
+        window.web3 = new Web3(window.ethereum);
+      } else {
+        // Metamask either disconnected or user has never accepted a connection with this domain
+        // Test scenario 1: logout from Metamask, refresh the page, click on "Login with Metamask" and decline invitation --> It still works
+        // Test scenario 2: Settings > Connections > (delete the connected domain from the list) --> Should throw an error
+        try {
+          await window.ethereum.enable();
+        } catch (error) {
+          if (window.ethereum.selectedAddress) {
+            // Web3 not enabled but we have the address
+            // TODO: remove between merging on main branch, cannot test locally
+            console.log(window.ethereum.selectedAddress);
+          } else {
+            this.utilService.openSnackBar('Web3 not enabled but maybe we have the address?');
+            console.error(error);
+          }
+        }
+      }
     } else if (window.web3) {
       // Legacy dapp browsers...
       window.web3 = new Web3(window.web3.currentProvider);
-    } else {
-      try {
-        await window.ethereum.enable();
-      } catch (error) {
-        this.utilService.openSnackBar('Web3 not enabled');
-        console.error(error);
-      }
     }
   }
 
