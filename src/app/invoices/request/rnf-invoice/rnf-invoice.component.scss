@@ -10,13 +10,27 @@
   .mat-header-row, .mat-row {
     height: auto;
   }
+  .mat-header-row th {
+    color: #000;
+    font-weight: bold;
+    text-align: right;
 
+    &.item-description-header {
+      text-align: left;
+    }
+  }
   .mat-cell, .mat-header-cell {
     font-size: 14px !important;
-    color: $blue-grey;
     border: none;
     span {
       display: block;
+    }
+  }
+  .mat-cell {
+    text-align: right;
+
+    &.cdk-column-name {
+      text-align: left;
     }
   }
 

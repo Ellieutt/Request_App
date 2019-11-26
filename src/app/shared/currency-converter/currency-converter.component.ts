@@ -29,9 +29,10 @@ export class CurrencyConverterComponent implements OnInit {
       return;
     }
 
+    const currency = this.from == 'SAI' ? 'DAI' : this.from;
     if (this.timestamp) {
       const response = await fetch(
-        `https://min-api.cryptocompare.com/data/dayAvg?fsym=${this.from}&tsym=${
+        `https://min-api.cryptocompare.com/data/dayAvg?fsym=${currency}&tsym=${
           this.to
         }&toTs=${this.timestamp}`
       );
@@ -39,7 +40,7 @@ export class CurrencyConverterComponent implements OnInit {
       this.rate = result;
     } else {
       const response = await fetch(
-        `https://min-api.cryptocompare.com/data/price?fsym=${this.from}&tsyms=${
+        `https://min-api.cryptocompare.com/data/price?fsym=${currency}&tsyms=${
           this.to
         }`
       );
