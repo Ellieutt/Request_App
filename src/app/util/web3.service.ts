@@ -317,17 +317,26 @@ export class Web3Service {
 
   private async enableWeb3() {
     if (typeof window.ethereum !== 'undefined') {
-      window.web3 = new Web3(window.ethereum);
+      if (window.ethereum.selectedAddress) {
+        window.web3 = new Web3(window.ethereum);
+      } else {
+        // Metamask either disconnected or user has never accepted a connection with this domain
+        // Test scenario 1: logout from Metamask, refresh the page, click on "Login with Metamask" and decline invitation --> It still works
+        // Test scenario 2: Settings > Connections > (delete the connected domain from the list) --> Should throw an error
+        try {
+          // The only way to ask user to login on Metamask is to ask for a connection, even if it was approved in the past.
+          // At this stage, if the user already approved the connection in the past and connects to Metemask, he may leave the approval running in the background.
+          await window.ethereum.enable();
+        } catch (error) {
+          if (!window.ethereum.selectedAddress) {
+            this.utilService.openSnackBar('The connection with your account has been refused by Metamask.');
+            console.error(error);
+          }
+        }
+      }
     } else if (window.web3) {
       // Legacy dapp browsers...
       window.web3 = new Web3(window.web3.currentProvider);
-    } else {
-      try {
-        await window.ethereum.enable();
-      } catch (error) {
-        this.utilService.openSnackBar('Web3 not enabled');
-        console.error(error);
-      }
     }
   }
 
