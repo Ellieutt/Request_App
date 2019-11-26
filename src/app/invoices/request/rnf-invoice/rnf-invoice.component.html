@@ -6,26 +6,19 @@
 </ng-template>
 <request-addresses [request]="request" [account]="account" [payeeExtraInformation]="data.sellerInfo" [payerExtraInformation]="data.buyerInfo"></request-addresses>
 
-<div class="p-4" style="border-bottom: 1px solid #DFE5EC">
+<div class="p-4">
 
   <table mat-table #itemsTable [dataSource]="data.invoiceItems" class="w-100 invoice-items-table"
     *ngIf="data.invoiceItems">
     <ng-container matColumnDef="name">
-      <th mat-header-cell *matHeaderCellDef class="item-description-header col-3"> Description </th>
-      <td mat-cell *matCellDef="let invoiceItem" class="col-3">
+      <th mat-header-cell *matHeaderCellDef class="item-description-header col-5">Item</th>
+      <td mat-cell *matCellDef="let invoiceItem" class="col-5">
         {{invoiceItem.name}}
       </td>
     </ng-container>
 
-    <ng-container matColumnDef="quantity">
-      <th mat-header-cell *matHeaderCellDef class="col-1"> Qty </th>
-      <td mat-cell *matCellDef="let invoiceItem" class="col-1">
-        {{invoiceItem.quantity}}
-      </td>
-    </ng-container>
-
     <ng-container matColumnDef="unitPrice">
-      <th mat-header-cell *matHeaderCellDef class="col-2"> Price <span class="font-italic">(tax free)</span> </th>
+      <th mat-header-cell *matHeaderCellDef class="col-2"> Price </th>
       <td mat-cell *matCellDef="let invoiceItem" class="col-2">
         <ng-container *ngIf="data.meta.version === '0.0.1'">
           {{invoiceItem.unitPrice}} {{request.currency}}
@@ -34,6 +27,13 @@
           {{this.web3Service.BNToAmount(this.web3Service.BN(invoiceItem.unitPrice), request.currency)}}
           {{request.currency}}
         </ng-container>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="quantity">
+      <th mat-header-cell *matHeaderCellDef class="col-1"> Qty </th>
+      <td mat-cell *matCellDef="let invoiceItem" class="col-1">
+        {{invoiceItem.quantity}}
       </td>
     </ng-container>
 
@@ -56,16 +56,9 @@
     </ng-container>
 
     <ng-container matColumnDef="taxPercent">
-      <th mat-header-cell *matHeaderCellDef class="col-2"> VAT </th>
+      <th mat-header-cell *matHeaderCellDef class="col-2"> Tax </th>
       <td mat-cell *matCellDef="let invoiceItem" class="col-2">
         {{invoiceItem.taxPercent || '0'}}%
-      </td>
-    </ng-container>
-
-    <ng-container matColumnDef="amount">
-      <th mat-header-cell *matHeaderCellDef class="col-2"> Amount <span class="font-italic">(tax free)</span> </th>
-      <td mat-cell *matCellDef="let invoiceItem" class="col-2">
-        {{itemAmount(invoiceItem.unitPrice, invoiceItem.discount, invoiceItem.quantity)}} {{request.currency}}
       </td>
     </ng-container>
 
@@ -74,26 +67,17 @@
   </table>
 </div>
 <div class="d-flex flex-wrap">
-  <div *ngIf="data.invoiceItems" class="d-inline-block semi-bold fc-primary p-3 pl-4">
-    <div class="fs-14">TOTAL WITHOUT TAX</div>
-    <div class="fs-24" id="request-expected-amount">
+  <div *ngIf="data.invoiceItems" class="semi-bold fc-primary pl-4 pr-4" style="width: 100%;">
+    <h4 class="fs-16" style="float: left;">Total without tax</h4>
+    <h4 class="fs-18 text-right" id="request-expected-amount">
       {{this.web3Service.BNToAmount(taxFreeTotal, request.currency)}} {{request.currency}}
-    </div>
+    </h4>
   </div>
-  <div *ngIf="data.invoiceItems" class="ml-auto d-inline-block semi-bold fc-primary px-3 py-4">
-    <div class="fs-24" id="request-expected-amount">+</div>
-  </div>
-  <div *ngIf="data.invoiceItems" class="ml-auto d-inline-block semi-bold fc-primary p-3">
-    <div class="fs-14">TAX</div>
-    <div class="fs-24" id="request-expected-amount">
+  <div *ngIf="data.invoiceItems" class="semi-bold fc-primary pb-4 pl-4 pr-4" style="width: 100%;">
+    <p class="fs-14" style="float: left;">Tax</p>
+    <div class="fs-14 text-right" id="request-expected-amount">
       {{this.web3Service.BNToAmount(this.web3Service.BN(vatTotal), request.currency)}} {{request.currency}}
     </div>
-  </div>
-  <div class="ml-auto d-inline-block semi-bold fc-primary p-3 pr-4" style="background: #DFE5EC;">
-    <div class="fs-14">AMOUNT</div>
-    <div class="fs-24" id="request-expected-amount">
-      {{ amount }}
-      {{request.currency}}</div>
   </div>
 </div>
 <div class="d-flex">

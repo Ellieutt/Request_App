@@ -20,11 +20,11 @@ export class RnfInvoiceComponent implements OnInit {
 
   public invoiceItemsColumns = [
     'name',
-    'quantity',
     'unitPrice',
+    'quantity',
     'discount',
     'taxPercent',
-    'amount',
+    // 'amount',
   ];
 
   data: any;
