@@ -24,7 +24,6 @@ export class RnfInvoiceComponent implements OnInit {
     'quantity',
     'discount',
     'taxPercent',
-    // 'amount',
   ];
 
   data: any;
