@@ -3,6 +3,20 @@ $('#download-receipt').click(function () {
         copyurl: $('.url-box').val()
     });
 
+
+    const pdfElement = document.getElementById('request-invoice-inner-pdf');
+    // If this is an invoice
+    if (pdfElement) {
+        html2pdf(pdfElement, {
+            margin: 0,
+            filename: 'RequestInvoice.pdf',
+            image: { type: 'jpeg', quality: 1 },
+            html2canvas: { scale: 2 },
+            jsPDF: { unit: 'in', format: [7, 9], orientation: 'p' }
+        });
+        return;
+    }
+
     var reason = $('#reasonPdf').html(),
         createdDate = $('#invoice-date-created').html(),
         paidDate = $('#invoice-date-paid').html(),
