@@ -43,6 +43,14 @@
             <div *ngIf="!req.requestId && !req.txid" class="placeholder"></div>
           </mat-cell>
         </ng-container>
+        
+        <!-- Access Request on Mobile -->
+        <ng-container matColumnDef="mobile-click">
+          <mat-header-cell *matHeaderCellDef></mat-header-cell>
+          <mat-cell *matCellDef="let req">
+            <div style="background-color: blue; opacity: 50%; float: left; display: block; z-index: -1;">Click me</div>
+          </mat-cell>
+        </ng-container>
         <!-- From Column -->
         <ng-container matColumnDef="request.payee.address">
           <mat-header-cell *matHeaderCellDef mat-sort-header>From</mat-header-cell>
