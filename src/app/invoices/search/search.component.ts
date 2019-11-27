@@ -33,7 +33,6 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
     'request.payee.expectedAmount',
     'request.status',
     'requestId',
-    'mobile-click'
   ];
   dataSource = new MatTableDataSource();
   loading = true;
