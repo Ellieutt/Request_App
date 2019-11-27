@@ -118,6 +118,11 @@ export class RequestComponent implements OnInit, OnDestroy, AfterContentInit {
       }
     });
     if (isNewRequest) {
+      let expectedAmount = request.payee.expectedAmount;
+      if (this.isInvoiceRequest) {
+        const totalWithTax = this.getTaxFreeTotal(request).add(this.getVatTotal(request));
+        expectedAmount = totalWithTax;
+      }
       cookieList.push({
         txid:
           that.txHash + '?request=' + this.route.snapshot.queryParams.request,
@@ -125,7 +130,7 @@ export class RequestComponent implements OnInit, OnDestroy, AfterContentInit {
         payee: { address: request.payee.address },
         payer: request.payer,
         amount: this.web3Service.BNToAmount(
-          request.payee.expectedAmount,
+          expectedAmount,
           request.currency
         ),
         currency: request.currency,
@@ -139,6 +144,34 @@ export class RequestComponent implements OnInit, OnDestroy, AfterContentInit {
         1
       );
     }
+  }
+
+  getTaxFreeTotal(request) {
+    return request.data.data['invoiceItems'].reduce(
+      (acc, item) =>
+        acc.add(
+          this.web3Service
+            .BN(item.unitPrice)
+            .sub(this.web3Service.BN(item.discount || 0))
+            .mul(this.web3Service.BN(item.quantity))
+        ),
+      this.web3Service.BN()
+    );
+  }
+
+  getVatTotal(request) {
+    return request.data.data['invoiceItems'].reduce(
+      (acc, item) =>
+        acc.add(
+          this.web3Service
+            .BN(item.unitPrice)
+            .sub(this.web3Service.BN(item.discount || 0))
+            .mul(this.web3Service.BN(item.quantity))
+            .mul(this.web3Service.BN(Math.round(item.taxPercent * 100)))
+            .div(this.web3Service.BN(10000))
+        ),
+      this.web3Service.BN()
+    );
   }
 
   async ngAfterContentInit() {

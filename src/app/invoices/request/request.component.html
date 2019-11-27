@@ -55,7 +55,7 @@
                     id="invoice-date-created" class="invoice-date fs-16">
                     {{ request.data.data.creationDate | date: 'MMMM d, y' }}
                   </div>
-                  <div *ngIf="request.data && request.data.data && request.data.data.paymentTerms.dueDate" class="fs-16">
+                  <div *ngIf="request.data && request.data.data && request.data.data.paymentTerms && request.data.data.paymentTerms.dueDate" class="fs-16">
                     Due: {{ request.data.data.paymentTerms.dueDate | date: 'MMMM d, y' }}
                   </div>
                   <!-- <div class="mt-1">
