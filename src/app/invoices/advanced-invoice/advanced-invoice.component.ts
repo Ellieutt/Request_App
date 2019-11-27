@@ -118,7 +118,6 @@ export class AdvancedInvoiceComponent implements OnInit {
     );
 
     this.addInvoiceItem(false);
-    this.addInvoiceItem(false);
 
     this.invoiceData = this.formBuilder.group({
       meta: {
