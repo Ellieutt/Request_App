@@ -79,9 +79,8 @@ div.top-filters div.active {
 	.mat-row { 
 		display: block;
 		align-items: start;
-		padding: 0px 2px;
+		padding: 0px 15px 0px 2px;
 		min-height: auto;
-		padding-bottom: 15px;
 		border-bottom: 1px solid lightgrey;
 	}
 
@@ -97,19 +96,23 @@ div.top-filters div.active {
 		text-align: left;
 	}
 
+	.mat-cell:last-of-type {
+		padding-right: 0px;
+	}
+
 	.mat-table .blockies {
 		//top: 0px;
 	}
 
 	.cdk-column-request-payee-address {
 		display: inline-block;
-		width: 48%;
+		width: 49%;
 		text-align: center;
 	}
 
 	.cdk-column-request-payer {
 		display: inline-block;
-		width: 48%;
+		width: 49%;
 		margin-left: 2%;
 		text-align: center;
 	}
@@ -127,6 +130,8 @@ div.top-filters div.active {
 	}
 
 	.cdk-column-requestId {
-		display: none;
+		//display: none;
+		width: 100%;
+		text-align: right;
 	}
 }
