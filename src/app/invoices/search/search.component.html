@@ -47,6 +47,7 @@
         <ng-container matColumnDef="request.payee.address">
           <mat-header-cell *matHeaderCellDef mat-sort-header>From</mat-header-cell>
           <mat-cell *matCellDef="let req">
+            <div class="mobile-view">Requester:</div>
             <div *ngIf="req.request">
               <span
                 (click)="openAddressModal(req.request.payee.address)">
@@ -76,6 +77,7 @@
         <ng-container matColumnDef="request.payer">
           <mat-header-cell *matHeaderCellDef mat-sort-header>To</mat-header-cell>
           <mat-cell *matCellDef="let req">
+            <div class="mobile-view">Payer:</div>
             <div *ngIf="req.request">
               <span
                 (click)="openAddressModal(req.request.payer)">
