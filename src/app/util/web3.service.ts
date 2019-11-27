@@ -324,13 +324,11 @@ export class Web3Service {
         // Test scenario 1: logout from Metamask, refresh the page, click on "Login with Metamask" and decline invitation --> It still works
         // Test scenario 2: Settings > Connections > (delete the connected domain from the list) --> Should throw an error
         try {
+          // The only way to ask user to login on Metamask is to ask for a connection, even if it was approved in the past.
+          // At this stage, if the user already approved the connection in the past and connects to Metemask, he may leave the approval running in the background.
           await window.ethereum.enable();
         } catch (error) {
-          if (window.ethereum.selectedAddress) {
-            // Web3 not enabled but we have the address
-            // TODO: remove between merging on main branch, cannot test locally
-            console.log(window.ethereum.selectedAddress);
-          } else {
+          if (!window.ethereum.selectedAddress) {
             this.utilService.openSnackBar('The connection with your account has been refused by Metamask.');
             console.error(error);
           }
