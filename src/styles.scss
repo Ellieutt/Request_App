@@ -1519,3 +1519,15 @@ i.dash:after {
   margin-bottom: 1.5rem;
   border-bottom: 1px solid #EFEFEF;
 }
+
+.create-invoice-button {
+  margin: -24px !important;
+  margin-top: 35px !important;
+}
+.create-button {
+  box-shadow: none !important;
+  width: 32%;
+  height: 74px;
+  border-radius: 0 !important;
+  border-bottom-right-radius: 3px !important;
+}
