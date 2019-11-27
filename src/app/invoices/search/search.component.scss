@@ -47,6 +47,18 @@ div.top-filters div.active {
 	display: none;
 }
 
+.mat-cell,
+.mat-header-cell {
+	text-align: center;
+	font-size: 12px;
+	color: $primary;
+	margin-left: 5px;
+}
+
+.mat-sort-header-container {
+	justify-content: center !important;
+}
+
 @media screen and (max-width: 500px) {
 	.mobile-view {
 		display: block;
@@ -57,7 +69,7 @@ div.top-filters div.active {
 	}
 
 	.mat-table {
-		max-height: auto;
+		max-height: unset;
 	}
 
 	.mat-header-row {
@@ -69,14 +81,20 @@ div.top-filters div.active {
 		align-items: start;
 		padding: 0px 2px;
 		min-height: auto;
+		margin-bottom: 20px;
+	}
+	
+	mat-row {
+		border-bottom: 1px solid lightgrey;
 	}
 
 	.mat-cell {
 		display: block;
 		text-align: unset;
+		margin-left: 0px;
 	}
 	
-	mat-cell:first-of-type {
+	.mat-cell:first-of-type {
 		padding: 0px 2px;
 		text-align: left;
 	}
@@ -87,12 +105,15 @@ div.top-filters div.active {
 
 	.cdk-column-request-payer {
 		display: inline-block;
-		width: 45%;
+		width: 48%;
+		text-align: center;
 	}
 
 	.cdk-column-request-payee-address {
 		display: inline-block;
-		width: 45%;
+		width: 48%;
+		margin-left: 1%;
+		text-align: center;
 	}
 
 	.cdk-column-request-payee-expectedAmount {
@@ -103,23 +124,11 @@ div.top-filters div.active {
 
 	.cdk-column-request-status {
 		display: inline-block;
-		width: 25%;
+		width: 30%;
 		text-align: right;
 	}
 
 	.cdk-column-requestId {
 		display: none;
 	}
-}
-
-.mat-cell,
-.mat-header-cell {
-	text-align: center;
-	font-size: 12px;
-	color: $primary;
-	margin-left: 5px;
-}
-
-.mat-sort-header-container {
-	justify-content: center !important;
 }
