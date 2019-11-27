@@ -27,7 +27,7 @@
         <!-- Age Column -->
         <ng-container matColumnDef="_meta.timestamp">
           <mat-header-cell *matHeaderCellDef start="desc" mat-sort-header>Date</mat-header-cell>
-          <mat-cell *matCellDef="let req">
+          <mat-cell *matCellDef="let req" routerLink="/request/requestId/{{req.requestId}}">
             <span *ngIf="req._meta && req._meta.timestamp">{{ req._meta.timestamp * 1000 | date: 'y/MM/dd'  }}</span>
             <span *ngIf="req.timestamp">{{ req.timestamp | date: 'y/MM/dd'  }}</span>
           </mat-cell>
@@ -47,6 +47,7 @@
         <ng-container matColumnDef="request.payee.address">
           <mat-header-cell *matHeaderCellDef mat-sort-header>From</mat-header-cell>
           <mat-cell *matCellDef="let req">
+            <div class="mobile-view">Requester:</div>
             <div *ngIf="req.request">
               <span
                 (click)="openAddressModal(req.request.payee.address)">
@@ -76,6 +77,7 @@
         <ng-container matColumnDef="request.payer">
           <mat-header-cell *matHeaderCellDef mat-sort-header>To</mat-header-cell>
           <mat-cell *matCellDef="let req">
+            <div class="mobile-view">Payer:</div>
             <div *ngIf="req.request">
               <span
                 (click)="openAddressModal(req.request.payer)">
@@ -142,7 +144,7 @@
         <!-- Status Column -->
         <ng-container matColumnDef="request.status">
           <mat-header-cell *matHeaderCellDef mat-sort-header>Status</mat-header-cell>
-          <mat-cell *matCellDef="let req" class="text-center">
+          <mat-cell *matCellDef="let req">
             <div *ngIf="req.request">
               <span class="status-{{ req.request.status.replace(' ','-') }}">{{ req.request.status }}</span>
             </div>

@@ -624,6 +624,13 @@ input[type='number'] {
   }
 }
 
+  @media (max-width: 500px) {
+    .container {
+      padding-left: 2px;
+      padding-right: 2px;
+    }
+}
+
 h1 {
   color: #000;
   font-size: 36px;
@@ -766,8 +773,8 @@ mat-header-row {
   margin-bottom: 5px;
 }
 
-mat-row {
-  border-bottom-width: 0 !important;
+.mat-row {
+  border-bottom-width: 0;
   margin: 5px 0;
 }
 
@@ -795,7 +802,7 @@ mat-row {
 }
 
 .cdk-column-request-status {
-  flex: 0 0 125px !important;
+  flex: 0 0 auto !important;
 }
 
 .cdk-column-requestId, .cdk-column-payer {
@@ -803,7 +810,7 @@ mat-row {
 }
 
 .cdk-column-_meta-timestamp {
-  flex: 0 0 130px;
+  flex: 0 0 auto;
 }
 
 .gas-container {
