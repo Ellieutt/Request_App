@@ -3,6 +3,8 @@
   (emitHideAddressBook)="closedModal()"
   [addressToAdd]="addressToAdd">
 </address-book>
+<!--.slice(createdReq => {return createdReq._meta && createdReq._meta.timestamp}-->
+<CSV-export [requests]="dataSource.data"></CSV-export>
 
 <div class="container">
     <div class="d-flex mb-4">
