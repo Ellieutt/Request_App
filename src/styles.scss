@@ -1537,4 +1537,9 @@ i.dash:after {
   height: 74px;
   border-radius: 0 !important;
   border-bottom-right-radius: 3px !important;
+
+  &.disabled {
+    opacity: 0.3;
+    background: grey !important;
+  }
 }

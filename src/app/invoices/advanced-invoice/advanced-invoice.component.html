@@ -266,7 +266,10 @@
       <textarea matInput placeholder="Please enter your own terms & conditions as due date, late fees and others. You can also leave it blank if you don't have any." name="terms" [formControl]="terms" rows="5"></textarea>
       <div class="create-invoice-button">
           <div style="text-align: right">
-            <button mat-raised-button color="accent" type="submit" class="fs-18 create-button">Create the invoice</button>
+            <button mat-raised-button color="accent" type="submit" class="fs-18 create-button" [ngClass]="sendingInvoice ? 'disabled': ''">
+              Create the invoice
+              <i *ngIf="sendingInvoice" class="fa fa-circle-o-notch fa-spin" style="margin-left: 10px;"></i>
+            </button>
           </div>
       </div>
     </mat-card>
