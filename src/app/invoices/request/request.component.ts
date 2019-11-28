@@ -119,7 +119,7 @@ export class RequestComponent implements OnInit, OnDestroy, AfterContentInit {
     });
     if (isNewRequest) {
       let expectedAmount = request.payee.expectedAmount;
-      if (this.isInvoiceRequest) {
+      if (this.isInvoiceRequest()) {
         const totalWithTax = this.getTaxFreeTotal(request).add(this.getVatTotal(request));
         expectedAmount = totalWithTax;
       }
