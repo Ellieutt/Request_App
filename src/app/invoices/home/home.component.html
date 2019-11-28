@@ -116,10 +116,12 @@
             <button *ngIf="!isRequestForm" class="fs-18" [ngClass]="createLoading ? 'disabled': ''"
               id="send-request-button" mat-raised-button color="accent" (click)="clickSend()">
               Pay Now&nbsp;
+              <i *ngIf="createLoading" class="fa fa-circle-o-notch fa-spin" style="margin-left: 6px;"></i>
             </button>
             <button *ngIf="isRequestForm" class="fs-18" [ngClass]="createLoading ? 'disabled': ''"
               id="create-request-button" mat-raised-button color="accent" (click)="clickRequest()">
               Create a Request&nbsp;
+              <i *ngIf="createLoading" class="fa fa-circle-o-notch fa-spin" style="margin-left: 6px;"></i>
             </button>
           </mat-toolbar>
         </form>
