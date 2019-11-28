@@ -1537,9 +1537,28 @@ i.dash:after {
   height: 74px;
   border-radius: 0 !important;
   border-bottom-right-radius: 3px !important;
-
   &.disabled {
     opacity: 0.3;
     background: grey !important;
+  }
+}
+.container .home-request-form {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.request-form-tabs {
+  .tab-item {
+    padding: 24px 20px;
+    text-align: center;
+    border-top: 2px solid #E2E2E2;;
+    background: #FAFAFA;
+    cursor: pointer;
+    font-weight: 500;
+
+    &.active {
+      background: #fff;
+      border-color: #00E6A0;
+    }
   }
 }
