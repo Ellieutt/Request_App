@@ -1537,6 +1537,10 @@ i.dash:after {
   height: 74px;
   border-radius: 0 !important;
   border-bottom-right-radius: 3px !important;
+  &.disabled {
+    opacity: 0.3;
+    background: grey !important;
+  }
 }
 .container .home-request-form {
   border-top-left-radius: 0;
@@ -1556,5 +1560,9 @@ i.dash:after {
       background: #fff;
       border-color: #00E6A0;
     }
+
+  &.disabled {
+    opacity: 0.3;
+    background: grey !important;
   }
 }
