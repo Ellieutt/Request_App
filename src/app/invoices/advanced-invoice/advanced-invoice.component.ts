@@ -161,7 +161,7 @@ export class AdvancedInvoiceComponent implements OnInit {
 
   public shouldShowSellerDetails = false;
   public shouldShowBuyerDetails = false;
-  private sendingInvoice = false;
+  public sendingInvoice = false;
 
   public taxFreeTotal;
   public vatTotal;
