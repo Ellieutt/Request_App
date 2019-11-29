@@ -19,6 +19,15 @@ export class CSVExportComponent {
             this.popupVisible = false;
         }
         
+    exportOrWarn() {
+        if (this.nbValid() == this.requests.length) {
+            this.exportToCsv();
+        } else {
+            console.log(">" + this.nbValid() + "-" + this.requests.length);
+            this.togglePopup();
+        }
+    }
+
     togglePopup() {
         // TEST partial requests
         //this.requests = JSON.parse('[{"_meta":{"blockNumber":8528181,"timestamp":1568200748},"requestId":"0xdb600fda54568a35b78565b5257125bebc51eb270000000000000000000004c1"},{"_meta":{"blockNumber":8524618,"timestamp":1568152619},"requestId":"0xdb600fda54568a35b78565b5257125bebc51eb270000000000000000000004b3"},{"_meta":{"blockNumber":8520809,"timestamp":1568100828},"requestId":"0xdb600fda54568a35b78565b5257125bebc51eb270000000000000000000004af"},{"_meta":{"blockNumber":8495285,"timestamp":1567757688},"requestId":"0xdb600fda54568a35b78565b5257125bebc51eb270000000000000000000004ac"}]');
@@ -66,7 +75,7 @@ export class CSVExportComponent {
     }
 
     nbValid() {
-        return this.requests.filter(r => {return this.isValid(r)}).length
+        return this.requests.filter(r => {return this.isValid(r)}).length;
     }
 
     exportToCsv() {
@@ -105,8 +114,9 @@ export class CSVExportComponent {
             "Block Number"
         ]);
         this.requests.filter(r => this.isValid(r)).forEach( req => {
-            console.log(req.request.payee.expectedAmount);
-            console.log(req.request.currency);
+            if (req.requestId == "0x8fc2e7f2498f1d06461ee2d547002611b801202b000000000000000000000c67") {
+                console.log(req);
+            }
             rows.push([new Date (req._meta.timestamp * 1000),
                 req.requestId,
                 req.request.creator,
@@ -115,11 +125,10 @@ export class CSVExportComponent {
                 (req.request.payerLabel ? req.request.payerLabel : ""), 
                 req.request.currencyContract.payeePaymentAddress,
                 this.web3Service.BNToAmount(req.request.payee.expectedAmount, req.request.currency),
-                //100000,
                 req.request.currency,
                 req.request.status,
-                req.request.data.data.reason,
-                req.request.data.data.miscellaneous.builderId,
+                (req.request.data && req.request.data.data ? req.request.data.data.reason : ""),
+                (req.request.data && req.request.data.data ? req.request.data.data.miscellaneous.builderId : ""),
                 req._meta.blockNumber,
                 ]);
         })
