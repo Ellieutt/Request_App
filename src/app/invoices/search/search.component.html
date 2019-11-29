@@ -154,19 +154,12 @@
             <div *ngIf="!req.request && !req.status" class="placeholder"></div>
           </mat-cell>
         </ng-container>
-        <!-- Footer row: CSV EXPORT -->
-        <!--<ng-container matColumnDef="CSV-export">
-          <CSV-export [requests]="this.dataSource.data"></CSV-export>
-          <div>OKOK</div>
-        </ng-container>-->
         <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
         <mat-row *matRowDef="let row; columns: displayedColumns;">
         </mat-row>
-        <!--<mat-footer-row *matFooterRowDef="['CSV-export']"></mat-footer-row>-->
       </mat-table>
       <mat-toolbar>
         <mat-toolbar-row style="justify-content: space-between;">
-          <!--<mat-icon (click)="exportCsv(dataSource)" title="Export as CSV">save_alt</mat-icon>-->
           <CSV-export [requests]="this.dataSource.data"></CSV-export>
           <mat-paginator [length]="this.dataSource.filteredData.length" [pageSize]="10" [pageSizeOptions]="[5, 10, 20]" (page)="handlePageChange($event)">
           </mat-paginator>
