@@ -6,7 +6,7 @@
 <div class="CSV-export-float-bg" (click)="togglePopup()" *ngIf="popupVisible"></div>
 <div class="CSV-export-popup" *ngIf="popupVisible">
     <i class="close-icon" (click)="togglePopup()">×</i>
-    <p *ngIf="nbValid() != requests.length" style="text-align: left;">Only requests that are already loaded can exported to CSV.<br>
+    <p *ngIf="nbValid() != requests.length" style="text-align: left;">Only requests that are already loaded can be exported to CSV.<br>
         (Exportable requests: {{ "" + nbValid() + "/" + requests.length}})</p>
     <p *ngIf="nbValid() == requests.length" style="text-align: left;">All the requests are ready to be exported to CSV.</p>
     <a (click)="togglePopup()">Cancel</a>
