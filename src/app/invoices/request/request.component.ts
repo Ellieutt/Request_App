@@ -119,7 +119,7 @@ export class RequestComponent implements OnInit, OnDestroy, AfterContentInit {
     });
     if (isNewRequest) {
       let expectedAmount = request.payee.expectedAmount;
-      if (this.isInvoiceRequest) {
+      if (this.isInvoiceRequest()) {
         const totalWithTax = this.getTaxFreeTotal(request).add(this.getVatTotal(request));
         expectedAmount = totalWithTax;
       }
@@ -417,8 +417,15 @@ export class RequestComponent implements OnInit, OnDestroy, AfterContentInit {
 
   openEmailDialog(sendToEmail) {
     const currency = this.request.currency;
-    const reason =
+    let reason = 'N/A';
+    if (this.isInvoiceRequest()) {
+      if (this.request.data.data['invoiceItems'].length != 0) {
+        reason = this.request.data.data['invoiceItems'][0].name;
+      }
+    } else {
+      reason =
       this.ipfsData && this.ipfsData.reason ? this.ipfsData.reason : 'N/A';
+    }
     const amount = this.amount;
     const url = this.url;
 

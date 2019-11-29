@@ -30,6 +30,7 @@ export class HomeComponent implements OnInit {
   currencyFormControl: FormControl;
   BTCRefundAddress;
   payeeOrPayer: string;
+  isRequestForm = true;
 
   sameAddressValidator(control: FormControl) {
     if (control.value) {
@@ -98,6 +99,15 @@ export class HomeComponent implements OnInit {
       date: this.dateFormControl,
       reason: this.reasonFormControl,
     });
+  }
+
+  showRequestForm() {
+    this.isRequestForm = true;
+  }
+
+  showPaymentForm() {
+    this.isRequestForm = false;
+    this.payeePaymentAddressFormControl.setValue(this.account);
   }
 
   clickRequest() {
