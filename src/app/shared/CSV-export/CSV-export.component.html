@@ -1,0 +1,11 @@
+<a (click)="togglePopup()">
+    <img src="assets/img/download.svg" width="30px">
+    Export CSV
+</a>
+
+<div class="CSV-export-popup" *ngIf="popupVisible">
+    <span>This feature only works with requests that already loaded
+        {{ "" + nbValid() + "/" + requests.length}}</span>
+    <button (click)="exportToCsv()" class="form-buttons">Save</button>
+    <a (click)="togglePopup()">Cancel</a>
+</div>
