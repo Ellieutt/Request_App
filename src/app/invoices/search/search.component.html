@@ -123,14 +123,14 @@
             </div>
             <ng-template #pendingRequest>
               <div *ngIf="req.amount && req.currency; else spinSpan">
-                <span *ngIf="req.payee.address != searchValue; else payeeSpan">
+                <span *ngIf="req.payee.address != searchValue || req.isSend; else payeeSpan">
                   <div class="amount-dashboard negative">
                     - {{ req.amount }} {{ req.currency }}
                   </div>
                 </span>
                 <ng-template #payeeSpan>
                   <div class="amount-dashboard">
-                    + {{ req.amount }} {{ req.currency }}
+                    + {{ req.amount }} {{ req.currency }} 
                   </div>
                 </ng-template>
 

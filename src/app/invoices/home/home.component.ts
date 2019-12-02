@@ -131,7 +131,7 @@ export class HomeComponent implements OnInit {
       const parsedBalance = parseFloat(balance);
       const formBalance = parseFloat(this.expectedAmountFormControl.value);
       if (parsedBalance >= formBalance) {
-        return this.createRequest();
+        return this.createRequest(true);
       } else {
         this.createLoading = false;
         return this.utilService.openSnackBar(
@@ -151,7 +151,7 @@ export class HomeComponent implements OnInit {
       if (balance.gte(allowanceNeeded)) {
         if (allowance >= allowanceNeeded) {
           // Create Request
-          this.createRequest();
+          this.createRequest(true);
         } else {
           // this.web3Service.allow(contract, this.expectedAmountFormControl.value, null);
           this.web3Service
@@ -161,7 +161,7 @@ export class HomeComponent implements OnInit {
               this.payeePaymentAddressFormControl.value
             )
             .on('broadcasted', txHash => {
-              this.createRequest();
+              this.createRequest(true);
             })
             .catch(err => {
               this.createLoading = false;
@@ -252,7 +252,7 @@ export class HomeComponent implements OnInit {
     return true;
   }
 
-  createRequest() {
+  createRequest(isSend = false) {
     if (this.createLoading || this.web3Service.watchDog()) {
       return;
     }
@@ -306,6 +306,9 @@ export class HomeComponent implements OnInit {
         for (const key of Object.keys(data)) {
           request.data.data[key] = data[key];
         }
+
+        this.web3Service.addPendingRequestToCookie(request, response.transaction.hash, btoa(JSON.stringify(request)), isSend);
+
         return this.router.navigate(
           ['/request/txHash', response.transaction.hash],
           {
