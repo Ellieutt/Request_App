@@ -1,4 +1,12 @@
-import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  Input,
+  Output,
+  EventEmitter,
+  ViewChild,
+  ElementRef,
+} from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
 import { UtilService } from '../../util/util.service';
 
@@ -16,8 +24,8 @@ export class AddressBookComponent implements OnInit {
   @Output()
   emitHideAddressBook = new EventEmitter<boolean>();
   @Output()
-  emitNewLabel = new EventEmitter<{ address: string, label: string }>();
-  @ViewChild("addressLabelField")
+  emitNewLabel = new EventEmitter<{ address: string; label: string }>();
+  @ViewChild('addressLabelField')
   addressLabelElement: ElementRef;
   editLabel = false;
 
@@ -30,8 +38,9 @@ export class AddressBookComponent implements OnInit {
     if (this.cookieService.get('request_label_tags')) {
       const labelList = JSON.parse(
         this.cookieService.get('request_label_tags')
-      ).filter(label => {return label.hasOwnProperty(address.toLowerCase());}
-      );
+      ).filter(label => {
+        return label.hasOwnProperty(address.toLowerCase());
+      });
       if (labelList.length == 1) {
         return labelList[0][address.toLowerCase()];
       } else {
@@ -54,11 +63,13 @@ export class AddressBookComponent implements OnInit {
   ngOnInit() {
     this.addressLabel = this.fetchLabelOrEmpty(this.addressToAdd);
   }
-  
+
   toggleEdition() {
     this.editLabel = !this.editLabel;
     if (this.editLabel) {
-      setTimeout(() => {this.addressLabelElement.nativeElement.focus()}, 0);
+      setTimeout(() => {
+        this.addressLabelElement.nativeElement.focus();
+      }, 0);
     }
   }
 
@@ -84,10 +95,13 @@ export class AddressBookComponent implements OnInit {
     }
     if (isNew) {
       requestLabelList.push({
-        [address]: this.addressLabel
+        [address]: this.addressLabel,
       });
     }
-    this.emitNewLabel.emit({ address, label: this.addressLabel ? this.addressLabel : "" });
+    this.emitNewLabel.emit({
+      address,
+      label: this.addressLabel ? this.addressLabel : '',
+    });
 
     this.cookieService.set(
       'request_label_tags',

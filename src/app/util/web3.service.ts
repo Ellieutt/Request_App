@@ -329,7 +329,9 @@ export class Web3Service {
           await window.ethereum.enable();
         } catch (error) {
           if (!window.ethereum.selectedAddress) {
-            this.utilService.openSnackBar('The connection with your account has been refused by Metamask.');
+            this.utilService.openSnackBar(
+              'The connection with your account has been refused by Metamask.'
+            );
             console.error(error);
           }
         }
@@ -439,7 +441,7 @@ export class Web3Service {
           undefined,
           [this.amountToBN(expectedAmount, currency)],
           undefined,
-          JSON.stringify(requestOptions.data),
+          JSON.stringify(requestOptions.data)
         );
       } else {
         return this.requestNetwork.requestERC20Service.createRequestAsPayer(
@@ -862,7 +864,7 @@ export class Web3Service {
       DAI: {
         main: '0x6b175474e89094c44da98b954eedeac495271d0f',
         erc20: '0x62b37F0547047D99cC59e2F0db549Ab1D97149B5',
-      }
+      },
     };
 
     return allContractAddresses[currency];
@@ -870,13 +872,20 @@ export class Web3Service {
 
   public async getBalance(currency) {
     if (currency === 'ETH') {
-      const weiBalance = await this.web3.eth.getBalance(this.accountObservable.value);
+      const weiBalance = await this.web3.eth.getBalance(
+        this.accountObservable.value
+      );
       const balance = this.web3.utils.fromWei(weiBalance);
       return balance;
     } else {
       const currencyContract = this.getCurrencyAddress(currency).main;
-      const contract = new this.web3.eth.Contract(this.minABI, currencyContract);
-      const balance = await contract.methods.balanceOf(this.accountObservable.value).call();
+      const contract = new this.web3.eth.Contract(
+        this.minABI,
+        currencyContract
+      );
+      const balance = await contract.methods
+        .balanceOf(this.accountObservable.value)
+        .call();
       const decimals = this.getDecimalsForCurrency(currency);
       const BN = this.web3.utils.BN;
       return new BN(balance);

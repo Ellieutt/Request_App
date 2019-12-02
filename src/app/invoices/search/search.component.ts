@@ -40,8 +40,8 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
   openAddressBookModal = false;
   addressToAdd = '';
   addressLabel = '';
-  preLoadBatchSize = 10;  // default page is 10, so we load the next page
-  maxPreLoad = 100;       // 10 default pages in advance, loaded in the background
+  preLoadBatchSize = 10; // default page is 10, so we load the next page
+  maxPreLoad = 100; // 10 default pages in advance, loaded in the background
 
   @ViewChild(MatPaginator)
   paginator: MatPaginator;
@@ -67,7 +67,7 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
 
   updateTableWithNewLabel(event) {
     if (event && event.address) {
-      this.dataSource.data.forEach(function (requestObject) {
+      this.dataSource.data.forEach(function(requestObject) {
         if (requestObject['request']) {
           // For existing requests
           if (
@@ -84,7 +84,9 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
           if (requestObject['payer'].toLowerCase() === event.address) {
             requestObject['payerLabel'] = event.label;
           }
-          if (requestObject['payee']['address'].toLowerCase() === event.address) {
+          if (
+            requestObject['payee']['address'].toLowerCase() === event.address
+          ) {
             requestObject['payee']['label'] = event.label;
           }
         }
@@ -102,7 +104,6 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
       name: 'Search',
       path: window.location.href,
     });
-
 
     this.subscription = this.utilService.searchValue.subscribe(
       async searchValue => {
@@ -126,26 +127,33 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
 
         // Financial-level filters logic for the top buttons
         this.dataSource.filterPredicate = (data: any, filter: string) => {
-          if (!data['txid'] && (
-            !data['request']
-            || !data['request']['status']
-          )) {
+          if (
+            !data['txid'] &&
+            (!data['request'] || !data['request']['status'])
+          ) {
             return true; // Loading result could match
           }
           switch (filter) {
-            case "paid":
-              return (data['request'] && data['request']['status'] == 'paid');
-            case "outstanding":
-                const outstandingStatuses = ['created', 'pending', 'accepted', 'in progress'];
-                if (data['request']) {
-                  return outstandingStatuses.includes( data['request']['status'] );
-                } else {
-                  return data['status'] && outstandingStatuses.includes( data['status'] );
-                }
+            case 'paid':
+              return data['request'] && data['request']['status'] == 'paid';
+            case 'outstanding':
+              const outstandingStatuses = [
+                'created',
+                'pending',
+                'accepted',
+                'in progress',
+              ];
+              if (data['request']) {
+                return outstandingStatuses.includes(data['request']['status']);
+              } else {
+                return (
+                  data['status'] && outstandingStatuses.includes(data['status'])
+                );
+              }
             default:
               return true;
           }
-        }
+        };
 
         this.handlePageLoading();
         this.dataSource.paginator = this.paginator;
@@ -154,7 +162,7 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
         this.loading = false;
         this.updateAndShowPendingRequests();
       }
-      );
+    );
 
     if (this.route.snapshot.params['searchValue']) {
       setTimeout(() =>
@@ -167,15 +175,19 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
 
   sortData(sort: Sort) {
     const isAsc = sort.direction === 'asc';
-    this.dataSource.data = this.sortRequests(this.dataSource.data, sort.active, isAsc);
+    this.dataSource.data = this.sortRequests(
+      this.dataSource.data,
+      sort.active,
+      isAsc
+    );
     this.paginator.firstPage();
     this.handlePageLoading();
   }
 
   private sortRequests(data: Array<any>, activeSort: string, isAsc: boolean) {
-    data.sort((a,b) => {
+    data.sort((a, b) => {
       let usedSort: String;
-      if ((!a['request'] || !b['request']) && (activeSort != '_meta.timestamp')) {
+      if ((!a['request'] || !b['request']) && activeSort != '_meta.timestamp') {
         // How to sort data based on data we don't have (any filter except timestamp) ?
         if (!a['request'] && !b['request']) {
           // Compare 2 loading requests by ascending timestamp, whatever the filter
@@ -188,19 +200,32 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
       } else {
         usedSort = activeSort;
       }
-      
+
       switch (usedSort) {
         // *** Sort by AMOUNT ***
         case 'request.payee.expectedAmount': {
-          if (a['request'].payee.expectedAmount - b['request'].payee.expectedAmount == 0) {
-            usedSort = '_meta.timestamp';              
+          if (
+            a['request'].payee.expectedAmount -
+              b['request'].payee.expectedAmount ==
+            0
+          ) {
+            usedSort = '_meta.timestamp';
           } else {
-            return this.compare(a['request'].payee.expectedAmount, b['request'].payee.expectedAmount, isAsc);
+            return this.compare(
+              a['request'].payee.expectedAmount,
+              b['request'].payee.expectedAmount,
+              isAsc
+            );
           }
         }
         case 'request.payee.address':
         case 'request.payer': {
-          let sortingStringA: string, sortingStringB: string, labelA: string, labelB: string, addressA: string, addressB: string;
+          let sortingStringA: string,
+            sortingStringB: string,
+            labelA: string,
+            labelB: string,
+            addressA: string,
+            addressB: string;
           if (usedSort == 'request.payer') {
             // *** Sort by PAYER ***
             labelA = a['request'] ? a['request'].payerLabel : a.payerLabel;
@@ -228,7 +253,7 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
             return (labelA ? -1 : 1) * (isAsc ? 1 : -1);
           }
           if (sortingStringA == sortingStringB) {
-            usedSort = '_meta.timestamp';              
+            usedSort = '_meta.timestamp';
           } else {
             return this.compareStrings(sortingStringA, sortingStringB, isAsc);
           }
@@ -237,11 +262,21 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
         case 'request.status': {
           const statusA = a['request'] ? a['request'].status : a['status'];
           const statusB = b['request'] ? b['request'].status : b['status'];
-          const workflowStatuses = ['pending', 'created', 'accepted', 'paid', 'cancelled'];
+          const workflowStatuses = [
+            'pending',
+            'created',
+            'accepted',
+            'paid',
+            'cancelled',
+          ];
           if (statusA == statusB) {
             usedSort = '_meta.timestamp';
           } else {
-            return this.compare(workflowStatuses.indexOf(statusA), workflowStatuses.indexOf(statusB), isAsc);
+            return this.compare(
+              workflowStatuses.indexOf(statusA),
+              workflowStatuses.indexOf(statusB),
+              isAsc
+            );
           }
         }
         default:
@@ -263,7 +298,7 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
       return (a > b ? 1 : -1) * (isAsc ? 1 : -1);
     }
   }
-  
+
   // Return a positive number if it should be displayed after in Asc
   //  (The greater the number, the further down if Asc)
   private compare(a: any, b: any, isAsc: boolean) {
@@ -273,7 +308,7 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
       return (a - b) * (isAsc ? 1 : -1);
     }
   }
-  
+
   async financialFilter(filter: string) {
     this.backgroundLoading = false;
     this.dataSource.filter = filter;
@@ -287,7 +322,9 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
 
   getRequestsFromIds(resultsList) {
     const promises = [];
-    for (const result of resultsList.filter(f => {return f.txid === undefined && f.request === undefined;})) {
+    for (const result of resultsList.filter(f => {
+      return f.txid === undefined && f.request === undefined;
+    })) {
       promises.push(
         this.web3Service
           .getRequestByRequestId(result.requestId)
@@ -297,11 +334,23 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.cookieService.get('request_label_tags')
               );
               labelList.forEach(element => {
-                if (element.hasOwnProperty(requestObject.requestData.payee.address.toLowerCase())) {
-                  requestObject.requestData.payee.label = element[requestObject.requestData.payee.address.toLowerCase()];
+                if (
+                  element.hasOwnProperty(
+                    requestObject.requestData.payee.address.toLowerCase()
+                  )
+                ) {
+                  requestObject.requestData.payee.label =
+                    element[
+                      requestObject.requestData.payee.address.toLowerCase()
+                    ];
                 }
-                if (element.hasOwnProperty(requestObject.requestData.payer.toLowerCase())) {
-                  requestObject.requestData.payerLabel = element[requestObject.requestData.payer.toLowerCase()];
+                if (
+                  element.hasOwnProperty(
+                    requestObject.requestData.payer.toLowerCase()
+                  )
+                ) {
+                  requestObject.requestData.payerLabel =
+                    element[requestObject.requestData.payer.toLowerCase()];
                 }
               });
             }
@@ -361,37 +410,64 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
       data = this.dataSource.filteredData;
     }
     this.backgroundLoading = true;
-    this.loadInBackground(data, pageStart, this.paginator.pageSize, this.paginator.pageSize
+    this.loadInBackground(
+      data,
+      pageStart,
+      this.paginator.pageSize,
+      this.paginator.pageSize
     ).then(() => {
       // When there is a filter, we preload the whole data to be sure we fetch the relevant info
       if (this.dataSource.filter != 'all') {
         this.backgroundLoading = true;
-        this.loadInBackground(data, pageEnd + 1, this.paginator.pageSize, data.length);
+        this.loadInBackground(
+          data,
+          pageEnd + 1,
+          this.paginator.pageSize,
+          data.length
+        );
       } else {
         // When there is no filter, we limit the query with maxPreload
         this.backgroundLoading = true;
-        this.loadInBackground(data, pageEnd + 1, this.preLoadBatchSize, this.maxPreLoad);
+        this.loadInBackground(
+          data,
+          pageEnd + 1,
+          this.preLoadBatchSize,
+          this.maxPreLoad
+        );
       }
     });
   }
 
-  handlePageChange(pageEvent?:PageEvent) {
+  handlePageChange(pageEvent?: PageEvent) {
     this.pageEvent = pageEvent;
     this.handlePageLoading();
   }
 
-  private async loadInBackground(data: Array<any>, startIndex: number, batchSize: number, loadingLimit: number) {
+  private async loadInBackground(
+    data: Array<any>,
+    startIndex: number,
+    batchSize: number,
+    loadingLimit: number
+  ) {
     if (
       this.backgroundLoading &&
       loadingLimit > 0 &&
       startIndex < data.length
     ) {
       const endIndex = startIndex + batchSize - 1;
-      this.getRequestsFromIds(data.slice(startIndex, endIndex + 1)
-      ).then(() => {
-        this.dataSource.data = this.sortRequests(this.dataSource.data, this.dataSource.sort.active, this.dataSource.sort.direction === 'asc');
+      this.getRequestsFromIds(data.slice(startIndex, endIndex + 1)).then(() => {
+        this.dataSource.data = this.sortRequests(
+          this.dataSource.data,
+          this.dataSource.sort.active,
+          this.dataSource.sort.direction === 'asc'
+        );
         this.dataSource._updateChangeSubscription();
-        this.loadInBackground(data, endIndex + 1, batchSize, loadingLimit - batchSize);
+        this.loadInBackground(
+          data,
+          endIndex + 1,
+          batchSize,
+          loadingLimit - batchSize
+        );
       });
     }
   }

@@ -37,13 +37,13 @@ export class HomeComponent implements OnInit {
       if (
         this.payeeIdAddressFormControl.value &&
         this.payeeIdAddressFormControl.value.toLowerCase() ===
-        control.value.toLowerCase()
+          control.value.toLowerCase()
       ) {
         return { sameAddressAsPayeeAddress: true };
       } else if (
         this.payeePaymentAddressFormControl.value &&
         this.payeePaymentAddressFormControl.value.toLowerCase() ===
-        control.value.toLowerCase()
+          control.value.toLowerCase()
       ) {
         return { sameAddressAsPaymentAddress: true };
       }
@@ -134,7 +134,9 @@ export class HomeComponent implements OnInit {
         return this.createRequest();
       } else {
         this.createLoading = false;
-        return this.utilService.openSnackBar('You do not have enough ' + currency + ' to make this payment.');
+        return this.utilService.openSnackBar(
+          'You do not have enough ' + currency + ' to make this payment.'
+        );
       }
     } else {
       const balance = await this.web3Service.getBalance(currency);
@@ -168,7 +170,9 @@ export class HomeComponent implements OnInit {
         }
       } else {
         this.createLoading = false;
-        return this.utilService.openSnackBar('You do not have enough ' + currency + ' to make this payment.');
+        return this.utilService.openSnackBar(
+          'You do not have enough ' + currency + ' to make this payment.'
+        );
       }
     }
   }
@@ -290,7 +294,7 @@ export class HomeComponent implements OnInit {
           currencyContract: {
             payeePaymentAddress:
               this.payeePaymentAddressFormControl.value &&
-                this.payeePaymentAddressFormControl.value !== this.account
+              this.payeePaymentAddressFormControl.value !== this.account
                 ? this.payeePaymentAddressFormControl.value
                 : null,
           },
@@ -330,8 +334,11 @@ export class HomeComponent implements OnInit {
       }
     };
 
-    const currencyAddress = this.currencyFormControl.value !== 'ETH' ?
-      this.web3Service.getCurrencyAddress(this.currencyFormControl.value).main : null;
+    const currencyAddress =
+      this.currencyFormControl.value !== 'ETH'
+        ? this.web3Service.getCurrencyAddress(this.currencyFormControl.value)
+            .main
+        : null;
 
     this.web3Service
       .createRequest(
