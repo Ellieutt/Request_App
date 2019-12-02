@@ -120,7 +120,9 @@ export class RequestComponent implements OnInit, OnDestroy, AfterContentInit {
     if (isNewRequest) {
       let expectedAmount = request.payee.expectedAmount;
       if (this.isInvoiceRequest()) {
-        const totalWithTax = this.getTaxFreeTotal(request).add(this.getVatTotal(request));
+        const totalWithTax = this.getTaxFreeTotal(request).add(
+          this.getVatTotal(request)
+        );
         expectedAmount = totalWithTax;
       }
       cookieList.push({
@@ -129,10 +131,7 @@ export class RequestComponent implements OnInit, OnDestroy, AfterContentInit {
         timestamp: request.data.data.date,
         payee: { address: request.payee.address },
         payer: request.payer,
-        amount: this.web3Service.BNToAmount(
-          expectedAmount,
-          request.currency
-        ),
+        amount: this.web3Service.BNToAmount(expectedAmount, request.currency),
         currency: request.currency,
         network: 4,
         status: 'pending',
@@ -424,7 +423,7 @@ export class RequestComponent implements OnInit, OnDestroy, AfterContentInit {
       }
     } else {
       reason =
-      this.ipfsData && this.ipfsData.reason ? this.ipfsData.reason : 'N/A';
+        this.ipfsData && this.ipfsData.reason ? this.ipfsData.reason : 'N/A';
     }
     const amount = this.amount;
     const url = this.url;

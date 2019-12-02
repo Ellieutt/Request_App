@@ -31,12 +31,18 @@ export class RnfInvoiceComponent implements OnInit {
   vatTotal;
   totalWithTax;
 
-  constructor(public web3Service: Web3Service, private utilService: UtilService,) {}
+  constructor(
+    public web3Service: Web3Service,
+    private utilService: UtilService
+  ) {}
 
   ngOnInit() {
     this.data = this.request.data.data;
     this.updateTotals();
-    this.amount = this.web3Service.BNToAmount(this.request.payee.expectedAmount, this.request.currency);
+    this.amount = this.web3Service.BNToAmount(
+      this.request.payee.expectedAmount,
+      this.request.currency
+    );
 
     this.watchAccount();
   }
