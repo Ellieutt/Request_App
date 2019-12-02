@@ -87,7 +87,7 @@
                         <div *ngIf="e.name == 'UpdateBalance'" id="amount-usd" style="text-align: center;">
                           <span class="hidden"
                             id="invoice-date-paid">{{e._meta.timestamp + '000' | date: 'MMMM d, y'}}</span>
-                            {{ amount }} {{ currency }} {{ e._meta.timestamp }}
+                            {{ amount }} {{ currency }}
                           <currency-converter *ngIf="amount" [from]="currency" [to]="'USD'" [amount]="amount"
                             [timestamp]="e._meta.timestamp">
                           </currency-converter>
