@@ -891,4 +891,39 @@ export class Web3Service {
       return new BN(balance);
     }
   }
+
+  public addPendingRequestToCookie(request, txHash, queryParams, isSend) {
+    let cookieList = [];
+    if (this.cookieService.get('processing_requests')) {
+      cookieList = JSON.parse(this.cookieService.get('processing_requests'));
+    }
+    let isNewRequest = true;
+    const that = this;
+    cookieList.forEach(element => {
+      if (element.txid.split('?')[0] === txHash) {
+        isNewRequest = false;
+      }
+    });
+    if (isNewRequest) {
+      const expectedAmount = request.payee.expectedAmount;
+      cookieList.push({
+        txid:
+          txHash + '?request=' + queryParams,
+        timestamp: request.data.data.date,
+        payee: { address: request.payee.address },
+        payer: request.payer,
+        amount: expectedAmount,
+        currency: request.currency,
+        network: 4,
+        status: 'pending',
+        unread: true,
+        isSend
+      });
+      this.cookieService.set(
+        'processing_requests',
+        JSON.stringify(cookieList),
+        1
+      );
+    }
+  }
 }
