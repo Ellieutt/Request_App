@@ -278,6 +278,20 @@ button.account-menu-button {
   font-size: 16px;
   font-weight: initial;
   max-width: 100%;
+  border: 1px solid #DEDEDE;
+  border-radius: 2px;
+  padding: 10px 30px !important;
+  box-shadow: none;
+  min-height: 50px;
+  background: #fff;
+
+  &.locked {
+    
+    box-shadow: -1px 2px 4px rgba(170, 170, 170, 0.5);
+    span {
+      color: #00E6A0;
+    }
+  }
 }
 
 .mat-menu-custom {
@@ -377,15 +391,8 @@ mat-toolbar.mat-toolbar {
 .network-1 {
   span.network-icon {
     display: flex;
-    transform: rotate(45deg);
     background: #038789;
-  }
-  span.network-name {
-    &::before {
-      content: 'Main Network';
-      margin-left: 0;
-      color: #038789;
-    }
+    border-radius: 50%;
   }
 }
 
@@ -393,14 +400,7 @@ mat-toolbar.mat-toolbar {
   span.network-icon {
     display: flex;
     background: #e91550;
-    border-radius: 10px;
-  }
-  span.network-name {
-    &::before {
-      content: 'Ropsten Test Net';
-      margin-left: 0;
-      color: #e91550;
-    }
+    border-radius: 50%;
   }
 }
 
@@ -409,13 +409,7 @@ mat-toolbar.mat-toolbar {
     display: flex;
     transform: rotate(45deg);
     border: 3px solid #690496;
-  }
-  span.network-name {
-    &::before {
-      content: 'Kovan Test Net';
-      margin-left: 0;
-      color: #690496;
-    }
+    border-radius: 50%;
   }
 }
 
@@ -423,13 +417,7 @@ mat-toolbar.mat-toolbar {
   span.network-icon {
     display: flex;
     background: #ebb33f;
-  }
-  span.network-name {
-    &::before {
-      content: 'Rinkeby Test Net';
-      margin-left: 0;
-      color: #ebb33f;
-    }
+    border-radius: 50%;
   }
 }
 

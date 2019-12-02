@@ -17,10 +17,19 @@ export class AccountComponent {
     private utilService: UtilService
   ) {}
 
+  public accountModalOpen = false;
+
   openLedgerDialog() {
     this.dialog.open(LedgerDialogComponent, {
       hasBackdrop: true,
       width: '500px',
     });
+  }
+
+  closeModal() {
+    this.accountModalOpen = false;
+  }
+  openModal() {
+    this.accountModalOpen = true;
   }
 }
