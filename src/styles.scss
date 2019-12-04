@@ -284,13 +284,15 @@ button.account-menu-button {
   box-shadow: none;
   min-height: 50px;
   background: #fff;
+}
 
-  &.locked {
-    
-    box-shadow: -1px 2px 4px rgba(170, 170, 170, 0.5);
-    span {
-      color: #00E6A0;
-    }
+.locked + button.account-menu-button {
+  box-shadow: -1px 2px 4px rgba(170, 170, 170, 0.5);
+  span {
+    color: #00E6A0;
+  }
+  .network-icon {
+    display: none;
   }
 }
 
