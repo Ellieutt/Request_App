@@ -47,7 +47,7 @@
     button {
         margin: 20px auto;
         background: #fff;
-        padding: 10px 24px;
+        padding: 10px 24px 10px 70px;
         height: auto;
         text-align: center;
         display: inline-block;
@@ -56,9 +56,19 @@
         box-shadow: -1px 2px 4px rgba(170, 170, 170, 0.5);
         border-radius: 2px;
         line-height: 38px;
+        position: relative;
+        min-width: 305px;
 
         img {
             width: 40px;
+            position: absolute;
+            left: 20px;
+        }
+
+        span {
+            display: block;
+            text-align: center;
+            width: 100%;
         }
     }
 }
