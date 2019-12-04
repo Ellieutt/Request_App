@@ -1,4 +1,13 @@
 <!-- ACCOUNT BLOCK -->
+<span *ngIf="web3Service.accountObservable | async as account; else locked">
+  <a routerLink="/search/{{ account }}" (click)="utilService.setSearchValue(account)"
+    style="font-weight: 500; margin-right: 50px; position: relative; top: -8px;">
+    My Dashboard
+  </a>
+</span>
+<ng-template #locked>
+  <div class="locked"></div>
+</ng-template>
 <button mat-button class="account-menu-button no-focus-overlay py-1" (click)="openModal()">
   <div *ngIf="web3Service.accountObservable | async as account; else accountLocked"
     class="d-flex justify-content-between align-items-center">
@@ -88,15 +97,20 @@
     </button>
   </div>
   <ng-template #accountLost>
-      <button class="d-flex align-items-center" (click)="web3Service.checkAndInstantiateWeb3()"
+    <button class="d-flex align-items-center" (click)="web3Service.checkAndInstantiateWeb3()"
+      *ngIf="web3Service.metamask">
+      <img style="position: relative; margin-right: 1rem" src="assets/img/metamask-icon-colour.png">
+      <span>Connect Metamask</span>
+    </button>
+    <button class="d-flex align-items-center" (click)="web3Service.checkAndInstantiateWeb3()"
       *ngIf="!web3Service.metamask">
       <img style="position: relative; margin-right: 1rem" src="assets/img/metamask-icon-colour.png">
       <span>Connect Metamask</span>
     </button>
     <button class="d-flex align-items-center" (click)="openLedgerDialog()">
-        <img style="position: relative; margin-right: 1rem; width: 36px;" src="assets/img/ledger-icon-colour.png">
-        <span>Connect Ledger Nano S</span>
-      </button>
+      <img style="position: relative; margin-right: 1rem; width: 36px;" src="assets/img/ledger-icon-colour.png">
+      <span>Connect Ledger Nano S</span>
+    </button>
   </ng-template>
 
   <p style="text-align: center; margin-top: 36px;">Is your wallet not supported?<br />
