@@ -96,23 +96,15 @@ workflows:
   build:
     jobs:
       - install
-      - commit-lint:
-          requires:
-            - install
       - format-lint:
           requires:
             - install
       - build:
           requires:
             - install
-      - test: 
-          requires:
-            - build
       - deploy:
           requires:
-            - test
-            - commit-lint
             - format-lint
           filters:
             branches:
-              only: master
+              only: staging

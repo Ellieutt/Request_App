@@ -307,7 +307,12 @@ export class HomeComponent implements OnInit {
           request.data.data[key] = data[key];
         }
 
-        this.web3Service.addPendingRequestToCookie(request, response.transaction.hash, btoa(JSON.stringify(request)), isSend);
+        this.web3Service.addPendingRequestToCookie(
+          request,
+          response.transaction.hash,
+          btoa(JSON.stringify(request)),
+          isSend
+        );
 
         return this.router.navigate(
           ['/request/txHash', response.transaction.hash],
