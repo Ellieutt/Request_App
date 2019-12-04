@@ -392,8 +392,12 @@ export class AdvancedInvoiceComponent implements OnInit {
             'MetaMask Tx Signature: User denied transaction signature.'
           );
         } else {
-          console.error(response);
-          return this.utilService.openSnackBar(response.message);
+          if (response && response.message) {
+            console.error(response);
+            return this.utilService.openSnackBar(response.message);
+          } else {
+            return this.utilService.openSnackBar('Your Request could not be created. Please try again later.');
+          }
         }
       }
     };
