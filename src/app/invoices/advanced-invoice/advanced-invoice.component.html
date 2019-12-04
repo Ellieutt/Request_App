@@ -245,33 +245,35 @@
         </div>
       </div>
       <mat-divider></mat-divider>
-      <h3 class="mt-3">Terms & Conditions</h3>
-      <div class="row" formGroupName="paymentTerms">
-        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
-          <label for="lateFeesFix" [ngClass]="{'warn': paymentTerms.controls.lateFeesFix.invalid && paymentTerms.controls.lateFeesFix.touched }">Late Fees (fix amount)</label>
-          <div class="suffixed-input" [ngClass]="{'warn': paymentTerms.controls.lateFeesFix.invalid && paymentTerms.controls.lateFeesFix.touched }">
-            <input matInput style="text-align: right" type="text" name="lateFeesFix" placeholder="Add late fees (fix amount)" formControlName="lateFeesFix">
-            <span class="input-suffix">{{currency.value}}</span>
+      <div class="hidden">
+        <h3 class="mt-3">Terms & Conditions</h3>
+        <div class="row" formGroupName="paymentTerms">
+          <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+            <label for="lateFeesFix" [ngClass]="{'warn': paymentTerms.controls.lateFeesFix.invalid && paymentTerms.controls.lateFeesFix.touched }">Late Fees (fix amount)</label>
+            <div class="suffixed-input" [ngClass]="{'warn': paymentTerms.controls.lateFeesFix.invalid && paymentTerms.controls.lateFeesFix.touched }">
+              <input matInput style="text-align: right" type="text" name="lateFeesFix" placeholder="Add late fees (fix amount)" formControlName="lateFeesFix">
+              <span class="input-suffix">{{currency.value}}</span>
+            </div>
+          </div>
+          <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+            <label for="lateFeesPercent">Monthly Late Fees (% amount)</label>
+            <div class="suffixed-input">
+              <input matInput style="text-align: right" type="number" name="lateFeesPercent" placeholder="Add late fees (% amount)" formControlName="lateFeesPercent">
+              <span class="input-suffix">%</span>
+            </div>
           </div>
         </div>
-        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
-          <label for="lateFeesPercent">Monthly Late Fees (% amount)</label>
-          <div class="suffixed-input">
-            <input matInput style="text-align: right" type="number" name="lateFeesPercent" placeholder="Add late fees (% amount)" formControlName="lateFeesPercent">
-            <span class="input-suffix">%</span>
-          </div>
+        <label for="terms">Terms and conditions</label>
+        <textarea matInput placeholder="Please enter your own terms & conditions as due date, late fees and others. You can also leave it blank if you don't have any." name="terms" [formControl]="terms" rows="5"></textarea>
+      </div>
+        <div class="create-invoice-button">
+            <div style="text-align: right">
+              <button mat-raised-button color="accent" type="submit" class="fs-18 create-button" [ngClass]="sendingInvoice ? 'disabled': ''">
+                Create the invoice
+                <i *ngIf="sendingInvoice" class="fa fa-circle-o-notch fa-spin" style="margin-left: 6px;"></i>
+              </button>
+            </div>
         </div>
-      </div>
-      <label for="terms">Terms and conditions</label>
-      <textarea matInput placeholder="Please enter your own terms & conditions as due date, late fees and others. You can also leave it blank if you don't have any." name="terms" [formControl]="terms" rows="5"></textarea>
-      <div class="create-invoice-button">
-          <div style="text-align: right">
-            <button mat-raised-button color="accent" type="submit" class="fs-18 create-button" [ngClass]="sendingInvoice ? 'disabled': ''">
-              Create the invoice
-              <i *ngIf="sendingInvoice" class="fa fa-circle-o-notch fa-spin" style="margin-left: 6px;"></i>
-            </button>
-          </div>
-      </div>
     </mat-card>
   </form>
 </div>
