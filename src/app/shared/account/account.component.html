@@ -87,28 +87,28 @@
   <div *ngIf="web3Service.accountObservable | async as account; else accountLost">
     <button class="d-flex align-items-center" (click)="web3Service.checkAndInstantiateWeb3()"
       *ngIf="web3Service.metamask">
-      <img style="position: relative; margin-right: 1rem" src="assets/img/metamask-icon-colour.png">
+      <img src="assets/img/metamask-icon-colour.png">
       <span>{{ account.substring(0,14) }}...{{ account.substring(28,42) }}</span>
     </button>
     <button class="d-flex align-items-center" (click)="web3Service.checkAndInstantiateWeb3()"
       *ngIf="web3Service.ledgerConnected">
-      <img style="position: relative; margin-right: 1rem; width: 36px;" src="assets/img/ledger-icon-colour.png">
+      <img style="width: 36px;" src="assets/img/ledger-icon-colour.png">
       <span>{{ account.substring(0,14) }}...{{ account.substring(28,42) }}</span>
     </button>
   </div>
   <ng-template #accountLost>
     <button class="d-flex align-items-center" (click)="web3Service.checkAndInstantiateWeb3()"
       *ngIf="web3Service.metamask">
-      <img style="position: relative; margin-right: 1rem" src="assets/img/metamask-icon-colour.png">
+      <img src="assets/img/metamask-icon-colour.png">
       <span>Connect Metamask</span>
     </button>
     <button class="d-flex align-items-center" (click)="web3Service.checkAndInstantiateWeb3()"
       *ngIf="!web3Service.metamask">
-      <img style="position: relative; margin-right: 1rem" src="assets/img/metamask-icon-colour.png">
+      <img src="assets/img/metamask-icon-colour.png">
       <span>Connect Metamask</span>
     </button>
-    <button class="d-flex align-items-center" (click)="openLedgerDialog()">
-      <img style="position: relative; margin-right: 1rem; width: 36px;" src="assets/img/ledger-icon-colour.png">
+    <button class="d-flex align-items-center" (click)="openLedgerDialog()" value="">
+      <img src="assets/img/ledger-icon-colour.png">
       <span>Connect Ledger Nano S</span>
     </button>
   </ng-template>
