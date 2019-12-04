@@ -907,8 +907,7 @@ export class Web3Service {
     if (isNewRequest) {
       const expectedAmount = request.payee.expectedAmount;
       cookieList.push({
-        txid:
-          txHash + '?request=' + queryParams,
+        txid: txHash + '?request=' + queryParams,
         timestamp: request.data.data.date,
         payee: { address: request.payee.address },
         payer: request.payer,
@@ -917,7 +916,7 @@ export class Web3Service {
         network: 4,
         status: 'pending',
         unread: true,
-        isSend
+        isSend,
       });
       this.cookieService.set(
         'processing_requests',
