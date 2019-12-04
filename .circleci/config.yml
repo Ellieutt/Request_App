@@ -104,6 +104,7 @@ workflows:
             - install
       - deploy:
           requires:
+            - build
             - format-lint
           filters:
             branches:
