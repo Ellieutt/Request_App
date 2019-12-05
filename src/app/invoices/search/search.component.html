@@ -38,7 +38,7 @@
           <mat-cell *matCellDef="let req">
             <a *ngIf="req.requestId" routerLink="/request/requestId/{{req.requestId}}" class="fc-accent-secondary">View
               Request</a>
-            <a *ngIf="req.txid" (click)="utilService.redirectToPage('/request/txHash/' + req.txid)"
+            <a *ngIf="req.txid" href="{{'/#/request/txHash/' + req.txid}}" (click)="utilService.redirectToPage('/request/txHash/' + req.txid, $event)"
               class="fc-accent-secondary">View Request</a>
             <div *ngIf="!req.requestId && !req.txid" class="placeholder"></div>
           </mat-cell>

@@ -14,9 +14,9 @@ export class UtilService {
   }
 
   // routerLink encodes the request info in the URL so we need to navigate by URL instead
-  public redirectToPage(pageUrl: string) {
+  public redirectToPage(pageUrl: string, event = null) {
     const pageUrlEncoded = encodeURI(pageUrl);
-    if (!location.hash.includes(pageUrl)) {
+    if (!event || !event.ctrlKey) {
       location.replace('#' + pageUrlEncoded);
       location.reload();
     }
