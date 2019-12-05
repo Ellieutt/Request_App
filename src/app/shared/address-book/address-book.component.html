@@ -28,7 +28,7 @@
             </svg>   
             Add a custom name
         </a>
-        <a (click)="utilService.redirectToPage('/search/' + addressToAdd)" class="right-link">View Address</a>
+        <a href="{{'/search/' + addressToAdd}}" (click)="utilService.redirectToPage('/search/' + addressToAdd, $event)" class="right-link">View Address</a>
     </div>
     <form *ngIf="editLabel" (ngSubmit)="onSave(addressToAdd.toLowerCase())" #labelForm="ngForm">
         <input  
