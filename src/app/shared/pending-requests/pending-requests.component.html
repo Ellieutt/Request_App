@@ -5,7 +5,7 @@
     <h3>Your pending requests</h3>
     <ul class="pending-request-list" *ngFor="let pendingRequest of requestList">
         <li>
-            <a (click)="utilService.redirectToPage('/request/txHash/' + pendingRequest.txid)">view</a>
+            <a href="{{'/#/request/txHash/' + pendingRequest.txid}}" (click)="utilService.redirectToPage('/request/txHash/' + pendingRequest.txid, $event)">view</a>
             <span class="amount">{{pendingRequest.amount}} {{pendingRequest.currency}}</span>
             <span class="status-{{ pendingRequest.status.replace(' ','-') }}">{{pendingRequest.status}}</span>
             <i class="remove" *ngIf="pendingRequest.status != 'pending'" (click)="removeRequestFromCookie(pendingRequest.txid)">&times;</i>

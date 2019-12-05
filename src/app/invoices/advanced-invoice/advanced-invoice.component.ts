@@ -396,7 +396,9 @@ export class AdvancedInvoiceComponent implements OnInit {
             console.error(response);
             return this.utilService.openSnackBar(response.message);
           } else {
-            return this.utilService.openSnackBar('Your Request could not be created. Please try again later.');
+            return this.utilService.openSnackBar(
+              'Your Request could not be created. Please try again later.'
+            );
           }
         }
       }
