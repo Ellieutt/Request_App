@@ -3,6 +3,20 @@ $('#download-receipt').click(function () {
         copyurl: $('.url-box').val()
     });
 
+
+    const pdfElement = document.getElementById('request-invoice-inner-pdf');
+    // If this is an invoice
+    if (pdfElement) {
+        html2pdf(pdfElement, {
+            margin: 0,
+            filename: 'RequestInvoice.pdf',
+            image: { type: 'jpeg', quality: 1 },
+            html2canvas: { scale: 2 },
+            jsPDF: { unit: 'in', format: [7, 9], orientation: 'p' }
+        });
+        return;
+    }
+
     var reason = $('#reasonPdf').html(),
         createdDate = $('#invoice-date-created').html(),
         paidDate = $('#invoice-date-paid').html(),
@@ -12,7 +26,8 @@ $('#download-receipt').click(function () {
         payerLabel = $('#payerAddressPdf .pdf-label').html(),
         amount = $('#request-expected-amount').html(),
         amountUSD = $('#amount-usd div').html(),
-        rinkeby = $('.network-identifier').html() !== undefined;
+        rinkeby = $('.network-identifier').html() !== undefined,
+        currentAddress = $('#current-selected-address').html();
 
     var doc = new jsPDF({
         unit: 'pt',
@@ -68,7 +83,12 @@ $('#download-receipt').click(function () {
     var paymentY = 155;
     if (payeeLabel) {
         paymentY = 140;
-        doc.setFillColor(194, 232, 255);
+        if (payeeAddress == currentAddress) {
+            doc.setFillColor(194, 232, 255);
+        } else {
+            doc.setFillColor(243, 243, 243);
+        }
+        
         doc.rect(46, 150, (payeeLabel.length * 8) + 20, 26, "F");
         doc.addImage(payeeImage, 'PNG', 20, 150, 26, 26, undefined, 'FAST');
         doc.text(58, 168, payeeLabel);
@@ -86,7 +106,11 @@ $('#download-receipt').click(function () {
     
     var paymentX = 220;
     if (payerLabel) {
-        doc.setFillColor(243, 243, 243);
+        if (payerAddress == currentAddress) {
+            doc.setFillColor(194, 232, 255);
+        } else {
+            doc.setFillColor(243, 243, 243);
+        }
         doc.rect(46, 230, (payerLabel.length * 8) + 20, 26, "F");
         doc.addImage(payerImage, 'PNG', 20, 230, 26, 26, undefined, 'FAST');
         doc.text(58, 248, payerLabel);

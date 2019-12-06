@@ -52,6 +52,25 @@ export class Web3Service {
   public isAddress;
   public getBlockNumber;
 
+  private minABI = [
+    // balanceOf
+    {
+      constant: true,
+      inputs: [{ name: '_owner', type: 'address' }],
+      name: 'balanceOf',
+      outputs: [{ name: 'balance', type: 'uint256' }],
+      type: 'function',
+    },
+    // decimals
+    {
+      constant: true,
+      inputs: [],
+      name: 'decimals',
+      outputs: [{ name: '', type: 'uint8' }],
+      type: 'function',
+    },
+  ];
+
   constructor(
     private utilService: UtilService,
     private gasService: GasService,
@@ -83,7 +102,7 @@ export class Web3Service {
       const updatedCookieList = [];
       await this.asyncForEach(cookieList, async element => {
         if (element.status !== 'created') {
-          // The txid ID is stored as txid&request="requestMeta". So we need to split 
+          // The txid ID is stored as txid&request="requestMeta". So we need to split
           const txidToCheck = element.txid.split('?')[0];
           const result = await this.getRequestByTransactionHash(txidToCheck);
           if (result.request && result.request.requestId) {
@@ -109,7 +128,11 @@ export class Web3Service {
         }
       });
       if (hasChanged) {
-        this.cookieService.set('processing_requests', JSON.stringify(updatedCookieList), 1);
+        this.cookieService.set(
+          'processing_requests',
+          JSON.stringify(updatedCookieList),
+          1
+        );
       }
     }
   }
@@ -293,13 +316,25 @@ export class Web3Service {
   }
 
   private async enableWeb3() {
-    if (window.ethereum) {
-      window.web3 = new Web3(window.ethereum);
-      try {
-        await window.ethereum.enable();
-      } catch (error) {
-        this.utilService.openSnackBar('Web3 not enabled');
-        console.error(error);
+    if (typeof window.ethereum !== 'undefined') {
+      if (window.ethereum.selectedAddress) {
+        window.web3 = new Web3(window.ethereum);
+      } else {
+        // Metamask either disconnected or user has never accepted a connection with this domain
+        // Test scenario 1: logout from Metamask, refresh the page, click on "Login with Metamask" and decline invitation --> It still works
+        // Test scenario 2: Settings > Connections > (delete the connected domain from the list) --> Should throw an error
+        try {
+          // The only way to ask user to login on Metamask is to ask for a connection, even if it was approved in the past.
+          // At this stage, if the user already approved the connection in the past and connects to Metemask, he may leave the approval running in the background.
+          await window.ethereum.enable();
+        } catch (error) {
+          if (!window.ethereum.selectedAddress) {
+            this.utilService.openSnackBar(
+              'The connection with your account has been refused by Metamask.'
+            );
+            console.error(error);
+          }
+        }
       }
     } else if (window.web3) {
       // Legacy dapp browsers...
@@ -390,33 +425,56 @@ export class Web3Service {
     currency: string,
     paymentAddress: string,
     requestOptions: any = {},
-    refundAddress?: string
+    refundAddress?: string,
+    contract?: string
   ) {
     if (this.watchDog()) {
       return;
     }
 
-    requestOptions.transactionOptions = {
-      gasPrice: this.getGasPrice(),
-    };
-
     this.confirmTxOnLedgerMsg();
-    return this.requestNetwork.createRequest(
-      Types.Role[role],
-      Types.Currency[currency],
-      [
-        {
-          idAddress: this.accountObservable.value,
+    if (Types.Role[role] === 0) {
+      if (currency === 'ETH') {
+        return this.requestNetwork.requestEthereumService.createRequestAsPayer(
+          [payerAddress],
+          [this.amountToBN(expectedAmount, currency)],
+          undefined,
+          [this.amountToBN(expectedAmount, currency)],
+          undefined,
+          JSON.stringify(requestOptions.data)
+        );
+      } else {
+        return this.requestNetwork.requestERC20Service.createRequestAsPayer(
+          contract,
+          [payerAddress],
+          [this.amountToBN(expectedAmount, currency)],
           paymentAddress,
-          expectedAmount: this.amountToBN(expectedAmount, currency),
+          [this.amountToBN(expectedAmount, currency)],
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          JSON.stringify(requestOptions.data)
+        );
+      }
+    } else {
+      return this.requestNetwork.createRequest(
+        Types.Role[role],
+        Types.Currency[currency],
+        [
+          {
+            idAddress: this.accountObservable.value,
+            paymentAddress,
+            expectedAmount: this.amountToBN(expectedAmount, currency),
+          },
+        ],
+        {
+          idAddress: payerAddress,
+          bitcoinRefundAddresses: refundAddress ? [refundAddress] : undefined,
         },
-      ],
-      {
-        idAddress: payerAddress,
-        bitcoinRefundAddresses: refundAddress ? [refundAddress] : undefined,
-      },
-      requestOptions
-    );
+        requestOptions
+      );
+    }
   }
 
   public cancel(
@@ -540,6 +598,22 @@ export class Web3Service {
       requestId,
       this.amountToBN(amount, 'ETH'),
       transactionOptions
+    );
+  }
+
+  public allowContract(
+    currencyContract: string,
+    amount: string,
+    paymentAddress: string
+  ) {
+    if (this.watchDog()) {
+      return;
+    }
+    this.confirmTxOnLedgerMsg();
+    return this.requestNetwork.requestERC20Service.approveTokenFromTokenAddress(
+      currencyContract,
+      amount,
+      { from: paymentAddress }
     );
   }
 
@@ -747,5 +821,108 @@ export class Web3Service {
       }
       return null;
     };
+  }
+
+  getCurrencyAddress(currency: string) {
+    const allContractAddresses = {
+      REQ: {
+        main: '0x8f8221afbb33998d8584a2b05749ba73c37a938a',
+        erc20: '0xc77ceefa6960174accca0c6fdecb5dbd95042cda',
+      },
+      KNC: {
+        main: '0xdd974d5c2e2928dea5f71b9825b8b646686bd200',
+        erc20: '0xa9566758d054f6efcf9b00095538fda3d9d75844',
+      },
+      DGX: {
+        main: '0x4f3afec4e5a3f2a6a1a411def7d7dfe50ee057bf',
+        erc20: '0x891a1f07cbf6325192d830f4399932d4d1d66e89',
+      },
+      SAI: {
+        main: '0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359',
+        erc20: '0x3baa64a4401bbe18865547e916a9be8e6dd89a5a',
+      },
+      OMG: {
+        main: '0xd26114cd6ee289accf82350c8d8487fedb8a0c07',
+        erc20: '0xe44d5393cc60d67c7858aa75cf307c00e837f0e5',
+      },
+      ZRX: {
+        main: '0xe41d2489571d322189246dafa5ebde1f4699f498',
+        erc20: '0xbBE47EFe1A2cEf913562fE454f6EB75A9F75E6d6',
+      },
+      BAT: {
+        main: '0x0d8775f648430679a709e98d2b0cb6250d2887ef',
+        erc20: '0x3f90549bAF95c3c0b7E5bBB66B39EDaEfc7BD25e',
+      },
+      LINK: {
+        main: '0x514910771af9ca656af840dff83e8264ecf986ca',
+        erc20: '0x8f9224e619921923fcb0f2e1a31502bF22b87CFF',
+      },
+      RSR: {
+        main: '0x8762db106b2c2a0bccb3a80d1ed41273552616e8',
+        erc20: '0x548ac0ec13b132f3b58bd8afd83ebd2e225eb1a6',
+      },
+      DAI: {
+        main: '0x6b175474e89094c44da98b954eedeac495271d0f',
+        erc20: '0x62b37F0547047D99cC59e2F0db549Ab1D97149B5',
+      },
+    };
+
+    return allContractAddresses[currency];
+  }
+
+  public async getBalance(currency) {
+    if (currency === 'ETH') {
+      const weiBalance = await this.web3.eth.getBalance(
+        this.accountObservable.value
+      );
+      const balance = this.web3.utils.fromWei(weiBalance);
+      return balance;
+    } else {
+      const currencyContract = this.getCurrencyAddress(currency).main;
+      const contract = new this.web3.eth.Contract(
+        this.minABI,
+        currencyContract
+      );
+      const balance = await contract.methods
+        .balanceOf(this.accountObservable.value)
+        .call();
+      const decimals = this.getDecimalsForCurrency(currency);
+      const BN = this.web3.utils.BN;
+      return new BN(balance);
+    }
+  }
+
+  public addPendingRequestToCookie(request, txHash, queryParams, isSend) {
+    let cookieList = [];
+    if (this.cookieService.get('processing_requests')) {
+      cookieList = JSON.parse(this.cookieService.get('processing_requests'));
+    }
+    let isNewRequest = true;
+    const that = this;
+    cookieList.forEach(element => {
+      if (element.txid.split('?')[0] === txHash) {
+        isNewRequest = false;
+      }
+    });
+    if (isNewRequest) {
+      const expectedAmount = request.payee.expectedAmount;
+      cookieList.push({
+        txid: txHash + '?request=' + queryParams,
+        timestamp: request.data.data.date,
+        payee: { address: request.payee.address },
+        payer: request.payer,
+        amount: expectedAmount,
+        currency: request.currency,
+        network: 4,
+        status: 'pending',
+        unread: true,
+        isSend,
+      });
+      this.cookieService.set(
+        'processing_requests',
+        JSON.stringify(cookieList),
+        1
+      );
+    }
   }
 }

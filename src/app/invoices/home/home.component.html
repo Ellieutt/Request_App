@@ -8,27 +8,36 @@
         <li><b>Easy-to-use</b><br />No signup or personal information needed to get started</li>
         <li><b>Multiple currency support</b><br />11+ currencies including ETH & DAI</li>
       </ul>
-      <a target="_blank" class="d-inline-block mt-3 outline-button"
-        href="https://share.hsforms.com/1rVnhlW9ZRhSFoZPcexgHNQ2nz19">Schedule a demo</a>
-      <!-- <a routerLink="/invoice" class="d-inline-block mt-3 fs-14" style="color: #3E82F7">Create a new invoice Request</a> -->
+      <a routerLink="/invoice" class="d-inline-block mt-3 fs-16" style="color: #00e6a0">+ Create an Invoice</a>
     </div>
     <div class="col-md-6 ml-md-auto">
       <network-identifier [isRinkeby]="getNetworkValue() == 4"></network-identifier>
-      <mat-card class="p-0 br-7 sh-blue">
+      <mat-card class="home-request-form p-0 sh-blue">
+        <div class="row request-form-tabs">
+          <div class="col-md-6 pr-0" >
+            <div class="tab-item {{ isRequestForm ? 'active': '' }}" (click)="showRequestForm()">
+                Request a payment
+            </div>
+          </div>
+          <div class="col-md-6 pl-0" (click)="showPaymentForm()">
+              <div class="tab-item {{ !isRequestForm ? 'active': '' }}" (click)="showPaymentForm()">
+                  Send a payment
+              </div>
+          </div>
+        </div>
         <div class="d-flex p-4 btr-7 home-invoice-header">
           <img class="px-3" [style.max-height]="'50px'" src="assets/img/request-logo.png">
           <div class="ml-auto text-right">
-            <h4 class="fs-18 semi-bold">New Request</h4>
+            <h4>{{ isRequestForm ? 'New Request': 'New Payment'}}</h4>
             <div class="fs-14" [style.opacity]="'0.5'">
-              <i>{{date | date: 'fullDate'}}</i>
+              <i class="request-home-date">{{date | date: 'fullDate'}}</i>
             </div>
           </div>
         </div>
-        <form [formGroup]="requestForm" (ngSubmit)="createRequest()" autocomplete="off">
+        <form [formGroup]="requestForm" autocomplete="off">
           <div class="p-4 mb-5">
-            <mat-form-field class="w-100 mb-1">
-              <input matInput type="text" name="ETHAddress"
-                [placeholder]="'On which ' + getBlockchainSymbol() + ' address do you want to receive the funds?'"
+            <mat-form-field class="w-100 mb-1" *ngIf="isRequestForm">
+              <input matInput type="text" name="ETHAddress" [placeholder]="'Your Address'"
                 [formControl]="payeePaymentAddressFormControl">
               <mat-error *ngIf="payeePaymentAddressFormControl.hasError('required')">
                 Payment address is
@@ -40,7 +49,7 @@
             </mat-form-field>
             <div class="d-flex w-100 mb-1">
               <mat-form-field class="w-100">
-                <input matInput type="text" name="expectedAmount" placeholder="Request amount"
+                <input matInput type="text" name="expectedAmount" placeholder="Amount"
                   [formControl]="expectedAmountFormControl">
                 <mat-error *ngIf="expectedAmountFormControl.hasError('required')">
                   amount is
@@ -59,7 +68,8 @@
               </mat-form-field>
             </div>
             <mat-form-field class="w-100 mb-1">
-              <input matInput type="text" name="payerETHAddress" placeholder="Payer's ETH address"
+              <input matInput type="text" name="payerETHAddress"
+                placeholder="{{ isRequestForm ? 'Payer’s ETH address': 'Recipient’s ETH address'}}"
                 [formControl]="payerAddressFormControl">
               <mat-error *ngIf="payerAddressFormControl.hasError('required')">
                 payer's address is
@@ -96,16 +106,22 @@
               </mat-error>
             </mat-form-field>
             <mat-form-field class="w-100" hintLabel="Max 256 characters">
-              <input matInput type="text" name="reason" placeholder="Reason (optional)" maxlength="256"
-                [formControl]="reasonFormControl">
+              <input matInput type="text" name="reason" placeholder="Reason: Bounty, Salary, Expense, etc… (optional)"
+                maxlength="256" [formControl]="reasonFormControl">
               <mat-hint align="end">{{ reasonFormControl?.value.length || 0 }}/256</mat-hint>
             </mat-form-field>
           </div>
           <mat-toolbar class="p-0 bbr-7 cta-toolbar" [style.height]="'70px'">
             <div></div>
-            <button class="fs-18" id="create-request-button" mat-raised-button color="accent" type="submit">Create
-              a Request&nbsp;
-              <i *ngIf="createLoading" class="fa fa-circle-o-notch fa-spin"></i>
+            <button *ngIf="!isRequestForm" class="fs-18" [ngClass]="createLoading ? 'disabled': ''"
+              id="send-request-button" mat-raised-button color="accent" (click)="clickSend()">
+              Pay Now&nbsp;
+              <i *ngIf="createLoading" class="fa fa-circle-o-notch fa-spin" style="margin-left: 6px;"></i>
+            </button>
+            <button *ngIf="isRequestForm" class="fs-18" [ngClass]="createLoading ? 'disabled': ''"
+              id="create-request-button" mat-raised-button color="accent" (click)="clickRequest()">
+              Create a Request&nbsp;
+              <i *ngIf="createLoading" class="fa fa-circle-o-notch fa-spin" style="margin-left: 6px;"></i>
             </button>
           </mat-toolbar>
         </form>
@@ -149,12 +165,12 @@
 <div class="home-figures">
   <div class="row py-6">
     <div class="col-md-6 home-item">
-      <h1>$450,000+</h1>
+      <h1>$600,000+</h1>
       <p>has already been transferred<br />
         using the Request network</p>
     </div>
     <div class="col-md-6 home-item">
-      <h1>1200+</h1>
+      <h1>1300+</h1>
       <p>Requests for payment <br />
         already created</p>
     </div>

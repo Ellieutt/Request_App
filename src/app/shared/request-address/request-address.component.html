@@ -1,23 +1,24 @@
-<div class="request-address-outer" [popover]="address" popoverPlacement="bottom" [popoverOnHover]="true" [popoverCloseOnMouseOutside]="true">
+<address-book *ngIf="openAddressBookModal" 
+  (emitNewLabel)="updateLabel($event)"
+  (emitHideAddressBook)="closedModal()"
+  [addressToAdd]="address"
+  [owner]="primaryLabel">
+</address-book>
+
+<div class="request-address-outer" [popover]="address" popoverPlacement="bottom" [popoverOnHover]="true" [popoverCloseOnMouseOutside]="true"
+  (click)="openAddressModal()">
   <div class="request-address-title semi-bold">{{ title }}</div>
   <div class="blockies-address-container">
     <div class="blockies-outer" [style.width]="'64px'">
-      <app-blockies [address]="address.toLowerCase()"></app-blockies>
+      <app-blockies *ngIf="!noAddress" [address]="address.toLowerCase()"></app-blockies>
+      <div *ngIf="noAddress" class="grey-block"></div>
     </div>
     <div class="request-address-item-outer {{ primaryLabel ? 'primary-label' : '' }}">
-      <div *ngIf="showLongAddress">
-        <span *ngIf="!label">
-          {{address}}
-        </span>
-        <span *ngIf="label">
-          {{label}}
-        </span>
-      </div>
-      <div *ngIf="!showLongAddress">
-        {{address | shortAddress}}
-      </div>
+      <span>
+        {{label ? label : (address | shortAddress)}}
+      </span>
     </div>
   </div>
 </div>
-<span class="hidden pdf-label">{{ label ? label : address }}</span>
+<span class="hidden pdf-label">{{ label ? label : (address | shortAddress)}}</span>
 <span class="hidden pdf-address">{{ address }}</span>

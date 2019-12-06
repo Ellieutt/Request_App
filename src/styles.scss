@@ -246,6 +246,11 @@ mat-toolbar.cta-toolbar {
     border-radius: 0;
     box-shadow: none !important;
     height: 100%;
+
+    &.disabled {
+      opacity: 0.3;
+      background: grey;
+    }
   }
   &:empty {
     display: none;
@@ -273,6 +278,22 @@ button.account-menu-button {
   font-size: 16px;
   font-weight: initial;
   max-width: 100%;
+  border: 1px solid #DEDEDE;
+  border-radius: 2px;
+  padding: 10px 30px !important;
+  box-shadow: none;
+  min-height: 50px;
+  background: #fff;
+}
+
+.locked + button.account-menu-button {
+  box-shadow: -1px 2px 4px rgba(170, 170, 170, 0.5);
+  span {
+    color: #00E6A0;
+  }
+  .network-icon {
+    display: none;
+  }
 }
 
 .mat-menu-custom {
@@ -372,15 +393,8 @@ mat-toolbar.mat-toolbar {
 .network-1 {
   span.network-icon {
     display: flex;
-    transform: rotate(45deg);
     background: #038789;
-  }
-  span.network-name {
-    &::before {
-      content: 'Main Network';
-      margin-left: 0;
-      color: #038789;
-    }
+    border-radius: 50%;
   }
 }
 
@@ -388,14 +402,7 @@ mat-toolbar.mat-toolbar {
   span.network-icon {
     display: flex;
     background: #e91550;
-    border-radius: 10px;
-  }
-  span.network-name {
-    &::before {
-      content: 'Ropsten Test Net';
-      margin-left: 0;
-      color: #e91550;
-    }
+    border-radius: 50%;
   }
 }
 
@@ -404,13 +411,7 @@ mat-toolbar.mat-toolbar {
     display: flex;
     transform: rotate(45deg);
     border: 3px solid #690496;
-  }
-  span.network-name {
-    &::before {
-      content: 'Kovan Test Net';
-      margin-left: 0;
-      color: #690496;
-    }
+    border-radius: 50%;
   }
 }
 
@@ -418,13 +419,7 @@ mat-toolbar.mat-toolbar {
   span.network-icon {
     display: flex;
     background: #ebb33f;
-  }
-  span.network-name {
-    &::before {
-      content: 'Rinkeby Test Net';
-      margin-left: 0;
-      color: #ebb33f;
-    }
+    border-radius: 50%;
   }
 }
 
@@ -619,6 +614,13 @@ input[type='number'] {
   }
 }
 
+  @media (max-width: 500px) {
+    .container {
+      padding-left: 2px;
+      padding-right: 2px;
+    }
+}
+
 h1 {
   color: #000;
   font-size: 36px;
@@ -676,6 +678,12 @@ ul li:after {
 
 .invoice-date {
   margin-top: 26px;
+}
+.invoice-id {
+  margin-top: -6px;
+}
+.invoice-id + .invoice-date {
+  margin-top: 0;
 }
 
 .cta-toolbar .void-request-button {
@@ -755,8 +763,8 @@ mat-header-row {
   margin-bottom: 5px;
 }
 
-mat-row {
-  border-bottom-width: 0 !important;
+.mat-row {
+  border-bottom-width: 0;
   margin: 5px 0;
 }
 
@@ -784,7 +792,7 @@ mat-row {
 }
 
 .cdk-column-request-status {
-  flex: 0 0 125px !important;
+  flex: 0 0 auto !important;
 }
 
 .cdk-column-requestId, .cdk-column-payer {
@@ -792,7 +800,20 @@ mat-row {
 }
 
 .cdk-column-_meta-timestamp {
-  flex: 0 0 300px;
+  flex: 0 0 auto;
+}
+
+@media (min-width: 900px) {
+  .cdk-column-_meta-timestamp {
+    flex: 0 0 220px;
+  }
+  .cdk-column-request-payee-address, .cdk-column-request-payer {
+    flex: 0 0 310px;
+  }
+
+  .cdk-column-request-status {
+    flex: 0 0 200px !important;
+  }
 }
 
 .gas-container {
@@ -1132,6 +1153,8 @@ ul {
 
 .request-amount {
   background: #FAFAFA;
+  border-top: 1px solid #EFEFEF;
+  border-bottom: 1px solid #EFEFEF;
 }
 
 .pending-message-container {
@@ -1375,4 +1398,177 @@ i.dash:after {
   padding: 8px 38px;
   margin-bottom: -1px;
   font-size: 14px;
+}
+
+#create-request-button {
+  position: relative;
+  &:after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 100%;
+    width: 1px;
+    background: #fff;
+  }
+}
+
+.request-home-address {
+  h4 {
+    margin-bottom: 2px;
+    position: relative;
+    top: -3px;
+  }
+  .request-address-outer {
+    margin-left: 0 !important;
+  }
+  .blockies {
+    width: 24px !important;
+    height: 24px !important;
+  }
+  .request-address-item-outer {
+    font-size: 12px;
+  }
+  .request-address-item-outer {
+    height: 24px !important;
+    line-height: 24px !important;
+    padding-left: 36px !important;
+    padding-right: 16px !important;
+  }
+}
+
+.request-home-date {
+  position: relative;
+  top: -4px;
+}
+
+.grey-block {
+  width: 24px;
+  height: 24px;
+  background: #D8D8D8;
+}
+
+.red-circle-no-address {
+  width: 14px;
+  height: 14px;
+  background: #F21515;
+  border-radius: 50%;
+  display: inline-block;
+  position: relative;
+  top: 3px;
+  right: -5px;
+}
+
+#send-request-button {
+  position: relative;
+
+  &:after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 1px;
+    height: 100%;
+    background: #fff;
+  }
+}
+
+// Animation
+@keyframes placeHolderShimmer{
+  0%{
+      background-position: -468px 0
+  }
+  100%{
+      background-position: 468px 0
+  }
+}
+
+.placeholder {
+  animation-duration: 1.25s;
+  animation-fill-mode: forwards;
+  animation-iteration-count: infinite;
+  animation-name: placeHolderShimmer;
+  animation-timing-function: linear;
+  background: #F6F6F6;
+  background: linear-gradient(to right, #F6F6F6 8%, #F0F0F0 18%, #F6F6F6 33%);
+  background-size: 800px 104px;
+  height: 20px;
+  position: relative;
+  width: 60%;
+  border-radius: 4px;
+}
+
+.warning-box {
+  background: rgba(255, 193, 35, 0.136801);
+  border: 1px solid #FFC123;
+  text-align: center;
+  padding: 16px;
+  border-radius: 3px;
+  color: #FFC123;
+  margin-bottom: 40px;
+}
+
+.invoice-form h3 {
+  text-transform: uppercase;
+
+  &.mt-3 {
+    margin: 2rem 0 !important;
+  }
+}
+
+.payment-note {
+  padding-top: 1.5rem;
+}
+
+.payment-terms + .payment-note {
+  padding-top: 0;
+}
+
+.payment-terms {
+  padding-bottom: 1.5rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid #EFEFEF;
+}
+
+.create-invoice-button {
+  margin: -24px !important;
+  margin-top: 35px !important;
+}
+.create-button {
+  box-shadow: none !important;
+  width: 32%;
+  height: 74px;
+  border-radius: 0 !important;
+  border-bottom-right-radius: 3px !important;
+  &.disabled {
+    opacity: 0.3;
+    background: grey !important;
+  }
+}
+.container .home-request-form {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.request-form-tabs {
+  .tab-item {
+    padding: 24px 20px;
+    text-align: center;
+    border-top: 2px solid #E2E2E2;;
+    background: #FAFAFA;
+    cursor: pointer;
+    font-weight: 500;
+
+    &.active {
+      background: #fff;
+      border-color: #00E6A0;
+    }
+  }
+}
+
+.save-button {
+  padding: 10px 30px;
+  background: #00e6a0;
+  border: 0;
+  color: white;
 }

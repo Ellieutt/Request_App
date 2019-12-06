@@ -1,0 +1,74 @@
+@import 'variables';
+
+.account-float-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #fff;
+    opacity: 0.7;
+    z-index: 2;
+}
+
+.fwb {
+    font-weight: 500;
+}
+
+.account-float {
+    position: fixed;
+    width: 800px;
+    left: 50%;
+    transform: translate(-50%, 0);
+    line-height: 21px;
+    padding: 40px 60px;
+    background: #FFFFFF;
+    box-shadow: 0px 20px 20px rgba(199, 199, 199, 0.5);
+    border-radius: 4px;
+    z-index: 3;
+    top: 10%;
+
+    .close-icon {
+        font-style: normal;
+        position: absolute;
+        top: 0;
+        right: 0;
+        font-size: 36px;
+        padding: 20px;
+        line-height: 16px;
+        cursor: pointer;
+    }
+
+    h2 {
+        line-height: 30px;
+        font-weight: normal;
+    }
+
+    button {
+        margin: 20px auto;
+        background: #fff;
+        padding: 10px 24px 10px 70px;
+        height: auto;
+        text-align: center;
+        display: inline-block;
+        width: auto;
+        border: 1px solid #F3F3F3;
+        box-shadow: -1px 2px 4px rgba(170, 170, 170, 0.5);
+        border-radius: 2px;
+        line-height: 38px;
+        position: relative;
+        min-width: 305px;
+
+        img {
+            width: 40px;
+            position: absolute;
+            left: 20px;
+        }
+
+        span {
+            display: block;
+            text-align: center;
+            width: 100%;
+        }
+    }
+}

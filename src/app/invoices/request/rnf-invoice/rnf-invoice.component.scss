@@ -8,13 +8,30 @@
 
 .invoice-items-table {
   .mat-header-row, .mat-row {
-    height: 35px;
+    height: auto;
   }
+  .mat-header-row th {
+    color: #000;
+    font-weight: bold;
+    text-align: right;
 
+    &.item-description-header {
+      text-align: left;
+    }
+  }
   .mat-cell, .mat-header-cell {
-    font-size: 14px;
-    color: $blue-grey;
+    font-size: 14px !important;
     border: none;
+    span {
+      display: block;
+    }
+  }
+  .mat-cell {
+    text-align: right;
+
+    &.cdk-column-name {
+      text-align: left;
+    }
   }
 
   .mat-cell:first-of-type, .mat-footer-cell:first-of-type, .mat-header-cell:first-of-type {

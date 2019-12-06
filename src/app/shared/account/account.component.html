@@ -1,31 +1,45 @@
 <!-- ACCOUNT BLOCK -->
-<button mat-button class="account-menu-button no-focus-overlay py-1" [matMenuTriggerFor]="accountMenu">
-  <div *ngIf="web3Service.accountObservable | async as account; else accountLocked" class="d-flex justify-content-between align-items-center">
-    <angular-blockies [options]="{ seed: account.toLowerCase() }" class="blockies"></angular-blockies>
-    <div class="d-flex flex-column align-items-start px-2" [style.lineHeight]="'14px'" [style.borderRight]="'1px solid #617B9F'">
-      <span class="hidden" id="wallet-type-mobile" attr.data-connected="{{ web3Service.ledgerConnected ? true : web3Service.metamask ? true : false }}"></span>
-      <span class="fc-accent fs-12" id="wallet-type">{{ web3Service.ledgerConnected ? 'Ledger Nano S' : web3Service.metamask ? 'Metamask' : 'Connect a wallet' }}</span>
-      <span class="fs-14">{{ account.substring(0,10) }}...{{ account.substring(37,42) }}</span>
+<span *ngIf="web3Service.accountObservable | async as account; else locked">
+  <a routerLink="/search/{{ account }}" (click)="utilService.setSearchValue(account)"
+    style="font-weight: 500; margin-right: 50px; position: relative; top: -8px;">
+    My Dashboard
+  </a>
+</span>
+<ng-template #locked>
+  <div class="locked"></div>
+</ng-template>
+<button mat-button class="account-menu-button no-focus-overlay py-1" (click)="openModal()">
+  <div *ngIf="web3Service.accountObservable | async as account; else accountLocked"
+    class="d-flex justify-content-between align-items-center">
+    <angular-blockies *ngIf="web3Service.ledgerConnected" [options]="{ seed: account.toLowerCase() }" class="blockies">
+    </angular-blockies>
+
+    <img *ngIf="!web3Service.ledgerConnected" style="width: 30px; position: relative; top: -1px; left: -10px;"
+      src="assets/img/metamask-icon-colour.png">
+
+    <div class="d-flex flex-column align-items-start px-2" [style.lineHeight]="'14px'">
+      <span class="hidden" id="wallet-type-mobile"
+        attr.data-connected="{{ web3Service.ledgerConnected ? true : web3Service.metamask ? true : false }}"></span>
+      <span class="fc-accent fs-12 hidden"
+        id="wallet-type">{{ web3Service.ledgerConnected ? 'Ledger Nano S' : web3Service.metamask ? 'Metamask' : 'Connect a wallet' }}</span>
+      <span class="fs-14 fwb">{{ account.substring(0,7) }}...{{ account.substring(35,42) }}</span>
     </div>
     <div class="fs-14 d-flex align-items-center network network-{{ web3Service.networkIdObservable | async }}">
       <span class="network-icon"></span>
-      <span class="network-name"></span>
     </div>
-      <mat-icon class="hidden-xs-down">expand_more</mat-icon>
   </div>
   <ng-template #accountLocked>
-    <div class="d-flex justify-content-between align-items-center">
-      <mat-icon>account_circle</mat-icon>
-      <div class="d-flex flex-column align-items-start px-2" [style.lineHeight]="'14px'" [style.borderRight]="'1px solid #617B9F'">
-        <span class="hidden" id="wallet-type-mobile" attr.data-connected="{{ web3Service.ledgerConnected ? true : web3Service.metamask ? true : false }}"></span>
-        <span class="fc-accent fs-12" id="wallet-type">{{ web3Service.ledgerConnected ? 'Ledger Nano S' : web3Service.metamask ? 'Metamask' : 'Connect a wallet' }}</span>
-        <span class="fs-14">{{ web3Service.metamask ? 'Account locked' : 'no account' }}</span>
+    <div class="locked-account d-flex justify-content-between align-items-center">
+      <div class="d-flex flex-column align-items-start px-2" [style.lineHeight]="'14px'">
+        <span class="hidden" id="wallet-type-mobile"
+          attr.data-connected="{{ web3Service.ledgerConnected ? true : web3Service.metamask ? true : false }}"></span>
+        <span class="fc-accent fs-12 hidden"
+          id="wallet-type">{{ web3Service.ledgerConnected ? 'Ledger Nano S' : web3Service.metamask ? 'Metamask' : 'Connect a wallet' }}</span>
+        <span class="fs-14">{{ web3Service.metamask ? 'Account locked' : 'Connect a wallet' }}</span>
       </div>
       <div class="fs-14 d-flex align-items-center network network-{{ web3Service.networkIdObservable | async }}">
         <span class="network-icon"></span>
-        <span class="network-name"></span>
       </div>
-      <mat-icon class="hidden-xs-down">expand_more</mat-icon>
     </div>
   </ng-template>
   <mat-menu #accountMenu="matMenu" [overlapTrigger]="false" class="mat-menu-custom">
@@ -37,22 +51,68 @@
       <hr class="m-0" style="border-color: #617B9F; opacity: 0.1;" />
     </div>
     <ng-template #accountLost>
-        <button class="d-flex align-items-center" (click)="web3Service.checkAndInstantiateWeb3()" *ngIf="web3Service.metamask" mat-menu-item>
-          <img style="width: 20px; position: relative; top: -4px; margin: 0 0.5rem" src="assets/img/metamask-icon.png">
-          <span>&nbsp;Connect Metamask</span>
-        </button>
-      </ng-template>
+      <button class="d-flex align-items-center" (click)="web3Service.checkAndInstantiateWeb3()"
+        *ngIf="web3Service.metamask" mat-menu-item>
+        <img style="width: 20px; position: relative; top: -4px; margin: 0 0.5rem" src="assets/img/metamask-icon.png">
+        <span>&nbsp;Connect Metamask</span>
+      </button>
+    </ng-template>
     <button class="d-flex align-items-center" (click)="openLedgerDialog()" mat-menu-item>
       <img style="width: 36px; position: relative; top: -2px" src="assets/img/ledger-icon.png">
       <span>&nbsp;Connect Ledger Nano S</span>
     </button>
-    <button class="d-flex align-items-center" (click)="web3Service.checkAndInstantiateWeb3()" *ngIf="!web3Service.metamask" mat-menu-item>
+    <button class="d-flex align-items-center" (click)="web3Service.checkAndInstantiateWeb3()"
+      *ngIf="(!web3Service.metamask || web3Service.ledgerConnected)" mat-menu-item>
       <img style="width: 20px; position: relative; top: -4px; margin: 0 0.5rem" src="assets/img/metamask-icon.png">
       <span>&nbsp;Connect Metamask</span>
     </button>
-    <a class="fs-14 d-flex align-items-center" href="https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn" target="_blank" *ngIf="!web3Service.metamask" mat-menu-item>
+    <a class="fs-14 d-flex align-items-center"
+      href="https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn" target="_blank"
+      *ngIf="!web3Service.metamask" mat-menu-item>
       <img style="width: 20px; position: relative; top: -4px; margin: 0 0.5rem" src="assets/img/metamask-icon.png">
       <span>&nbsp;Download Metamask</span>
     </a>
   </mat-menu>
 </button>
+
+
+
+
+<div *ngIf="accountModalOpen" class="account-float-bg" (click)="closeModal()"></div>
+<div *ngIf="accountModalOpen" class="account-float">
+  <i class="close-icon" (click)="closeModal()">×</i>
+  <h2 style="text-align: center; margin-bottom: 30px;"><strong>Connect your wallet</strong><br />to start using Request
+  </h2>
+
+  <div *ngIf="web3Service.accountObservable | async as account; else accountLost">
+    <button class="d-flex align-items-center" (click)="web3Service.checkAndInstantiateWeb3()"
+      *ngIf="web3Service.metamask">
+      <img src="assets/img/metamask-icon-colour.png">
+      <span>{{ account.substring(0,14) }}...{{ account.substring(28,42) }}</span>
+    </button>
+    <button class="d-flex align-items-center" (click)="web3Service.checkAndInstantiateWeb3()"
+      *ngIf="web3Service.ledgerConnected">
+      <img style="width: 36px;" src="assets/img/ledger-icon-colour.png">
+      <span>{{ account.substring(0,14) }}...{{ account.substring(28,42) }}</span>
+    </button>
+  </div>
+  <ng-template #accountLost>
+    <button class="d-flex align-items-center" (click)="web3Service.checkAndInstantiateWeb3()"
+      *ngIf="web3Service.metamask">
+      <img src="assets/img/metamask-icon-colour.png">
+      <span>Connect Metamask</span>
+    </button>
+    <button class="d-flex align-items-center" (click)="web3Service.checkAndInstantiateWeb3()"
+      *ngIf="!web3Service.metamask">
+      <img src="assets/img/metamask-icon-colour.png">
+      <span>Connect Metamask</span>
+    </button>
+    <button class="d-flex align-items-center" (click)="openLedgerDialog()" value="">
+      <img src="assets/img/ledger-icon-colour.png">
+      <span>Connect Ledger Nano S</span>
+    </button>
+  </ng-template>
+
+  <p style="text-align: center; margin-top: 36px;">Is your wallet not supported?<br />
+    <a style="display: block; margin-top: 6px; color: #00E6A0;" target="_blank" href="https://share.hsforms.com/1SUDFJxJySliSedFiwifsfw2nz19">Let us know</a></p>
+</div>

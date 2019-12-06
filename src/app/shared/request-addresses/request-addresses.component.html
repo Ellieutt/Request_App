@@ -24,6 +24,23 @@
         <request-address id="payeeAddressPdf" class="d-flex mt-2" [address]="payee.id" [primaryLabel]="payee.id == account"></request-address>
         <request-address class="d-flex" *ngIf="payee.payment" [address]="payee.payment" title="ETH Payment address" [primaryLabel]="payee.payment == account" ></request-address>
         <div *ngIf="i<payees.length-1" class="p-1"></div>
+
+        <div *ngIf="payeeExtraInformation" [style.marginLeft]="'1rem'" [style.marginTop]="'1rem'">
+            <div *ngIf="payeeExtraInformation.businessName">{{payeeExtraInformation.businessName}}</div>
+            <div *ngIf="payeeExtraInformation.firstName || payeeExtraInformation.lastName">
+              {{payeeExtraInformation.firstName}} {{payeeExtraInformation.lastName}}
+            </div>
+            <div *ngIf="payeeExtraInformation.address">
+              <div *ngIf="payeeExtraInformation.address.streetAddress">{{payeeExtraInformation.streetAddress}}</div>
+              <div *ngIf="payeeExtraInformation.address.extendedAddress">{{payeeExtraInformation.extendedAddress}}</div>
+              <div *ngIf="payeeExtraInformation.address.postalCode || payeeExtraInformation.locality">
+                {{payeeExtraInformation.address.postalCode}} {{payeeExtraInformation.locality}}
+              </div>
+            </div>
+            <div *ngIf="payeeExtraInformation.companyRegistration">Company Number:
+              {{payeeExtraInformation.companyRegistration}}</div>
+            <div *ngIf="payeeExtraInformation.taxRegistration">Tax Number: {{payeeExtraInformation.taxRegistration}}</div>
+        </div>
       </div>
     </div>
   </div>
@@ -31,6 +48,23 @@
     <div class="fs-14 lh-18">
       <div class="mb-2 address-title" [style.marginLeft]="'1rem'"><i>To</i></div>
       <request-address [address]="payer" id="payerAddressPdf" class="d-flex" [primaryLabel]="payer == account"></request-address>
+
+      <div *ngIf="payerExtraInformation" [style.marginLeft]="'1rem'" [style.marginTop]="'1rem'">
+          <div *ngIf="payerExtraInformation.businessName">{{payerExtraInformation.businessName}}</div>
+          <div *ngIf="payerExtraInformation.firstName || payerExtraInformation.lastName">
+            {{payerExtraInformation.firstName}} {{payerExtraInformation.lastName}}
+          </div>
+          <div *ngIf="payerExtraInformation.address">
+            <div *ngIf="payerExtraInformation.address.streetAddress">{{payerExtraInformation.streetAddress}}</div>
+            <div *ngIf="payerExtraInformation.address.extendedAddress">{{payerExtraInformation.extendedAddress}}</div>
+            <div *ngIf="payerExtraInformation.address.postalCode || payerExtraInformation.locality">
+              {{payerExtraInformation.address.postalCode}} {{payerExtraInformation.locality}}
+            </div>
+          </div>
+          <div *ngIf="payerExtraInformation.companyRegistration">Company Number:
+            {{payerExtraInformation.companyRegistration}}</div>
+          <div *ngIf="payerExtraInformation.taxRegistration">Tax Number: {{payerExtraInformation.taxRegistration}}</div>
+      </div>
     </div>
   </div>
 </div>

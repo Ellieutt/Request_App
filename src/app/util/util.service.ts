@@ -7,17 +7,16 @@ import { Location } from '@angular/common';
 export class UtilService {
   public searchValue = new Subject<string>();
 
-  constructor(private snackBar: MatSnackBar, private location: Location) {
-   }
+  constructor(private snackBar: MatSnackBar, private location: Location) {}
 
   public setSearchValue(searchValue: string) {
     this.searchValue.next(searchValue);
   }
 
   // routerLink encodes the request info in the URL so we need to navigate by URL instead
-  public redirectToPage(pageUrl: string) {
+  public redirectToPage(pageUrl: string, event = null) {
     const pageUrlEncoded = encodeURI(pageUrl);
-    if (!location.hash.includes(pageUrl)) {
+    if (!event || !event.ctrlKey || !event.metaKey) {
       location.replace('#' + pageUrlEncoded);
       location.reload();
     }

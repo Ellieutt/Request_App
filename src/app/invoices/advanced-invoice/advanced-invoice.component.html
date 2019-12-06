@@ -1,15 +1,14 @@
 <div class="container fc-primary my-5">
-  <form [formGroup]="invoiceData" (ngSubmit)="sendInvoice()">
+  <div class="warning-box">By creating this invoice, it will be pushed to the blockchain. <br/>
+      All the information will be publicly accessible. </div>
+  <form class="invoice-form" [formGroup]="invoiceData" (ngSubmit)="sendInvoice()">
     <div class="row mb-3">
-      <div class="col-12 col-md-4">
-        <h2>Create a new invoice</h2>
+      <div class="col-12 col-sm-4">
+        <h2 style="font-size: 1.8em;">Create a new invoice</h2>
       </div>
-      <div class="col-12 col-sm-8 col-md-5 mb-2">
+      <div class="col-12 col-sm-8 mb-2" style="text-align: right;">
         Select the currency
-        <app-currency-selector [formControl]="currency"></app-currency-selector>
-      </div>
-      <div class="col-12 col-sm-4 col-md-3" style="text-align: right">
-        <button mat-raised-button color="accent" type="submit" class="create-button">Create the invoice</button>
+        <app-currency-selector [formControl]="currency" style="text-align: left;"></app-currency-selector>
       </div>
     </div>
     <mat-card class="sh-blue">
@@ -31,14 +30,14 @@
               <label for="taxRegistration">Tax number</label>
               <input matInput type="text" name="taxRegistration" placeholder="Tax number" formControlName="taxRegistration">
             </div>
+            <div class="col-12 text-right" *ngIf="!shouldShowSellerDetails">
+                <button mat-button color="accent" class="mb-3" type="button" (click)="shouldShowSellerDetails = true">+ Add company details</button>
+              </div>
           </div>
         </div>
       </div>
 
       <div class="row" formGroupName="sellerInfo">
-        <div class="col-12 col-sm-6 col-lg-5" *ngIf="!shouldShowSellerDetails">
-          <button mat-button color="accent" class="mb-3" type="button" (click)="shouldShowSellerDetails = true">+ Add company details</button>
-        </div>
         <div class="col-12 col-sm-6 col-lg-5" *ngIf="shouldShowSellerDetails" formGroupName="address" [@displayAnim]>
           <label for="streetAddress">Address line 1</label>
           <input matInput type="text" name="streetAddress" placeholder="Street address, P.O. box, company name, c/o" formControlName="streetAddress">
@@ -80,7 +79,7 @@
           <input matInput type="text" name="payerETHAddress" placeholder="ETH address" [formControl]="payerETHAddress">
 
           <div *ngIf="!shouldShowBuyerDetails">
-            <button mat-button color="accent" class="mb-3" type="button" (click)="shouldShowBuyerDetails = true">+ Add company details</button>
+            <button mat-button color="accent" class="mb-3" type="button" (click)="shouldShowBuyerDetails = true">+ Add customer details</button>
           </div>
           <div *ngIf="shouldShowBuyerDetails" [@displayAnim] formGroupName="address">
             <label for="streetAddress">Address line 1</label>
@@ -246,30 +245,35 @@
         </div>
       </div>
       <mat-divider></mat-divider>
-      <h3 class="mt-3">Terms & Conditions</h3>
-      <div class="row" formGroupName="paymentTerms">
-        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
-          <label for="lateFeesFix" [ngClass]="{'warn': paymentTerms.controls.lateFeesFix.invalid && paymentTerms.controls.lateFeesFix.touched }">Late Fees (fix amount)</label>
-          <div class="suffixed-input" [ngClass]="{'warn': paymentTerms.controls.lateFeesFix.invalid && paymentTerms.controls.lateFeesFix.touched }">
-            <input matInput style="text-align: right" type="text" name="lateFeesFix" placeholder="Add late fees (fix amount)" formControlName="lateFeesFix">
-            <span class="input-suffix">{{currency.value}}</span>
+      <div class="hidden">
+        <h3 class="mt-3">Terms & Conditions</h3>
+        <div class="row" formGroupName="paymentTerms">
+          <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+            <label for="lateFeesFix" [ngClass]="{'warn': paymentTerms.controls.lateFeesFix.invalid && paymentTerms.controls.lateFeesFix.touched }">Late Fees (fix amount)</label>
+            <div class="suffixed-input" [ngClass]="{'warn': paymentTerms.controls.lateFeesFix.invalid && paymentTerms.controls.lateFeesFix.touched }">
+              <input matInput style="text-align: right" type="text" name="lateFeesFix" placeholder="Add late fees (fix amount)" formControlName="lateFeesFix">
+              <span class="input-suffix">{{currency.value}}</span>
+            </div>
+          </div>
+          <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+            <label for="lateFeesPercent">Monthly Late Fees (% amount)</label>
+            <div class="suffixed-input">
+              <input matInput style="text-align: right" type="number" name="lateFeesPercent" placeholder="Add late fees (% amount)" formControlName="lateFeesPercent">
+              <span class="input-suffix">%</span>
+            </div>
           </div>
         </div>
-        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
-          <label for="lateFeesPercent">Monthly Late Fees (% amount)</label>
-          <div class="suffixed-input">
-            <input matInput style="text-align: right" type="number" name="lateFeesPercent" placeholder="Add late fees (% amount)" formControlName="lateFeesPercent">
-            <span class="input-suffix">%</span>
-          </div>
-        </div>
+        <label for="terms">Terms and conditions</label>
+        <textarea matInput placeholder="Please enter your own terms & conditions as due date, late fees and others. You can also leave it blank if you don't have any." name="terms" [formControl]="terms" rows="5"></textarea>
       </div>
-      <label for="terms">Terms and conditions</label>
-      <textarea matInput placeholder="Please enter your own terms & conditions as due date, late fees and others. You can also leave it blank if you don't have any." name="terms" [formControl]="terms" rows="5"></textarea>
+        <div class="create-invoice-button">
+            <div style="text-align: right">
+              <button mat-raised-button color="accent" type="submit" class="fs-18 create-button" [ngClass]="sendingInvoice ? 'disabled': ''">
+                Create the invoice
+                <i *ngIf="sendingInvoice" class="fa fa-circle-o-notch fa-spin" style="margin-left: 6px;"></i>
+              </button>
+            </div>
+        </div>
     </mat-card>
-    <div class="row my-3">
-      <div class="col-12" style="text-align: right">
-        <button mat-raised-button color="accent" type="submit" class="create-button">Create the invoice</button>
-      </div>
-    </div>
   </form>
 </div>

@@ -29,6 +29,8 @@ export class HomeComponent implements OnInit {
   dateFormControl: FormControl;
   currencyFormControl: FormControl;
   BTCRefundAddress;
+  payeeOrPayer: string;
+  isRequestForm = true;
 
   sameAddressValidator(control: FormControl) {
     if (control.value) {
@@ -50,7 +52,7 @@ export class HomeComponent implements OnInit {
   }
 
   constructor(
-    private web3Service: Web3Service,
+    public web3Service: Web3Service,
     private utilService: UtilService,
     private formBuilder: FormBuilder,
     private router: Router,
@@ -97,6 +99,82 @@ export class HomeComponent implements OnInit {
       date: this.dateFormControl,
       reason: this.reasonFormControl,
     });
+  }
+
+  showRequestForm() {
+    this.isRequestForm = true;
+  }
+
+  showPaymentForm() {
+    this.isRequestForm = false;
+    this.payeePaymentAddressFormControl.setValue(this.account);
+  }
+
+  clickRequest() {
+    this.payeeOrPayer = 'Payee';
+    this.createRequest();
+  }
+
+  clickSend() {
+    if (!this.isFormValid()) {
+      return;
+    }
+    this.createLoading = false;
+    this.payeeOrPayer = 'Payer';
+    this.sendTrigger();
+  }
+
+  async sendTrigger() {
+    const currency = this.currencyFormControl.value;
+    if (currency === 'ETH') {
+      const balance = await this.web3Service.getBalance(currency);
+      const parsedBalance = parseFloat(balance);
+      const formBalance = parseFloat(this.expectedAmountFormControl.value);
+      if (parsedBalance >= formBalance) {
+        return this.createRequest(true);
+      } else {
+        this.createLoading = false;
+        return this.utilService.openSnackBar(
+          'You do not have enough ' + currency + ' to make this payment.'
+        );
+      }
+    } else {
+      const balance = await this.web3Service.getBalance(currency);
+
+      const contract = this.web3Service.getCurrencyAddress(currency).erc20;
+      const main = this.web3Service.getCurrencyAddress(currency).main;
+      const allowance = await this.web3Service.getAllowance(contract);
+      const allowanceNeeded = this.web3Service.amountToBN(
+        this.expectedAmountFormControl.value,
+        this.currencyFormControl.value
+      );
+      if (balance.gte(allowanceNeeded)) {
+        if (allowance >= allowanceNeeded) {
+          // Create Request
+          this.createRequest(true);
+        } else {
+          // this.web3Service.allow(contract, this.expectedAmountFormControl.value, null);
+          this.web3Service
+            .allowContract(
+              main,
+              allowanceNeeded,
+              this.payeePaymentAddressFormControl.value
+            )
+            .on('broadcasted', txHash => {
+              this.createRequest(true);
+            })
+            .catch(err => {
+              this.createLoading = false;
+              return this.utilService.openSnackBar(err.message);
+            });
+        }
+      } else {
+        this.createLoading = false;
+        return this.utilService.openSnackBar(
+          'You do not have enough ' + currency + ' to make this payment.'
+        );
+      }
+    }
   }
 
   getNetworkValue() {
@@ -157,12 +235,8 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  createRequest() {
-    if (this.createLoading || this.web3Service.watchDog()) {
-      return;
-    }
+  isFormValid() {
     this.createLoading = true;
-
     if (!this.requestForm.valid) {
       if (this.expectedAmountFormControl.hasError('required')) {
         this.expectedAmountFormControl.markAsTouched();
@@ -173,6 +247,16 @@ export class HomeComponent implements OnInit {
         this.payerAddressFormControl.setErrors({ required: true });
       }
       this.createLoading = false;
+      return false;
+    }
+    return true;
+  }
+
+  createRequest(isSend = false) {
+    if (this.createLoading || this.web3Service.watchDog()) {
+      return;
+    }
+    if (!this.isFormValid()) {
       return;
     }
     this.dateFormControl.setValue(this.date);
@@ -222,6 +306,14 @@ export class HomeComponent implements OnInit {
         for (const key of Object.keys(data)) {
           request.data.data[key] = data[key];
         }
+
+        this.web3Service.addPendingRequestToCookie(
+          request,
+          response.transaction.hash,
+          btoa(JSON.stringify(request)),
+          isSend
+        );
+
         return this.router.navigate(
           ['/request/txHash', response.transaction.hash],
           {
@@ -244,26 +336,40 @@ export class HomeComponent implements OnInit {
             'MetaMask Tx Signature: User denied transaction signature.'
           );
         } else {
-          console.error(response);
-          return this.utilService.openSnackBar(response.message);
+          if (response && response.message) {
+            console.error(response);
+            return this.utilService.openSnackBar(response.message);
+          } else {
+            return this.utilService.openSnackBar(
+              'Your Request could not be created. Please try again later.'
+            );
+          }
         }
       }
     };
 
+    const currencyAddress =
+      this.currencyFormControl.value !== 'ETH'
+        ? this.web3Service.getCurrencyAddress(this.currencyFormControl.value)
+            .main
+        : null;
+
     this.web3Service
       .createRequest(
-        'Payee',
+        this.payeeOrPayer,
         this.payerAddressFormControl.value,
         this.expectedAmountFormControl.value,
         this.currencyFormControl.value,
         this.payeePaymentAddressFormControl.value,
         { data },
-        this.payerRefundAddressFormControl.value
+        this.payerRefundAddressFormControl.value,
+        currencyAddress
       )
       .on('broadcasted', response => {
         callback(response);
       })
       .catch(err => {
+        console.log(err);
         callback(err);
       });
   }

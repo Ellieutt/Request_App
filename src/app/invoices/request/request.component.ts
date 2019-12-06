@@ -47,7 +47,7 @@ export class RequestComponent implements OnInit, OnDestroy, AfterContentInit {
     private utilService: UtilService,
     private emailService: EmailService,
     private cookieService: CookieService
-  ) { }
+  ) {}
 
   get amount() {
     return this.web3Service.BNToAmount(
@@ -96,10 +96,7 @@ export class RequestComponent implements OnInit, OnDestroy, AfterContentInit {
 
     // watch Request in background
     this.timerInterval = setInterval(async () => {
-      if (
-        !this.requestObject ||
-        this.loading
-      ) {
+      if (!this.requestObject || this.loading) {
         return;
       }
       const rd = await this.requestObject.getData();
@@ -111,9 +108,7 @@ export class RequestComponent implements OnInit, OnDestroy, AfterContentInit {
   addPendingRequestToCookie(request) {
     let cookieList = [];
     if (this.cookieService.get('processing_requests')) {
-      cookieList = JSON.parse(
-        this.cookieService.get('processing_requests')
-      );
+      cookieList = JSON.parse(this.cookieService.get('processing_requests'));
     }
     let isNewRequest = true;
     const that = this;
@@ -123,25 +118,65 @@ export class RequestComponent implements OnInit, OnDestroy, AfterContentInit {
       }
     });
     if (isNewRequest) {
+      let expectedAmount = request.payee.expectedAmount;
+      if (this.isInvoiceRequest()) {
+        const totalWithTax = this.getTaxFreeTotal(request).add(
+          this.getVatTotal(request)
+        );
+        expectedAmount = totalWithTax;
+      }
       cookieList.push({
-        'txid': that.txHash + '?request=' + this.route.snapshot.queryParams.request,
-        'timestamp': request.data.data.date,
-        'payee': { 'address': request.payee.address },
-        'payer': request.payer,
-        'amount': this.web3Service.BNToAmount(request.payee.expectedAmount, request.currency),
-        'currency': request.currency,
-        'network': 4,
-        'status': 'pending',
-        'unread': true
+        txid:
+          that.txHash + '?request=' + this.route.snapshot.queryParams.request,
+        timestamp: request.data.data.date,
+        payee: { address: request.payee.address },
+        payer: request.payer,
+        amount: this.web3Service.BNToAmount(expectedAmount, request.currency),
+        currency: request.currency,
+        network: 4,
+        status: 'pending',
+        unread: true,
       });
-      this.cookieService.set('processing_requests', JSON.stringify(cookieList), 1);
+      this.cookieService.set(
+        'processing_requests',
+        JSON.stringify(cookieList),
+        1
+      );
     }
+  }
+
+  getTaxFreeTotal(request) {
+    return request.data.data['invoiceItems'].reduce(
+      (acc, item) =>
+        acc.add(
+          this.web3Service
+            .BN(item.unitPrice)
+            .sub(this.web3Service.BN(item.discount || 0))
+            .mul(this.web3Service.BN(item.quantity))
+        ),
+      this.web3Service.BN()
+    );
+  }
+
+  getVatTotal(request) {
+    return request.data.data['invoiceItems'].reduce(
+      (acc, item) =>
+        acc.add(
+          this.web3Service
+            .BN(item.unitPrice)
+            .sub(this.web3Service.BN(item.discount || 0))
+            .mul(this.web3Service.BN(item.quantity))
+            .mul(this.web3Service.BN(Math.round(item.taxPercent * 100)))
+            .div(this.web3Service.BN(10000))
+        ),
+      this.web3Service.BN()
+    );
   }
 
   async ngAfterContentInit() {
     const that = this;
 
-    const loadReceiptJs = setInterval(function () {
+    const loadReceiptJs = setInterval(function() {
       if (document.getElementById('download-receipt')) {
         that.loadScript('../assets/js/receipt.js');
         clearInterval(loadReceiptJs);
@@ -288,9 +323,12 @@ export class RequestComponent implements OnInit, OnDestroy, AfterContentInit {
           }
           newCookieList.push(element);
         });
-        this.cookieService.set('processing_requests', JSON.stringify(newCookieList), 1);
+        this.cookieService.set(
+          'processing_requests',
+          JSON.stringify(newCookieList),
+          1
+        );
       }
-
 
       this.request = null;
       history.pushState(
@@ -300,7 +338,7 @@ export class RequestComponent implements OnInit, OnDestroy, AfterContentInit {
       );
       this.url = `${window.location.protocol}//${
         window.location.host
-        }/#/request/requestId/${request.requestId}`;
+      }/#/request/requestId/${request.requestId}`;
     }
     if (request && !request.status && request.state !== undefined) {
       this.web3Service.setRequestStatus(request);
@@ -378,8 +416,15 @@ export class RequestComponent implements OnInit, OnDestroy, AfterContentInit {
 
   openEmailDialog(sendToEmail) {
     const currency = this.request.currency;
-    const reason =
-      this.ipfsData && this.ipfsData.reason ? this.ipfsData.reason : 'N/A';
+    let reason = 'N/A';
+    if (this.isInvoiceRequest()) {
+      if (this.request.data.data['invoiceItems'].length != 0) {
+        reason = this.request.data.data['invoiceItems'][0].name;
+      }
+    } else {
+      reason =
+        this.ipfsData && this.ipfsData.reason ? this.ipfsData.reason : 'N/A';
+    }
     const amount = this.amount;
     const url = this.url;
 
@@ -421,8 +466,14 @@ export class RequestComponent implements OnInit, OnDestroy, AfterContentInit {
           'MetaMask Tx Signature: User denied transaction signature.'
         );
       } else {
-        console.error(response);
-        this.utilService.openSnackBar(response.message);
+        if (response && response.message) {
+          console.error(response);
+          return this.utilService.openSnackBar(response.message);
+        } else {
+          return this.utilService.openSnackBar(
+            'Your Request could not be created. Please try again later.'
+          );
+        }
       }
     }
   }

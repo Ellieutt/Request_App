@@ -48,6 +48,7 @@ import { RequestAddressComponent } from './request-address/request-address.compo
 import { AddressBookComponent } from './address-book/address-book.component';
 import { ClipboardModule } from 'ngx-clipboard';
 import { NetworkIdentifierComponent } from './network-identifier/network-identifier.component';
+import { CSVExportComponent } from './CSV-export/CSV-export.component';
 
 @NgModule({
   imports: [
@@ -100,6 +101,7 @@ import { NetworkIdentifierComponent } from './network-identifier/network-identif
     RequestAmountComponent,
     RequestAddressComponent,
     AddressBookComponent,
+    CSVExportComponent,
     NetworkIdentifierComponent,
   ],
   exports: [
@@ -120,6 +122,9 @@ import { NetworkIdentifierComponent } from './network-identifier/network-identif
     RequestAddressesComponent,
     PendingRequestsComponent,
     AddressBookComponent,
+    CSVExportComponent,
+    ShortAddressPipe,
+
     MatButtonModule,
     MatCardModule,
     // MatCheckboxModule,
@@ -146,7 +151,7 @@ import { NetworkIdentifierComponent } from './network-identifier/network-identif
     MatDatepickerModule,
     MatMomentDateModule,
     MatTreeModule,
-    NetworkIdentifierComponent
+    NetworkIdentifierComponent,
   ],
 })
 export class SharedModule {}

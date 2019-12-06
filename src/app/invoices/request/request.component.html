@@ -1,4 +1,5 @@
 <div class="container fc-primary request-container">
+  <span id="current-selected-address" class="hidden">{{ account }}</span>
   <div class="row my-5 mt-6">
     <div class="col-12" *ngIf="!request; else resultBlock">
       <mat-spinner class="mx-auto"></mat-spinner>
@@ -31,7 +32,7 @@
         <div class="mr-lg-auto col-lg-6 col-xl-5 mr-xl-auto request-invoice-container">
           <network-identifier [isRinkeby]="web3Service.networkIdObservable.value == 4"></network-identifier>
           <mat-card class="p-0 br-7 sh-blue" id="request-invoice-outer">
-            <div class="request-invoice-inner-pdf">
+            <div id="{{ isInvoiceRequest() ? 'request-invoice-inner-pdf' : ''}}" class="request-invoice-inner-pdf">
               <div class="d-flex p-4 btr-7">
                 <img class="px-3" style="max-height: 75px;padding:0!important;" src="assets/img/request-logo.png">
                 <div class="ml-auto text-right px-3">
@@ -42,9 +43,20 @@
                           class="fa {{request.errorMsg ? 'fa-warning fc-warn' : 'fa-circle-o-notch fa-spin'}}"></i>&nbsp;{{ request.errorMsg || request.waitingMsg || 'searching for blockchain information...' }}</span>
                     </ng-template>
                   </h4>
+                  <div *ngIf="request.data && request.data.data && request.data.data.purchaseOrderId" 
+                    class="invoice-id fs-16">
+                    Invoice #: {{ request.data.data.purchaseOrderId }}
+                  </div>
                   <div *ngIf="request.data && request.data.data && request.data.data.date" id="invoice-date-created"
                     class="invoice-date fs-16">
                     {{ request.data.data.date | date: 'MMMM d, y' }}
+                  </div>
+                  <div *ngIf="request.data && request.data.data && request.data.data.creationDate"
+                    id="invoice-date-created" class="invoice-date fs-16">
+                    {{ request.data.data.creationDate | date: 'MMMM d, y' }}
+                  </div>
+                  <div *ngIf="request.data && request.data.data && request.data.data.paymentTerms && request.data.data.paymentTerms.dueDate" class="fs-16">
+                    Due: {{ request.data.data.paymentTerms.dueDate | date: 'MMMM d, y' }}
                   </div>
                   <!-- <div class="mt-1">
                   <a *ngIf="txHash" class="fs-14 pr-1" style="opacity: 0.8; color: #008c62 !important;" href="{{web3Service.etherscanUrl}}tx/{{txHash}}" target="_blank">
@@ -75,6 +87,7 @@
                         <div *ngIf="e.name == 'UpdateBalance'" id="amount-usd" style="text-align: center;">
                           <span class="hidden"
                             id="invoice-date-paid">{{e._meta.timestamp + '000' | date: 'MMMM d, y'}}</span>
+                            {{ amount }} {{ currency }}
                           <currency-converter *ngIf="amount" [from]="currency" [to]="'USD'" [amount]="amount"
                             [timestamp]="e._meta.timestamp">
                           </currency-converter>
@@ -256,7 +269,7 @@
                   <div class="request-spinner12 request-spinner-child"></div>
                 </div>
                 <p>
-                  The request is pending. We will notify you when it has posted successfully.
+                  Your request is currently pending. We'll let you know when everything is confirmed.
                 </p>
                 <hr _ngcontent-c11="" class="my-4" style="border-top: 2px solid #EFEFEF;">
                 <div class="fs-16 lh-14 failed-container">
@@ -327,6 +340,13 @@
                 <p class="semi-bold mb-2 fs-16">History</p>
                 <div *ngIf="request && request.events && request.events.length > 0">
                   <div *ngFor="let e of request.events" class="fs-14 d-flex mb-1 justify-content-between">
+                    <div class="hidden" *ngIf="e.name == 'UpdateBalance'" id="amount-usd">
+                      <span
+                        id="invoice-date-paid">{{e._meta.timestamp + '000' | date: 'MMMM d, y'}}</span>
+                      <currency-converter *ngIf="amount" [from]="currency" [to]="'USD'" [amount]="amount"
+                        [timestamp]="e._meta.timestamp">
+                      </currency-converter>
+                    </div>
                     <span>{{ spaceBeforeCapital(e.name) === 'Canceled' ? 'Cancelled' : spaceBeforeCapital(e.name) }}
                     </span>
                     <span>{{ e._meta.timestamp * 1000 | date: 'MMMM d, y' }}</span>

@@ -1,9 +1,50 @@
 @import 'variables';
 
+div.top-filters {
+	display: table;
+	height: 66px;
+	width: 100%;
+	box-shadow: inset 0px -1px 0px #EBEBEB;
+}
+
+div.top-filters > div {
+	height: 100%;
+	width: 33%;
+	display: table-cell;
+
+	background: #FAFAFA;
+	border: 1px solid #EBEBEB;
+	border-right-width: 0;
+
+	vertical-align: middle;
+	text-align: center;
+	font-style: normal;
+	font-weight: 500;
+	font-size: 14px;
+
+	cursor: pointer;
+
+	&:last-of-type {
+		border-right-width: 1px;
+	}
+}
+
+div.top-filters div:hover {
+	filter: brightness(95%);
+}
+
+div.top-filters div.active {
+	border-bottom: 3px solid #00E6A0;
+}
+
 .mat-table {
 	overflow: auto;
 	max-height: 528px;
 	font-weight: 400;
+}
+
+.mobile-view {
+	display: none;
 }
 
 .mat-cell,
@@ -11,8 +52,86 @@
 	text-align: center;
 	font-size: 12px;
 	color: $primary;
+	margin-left: 10px;
 }
 
 .mat-sort-header-container {
 	justify-content: center !important;
+}
+
+@media screen and (max-width: 500px) {
+	.mobile-view {
+		display: block;
+		width: 100%;
+		font-size: 50%;
+		text-align: left;
+		font-style: italic;
+	}
+
+	.mat-table {
+		max-height: unset;
+	}
+
+	.mat-header-row {
+		display: none;
+	}
+
+	.mat-row { 
+		display: block;
+		align-items: start;
+		padding: 0px 15px 0px 2px;
+		min-height: auto;
+		border-bottom: 1px solid lightgrey;
+	}
+
+	.mat-cell {
+		display: block;
+		text-align: unset;
+		margin-left: 0px;
+		margin-bottom: 8px;
+	}
+	
+	.mat-cell:first-of-type {
+		padding: 0px 2px;
+		text-align: left;
+	}
+
+	.mat-cell:last-of-type {
+		padding-right: 0px;
+	}
+
+	.mat-table .blockies {
+		//top: 0px;
+	}
+
+	.cdk-column-request-payee-address {
+		display: inline-block;
+		width: 49%;
+		text-align: center;
+	}
+
+	.cdk-column-request-payer {
+		display: inline-block;
+		width: 49%;
+		margin-left: 2%;
+		text-align: center;
+	}
+
+	.cdk-column-request-payee-expectedAmount {
+		display: inline-block;
+		width: 70%;
+		text-align: left;
+	}
+
+	.cdk-column-request-status {
+		display: inline-block;
+		width: 30%;
+		text-align: right;
+	}
+
+	.cdk-column-requestId {
+		//display: none;
+		width: 100%;
+		text-align: right;
+	}
 }

@@ -118,7 +118,6 @@ export class AdvancedInvoiceComponent implements OnInit {
     );
 
     this.addInvoiceItem(false);
-    this.addInvoiceItem(false);
 
     this.invoiceData = this.formBuilder.group({
       meta: {
@@ -162,7 +161,7 @@ export class AdvancedInvoiceComponent implements OnInit {
 
   public shouldShowSellerDetails = false;
   public shouldShowBuyerDetails = false;
-  private sendingInvoice = false;
+  public sendingInvoice = false;
 
   public taxFreeTotal;
   public vatTotal;
@@ -393,8 +392,14 @@ export class AdvancedInvoiceComponent implements OnInit {
             'MetaMask Tx Signature: User denied transaction signature.'
           );
         } else {
-          console.error(response);
-          return this.utilService.openSnackBar(response.message);
+          if (response && response.message) {
+            console.error(response);
+            return this.utilService.openSnackBar(response.message);
+          } else {
+            return this.utilService.openSnackBar(
+              'Your Request could not be created. Please try again later.'
+            );
+          }
         }
       }
     };
