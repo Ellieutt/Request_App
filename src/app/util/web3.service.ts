@@ -321,7 +321,6 @@ export class Web3Service {
 
   private async enableWeb3() {
     if (typeof window.ethereum !== 'undefined') {
-      console.log(window.ethereum);
       if (window.ethereum.selectedAddress) {
         window.web3 = new Web3(window.ethereum);
       } else {
