@@ -40,6 +40,7 @@ export class Web3Service {
   public etherscanUrl: string;
 
   public accountObservable = new BehaviorSubject<string>(null);
+  public accountLoadingObservable = new BehaviorSubject<string>(null);
   public networkIdObservable = new BehaviorSubject<number>(null);
 
   private web3NotReadyMsg = 'Error when trying to instanciate web3.';
@@ -277,8 +278,10 @@ export class Web3Service {
         this.web3 = new Web3(providerEngine);
         this.ledgerConnected = true;
         this.refreshAccounts(true);
+        this.accountLoadingObservable.next('connected');
       } else {
         await this.enableWeb3();
+        this.accountLoadingObservable.next('connected');
         // if Web3 has been injected by the browser (Mist/MetaMask)
         this.ledgerConnected = false;
         this.metamask = window.web3.currentProvider.isMetaMask;
@@ -290,6 +293,7 @@ export class Web3Service {
       console.warn(
         `No web3 detected. Falling back to ${this.infuraNodeUrl[1]}.`
       );
+      this.accountLoadingObservable.next('noWeb3');
       this.networkIdObservable.next(1); // mainnet by default
       this.web3 = new Web3(
         new Web3.providers.HttpProvider(this.infuraNodeUrl[1])
@@ -317,6 +321,7 @@ export class Web3Service {
 
   private async enableWeb3() {
     if (typeof window.ethereum !== 'undefined') {
+      console.log(window.ethereum);
       if (window.ethereum.selectedAddress) {
         window.web3 = new Web3(window.ethereum);
       } else {
@@ -326,7 +331,13 @@ export class Web3Service {
         try {
           // The only way to ask user to login on Metamask is to ask for a connection, even if it was approved in the past.
           // At this stage, if the user already approved the connection in the past and connects to Metemask, he may leave the approval running in the background.
-          await window.ethereum.enable();
+          const that = this;
+          setTimeout(function() {
+            if (!window.ethereum.selectedAddress) {
+              that.accountLoadingObservable.next('enableWeb3');
+            }
+          }, 500);
+          window.ethereum.enable();
         } catch (error) {
           if (!window.ethereum.selectedAddress) {
             this.utilService.openSnackBar(
