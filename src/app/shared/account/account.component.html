@@ -22,7 +22,7 @@
         attr.data-connected="{{ web3Service.ledgerConnected ? true : web3Service.metamask ? true : false }}"></span>
       <span class="fc-accent fs-12 hidden"
         id="wallet-type">{{ web3Service.ledgerConnected ? 'Ledger Nano S' : web3Service.metamask ? 'Metamask' : 'Connect a wallet' }}</span>
-      <span class="fs-14 fwb">{{ account.substring(0,7) }}...{{ account.substring(35,42) }}</span>
+      <span class="fs-14 fwb">{{ account.substring(0,9) }}...{{ account.substring(33,42) }}</span>
     </div>
     <div class="fs-14 d-flex align-items-center network network-{{ web3Service.networkIdObservable | async }}">
       <span class="network-icon"></span>
@@ -57,7 +57,7 @@
     <button class="d-flex align-items-center"
       *ngIf="web3Service.metamask && !web3Service.ledgerConnected">
       <img src="assets/img/metamask-icon-colour.png">
-      <span>{{ account.substring(0,14) }}.a..{{ account.substring(28,42) }}</span>
+      <span>{{ account.substring(0,9) }}...{{ account.substring(33,42) }}</span>
     </button>
     <button class="d-flex align-items-center" (click)="openLedgerDialog()"
       *ngIf="web3Service.metamask && !web3Service.ledgerConnected">
@@ -67,7 +67,7 @@
     <button class="d-flex align-items-center"
       *ngIf="web3Service.ledgerConnected">
       <img style="width: 36px;" src="assets/img/ledger-icon-colour.png">
-      <span>{{ account.substring(0,14) }}...{{ account.substring(28,42) }}</span>
+      <span>{{ account.substring(0,9) }}...{{ account.substring(33,42) }}</span>
     </button>
     <button class="d-flex align-items-center" (click)="web3Service.checkAndInstantiateWeb3()"
       *ngIf="web3Service.ledgerConnected">
