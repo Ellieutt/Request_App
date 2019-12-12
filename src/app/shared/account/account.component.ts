@@ -15,7 +15,15 @@ export class AccountComponent {
     public web3Service: Web3Service,
     private dialog: MatDialog,
     private utilService: UtilService
-  ) {}
+  ) {
+    this.web3Service.accountLoadingObservable.subscribe(value => {
+      if (value == 'enableWeb3' || value == 'noWeb3') {
+        this.openModal();
+      } else {
+        this.closeModal();
+      }
+    });
+  }
 
   public accountModalOpen = false;
 
