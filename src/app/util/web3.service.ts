@@ -281,7 +281,6 @@ export class Web3Service {
         this.accountLoadingObservable.next('connected');
       } else {
         await this.enableWeb3();
-        this.accountLoadingObservable.next('connected');
         // if Web3 has been injected by the browser (Mist/MetaMask)
         this.ledgerConnected = false;
         this.metamask = window.web3.currentProvider.isMetaMask;
@@ -358,7 +357,8 @@ export class Web3Service {
     }
 
     const accs = await this.web3.eth.getAccounts();
-    if (this.accountObservable.value !== accs[0]) {
+    if (accs[0] && this.accountObservable.value !== accs[0]) {
+      this.accountLoadingObservable.next('connected');
       this.accountObservable.next(accs[0]);
     }
   }
