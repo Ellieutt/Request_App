@@ -795,19 +795,6 @@ mat-header-row {
   flex: 0 0 200px;
 }
 
-/*@media (min-width: 900px) {
-  .cdk-column-_meta-timestamp {
-    flex: 0 0 180px;
-  }
-  .cdk-column-request-payee-address, .cdk-column-request-payer, .cdk-column-request-payee-expectedAmount {
-    flex: 0 0 250px;
-  }
-
-  .cdk-column-request-status {
-    flex: 0 0 200px !important;
-  }
-}
-
 .gas-container {
   flex: 250 0 auto;
 
