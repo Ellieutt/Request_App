@@ -606,15 +606,11 @@ input[type='number'] {
   max-width: 1260px !important;
 }
 
+@media (max-width: 500px) {
   .container {
+    padding-left: 2px;
+    padding-right: 2px;
   }
-}
-
-  @media (max-width: 500px) {
-    .container {
-      padding-left: 2px;
-      padding-right: 2px;
-    }
 }
 
 h1 {
