@@ -602,14 +602,16 @@ input[type='number'] {
   -moz-appearance: textfield;
 }
 
-.container {
-  max-width: 1260px !important;
+@media (min-width: 1200px) {
+  .container {
+    max-width: 1180px !important;	
+  }	
 }
 
-@media (max-width: 500px) {
+
+@media (min-width: 1500px) {
   .container {
-    padding-left: 2px;
-    padding-right: 2px;
+    max-width: 1500px !important;
   }
 }
 
@@ -721,10 +723,6 @@ ul li:after {
   }
 }
 
-.cdk-column-request-payee-address, .cdk-column-request-payer {
-  position: relative;
-}
-
 .address-label-outer {
   cursor: pointer;
   padding: 3px 24px 3px;
@@ -744,10 +742,6 @@ ul li:after {
   canvas {
     border-radius: 0;
   }
-}
-
-.cdk-column-requestId a {
-  text-decoration: underline !important;
 }
 
 mat-header-row {
@@ -777,22 +771,6 @@ mat-header-row {
   .span.mat-select-value-text {
     color: #000 !important;
   }
-}
-
-.cdk-column-request-arrow {
-  flex: 0 0 105px !important;
-}
-
-.cdk-column-request-status, .cdk-column-request-payee-expectedAmount {
-  flex: 0 0 155px !important;
-}
-
-.cdk-column-requestId, .cdk-column-request-payer, .cdk-column-request-payee-address {
-  flex: 0 0 225px !important;
-}
-
-.cdk-column-_meta-timestamp {
-  flex: 0 0 195px;
 }
 
 .gas-container {
