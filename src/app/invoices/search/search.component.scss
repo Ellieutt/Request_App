@@ -41,6 +41,7 @@ div.top-filters div.active {
 	overflow: auto;
 	max-height: 528px;
 	font-weight: 400;
+	width: 1230px;
 }
 
 .mobile-view {
@@ -52,7 +53,7 @@ div.top-filters div.active {
 	text-align: center;
 	font-size: 12px;
 	color: $primary;
-	margin-left: 10px;
+	margin-left: 5px;
 }
 
 .mat-sort-header-container {
