@@ -73,8 +73,16 @@
               <input matInput type="text" name="lastName" placeholder="Last name" formControlName="lastName">
             </div>
           </div>
-          <label for="businessName">Company name</label>
-          <input matInput type="text" name="businessName" placeholder="Enter the company name" formControlName="businessName">
+          <div class="row">
+            <div class="col-12 col-md-6">
+              <label for="businessName">Company name</label>
+              <input matInput type="text" name="businessName" placeholder="Enter the company name" formControlName="businessName">
+            </div>
+            <div class="col-12 col-md-6">
+              <label for="taxRegistration">Tax number</label>
+              <input matInput type="text" name="taxRegistration" placeholder="Tax number" formControlName="taxRegistration">
+            </div>
+          </div>
           <label for="payerETHAddress" [ngClass]="{'warn': payerETHAddress.invalid && payerETHAddress.touched }">Customer's ETH address*</label>
           <input matInput type="text" name="payerETHAddress" placeholder="ETH address" [formControl]="payerETHAddress">
 

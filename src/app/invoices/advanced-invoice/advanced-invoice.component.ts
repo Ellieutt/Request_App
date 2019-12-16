@@ -84,6 +84,7 @@ export class AdvancedInvoiceComponent implements OnInit {
       region: [null],
       country: [null],
     }),
+    taxRegistration: [null],
   });
 
   public paymentTerms = this.formBuilder.group({
