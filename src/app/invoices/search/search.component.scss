@@ -1,5 +1,10 @@
 @import 'variables';
 
+.dashboard-container {
+	max-width: 1260px;
+	margin: 0 auto;
+}
+
 div.top-filters {
 	display: table;
 	height: 66px;
@@ -60,6 +65,30 @@ div.top-filters div.active {
 	justify-content: center !important;
 }
 
+.cdk-column-request-payee-address, .cdk-column-request-payer {
+  position: relative;
+}
+
+.cdk-column-request-arrow {
+  flex: 0 0 105px !important;
+}
+
+.cdk-column-request-status, .cdk-column-request-payee-expectedAmount {
+  flex: 0 0 155px !important;
+}
+
+.cdk-column-requestId, .cdk-column-request-payer, .cdk-column-request-payee-address {
+  flex: 0 0 225px !important;
+}
+
+.cdk-column-requestId a {
+  text-decoration: underline !important;
+}
+
+.cdk-column-_meta-timestamp {
+  flex: 0 0 195px;
+}
+
 @media screen and (max-width: 500px) {
 	.mobile-view {
 		display: block;
@@ -99,10 +128,6 @@ div.top-filters div.active {
 
 	.mat-cell:last-of-type {
 		padding-right: 0px;
-	}
-
-	.mat-table .blockies {
-		//top: 0px;
 	}
 
 	.cdk-column-request-payee-address {
