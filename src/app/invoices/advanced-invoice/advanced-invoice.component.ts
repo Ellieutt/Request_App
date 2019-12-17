@@ -188,15 +188,16 @@ export class AdvancedInvoiceComponent implements OnInit {
             this.web3Service.decimalValidator(this.currency),
             // TODO: check decimal precision because we only handle 2
             Validators.min(0),
-            Validators.max(100)
+            Validators.max(100),
           ])
         ],
         taxPercent: [
           null,
           Validators.compose([
-            Validators.required,
             // TODO: check decimal precision because we only handle 2
             this.web3Service.decimalValidator(this.currency),
+            Validators.min(0),
+            Validators.max(100),
           ]),
         ],
       })
