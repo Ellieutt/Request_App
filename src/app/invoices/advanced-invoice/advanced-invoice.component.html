@@ -16,19 +16,19 @@
       <div class="row" formGroupName="sellerInfo">
         <div class="col-12 col-sm-6 col-lg-5">
           <label for="businessName">Company name</label>
-          <input matInput type="text" name="businessName" placeholder="Enter the company name" formControlName="businessName">
+          <input matInput type="text" name="businessName" placeholder="Your company’s name" formControlName="businessName">
           <label for="payeeETHAddress">Company ETH address*</label>
-          <input matInput type="text" name="payeeETHAddress" placeholder="Enter the company ETH address" [formControl]="payeeETHAddress">
+          <input matInput type="text" name="payeeETHAddress" placeholder="The ETH address where you would like to receive payment" [formControl]="payeeETHAddress">
         </div>
         <div class="col-12 col-sm-6 col-lg-5 offset-lg-2">
           <div class="row">
             <div class="col-12 col-md-6">
               <label for="companyRegistration">Company number</label>
-              <input matInput type="text" name="companyRegistration" placeholder="Company number" formControlName="companyRegistration">
+              <input matInput type="text" name="companyRegistration" placeholder="Your company number" formControlName="companyRegistration">
             </div>
             <div class="col-12 col-md-6">
               <label for="taxRegistration">Tax number</label>
-              <input matInput type="text" name="taxRegistration" placeholder="Tax number" formControlName="taxRegistration">
+              <input matInput type="text" name="taxRegistration" placeholder="Your company’s tax number" formControlName="taxRegistration">
             </div>
             <div class="col-12 text-right" *ngIf="!shouldShowSellerDetails">
                 <button mat-button color="accent" class="mb-3" type="button" (click)="shouldShowSellerDetails = true">+ Add company details</button>
@@ -76,7 +76,7 @@
           <div class="row">
             <div class="col-12 col-md-6">
               <label for="businessName">Company name</label>
-              <input matInput type="text" name="businessName" placeholder="Enter the company name" formControlName="businessName">
+              <input matInput type="text" name="businessName" placeholder="Your customer’s company name" formControlName="businessName">
             </div>
             <div class="col-12 col-md-6">
               <label for="taxRegistration">Tax number</label>
@@ -84,7 +84,7 @@
             </div>
           </div>
           <label for="payerETHAddress" [ngClass]="{'warn': payerETHAddress.invalid && payerETHAddress.touched }">Customer's ETH address*</label>
-          <input matInput type="text" name="payerETHAddress" placeholder="ETH address" [formControl]="payerETHAddress">
+          <input matInput type="text" name="payerETHAddress" placeholder="Your customer’s ETH payment address" [formControl]="payerETHAddress">
 
           <div *ngIf="!shouldShowBuyerDetails">
             <button mat-button color="accent" class="mb-3" type="button" (click)="shouldShowBuyerDetails = true">+ Add customer details</button>
