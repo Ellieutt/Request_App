@@ -49,17 +49,6 @@ export class RnfInvoiceComponent implements OnInit {
   }
 
   getTaxFreeTotal() {
-    /*
-    return this.data['invoiceItems'].reduce(
-      (acc, item) =>
-        acc.add(
-          this.web3Service
-            .BN(item.unitPrice)
-            .mul(item.discountPercent ? this.web3Service.BN(Math.round(10000 - item.discountPercent * 100)) : 10000)
-        ),
-        this.web3Service.BN()
-      );
-      */
     return this.data['invoiceItems'].reduce(
       (acc, item) =>
         acc.add(
