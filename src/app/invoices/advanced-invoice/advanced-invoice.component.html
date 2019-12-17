@@ -179,7 +179,7 @@
               <th mat-header-cell *matHeaderCellDef class="col-2"> Price (per unit) *</th>
               <td mat-cell *matCellDef="let invoiceItem" [ngClass]="{'warn': invoiceItem.controls.unitPrice.invalid && invoiceItem.controls.unitPrice.touched }" class="col-2">
                 <div class="currency-row">
-                  <input matInput type="text" [formControl]="invoiceItem.controls.unitPrice" placeholder="0">
+                  <input matInput type="number" [formControl]="invoiceItem.controls.unitPrice" placeholder="0">
                   <div class="currency-display">
                     <img class="currencyIcon" src="assets/img/cryptoIcons/{{currency.value}}.png">
                     <span> {{currency.value}}</span>
@@ -188,10 +188,13 @@
               </td>
             </ng-container>
 
-            <ng-container matColumnDef="discount">
-              <th mat-header-cell *matHeaderCellDef class="col-1"> Discount </th>
-              <td mat-cell *matCellDef="let invoiceItem" class="right-align col-1"  [ngClass]="{'warn': invoiceItem.controls.discount.invalid && invoiceItem.controls.discount.touched }">
-                <input matInput type="text" [formControl]="invoiceItem.controls.discount" placeholder="None">
+            <ng-container matColumnDef="discountPercent">
+              <th mat-header-cell *matHeaderCellDef class="col-1"> Discount</th>
+              <td mat-cell *matCellDef="let invoiceItem" class="right-align col-1"  [ngClass]="{'warn': invoiceItem.controls.discountPercent.invalid && invoiceItem.controls.discountPercent.touched }">
+                <div class="d-flex">
+                  <input matInput type="number" [formControl]="invoiceItem.controls.discountPercent" placeholder="None">
+                  <span>&nbsp;%</span>
+                </div>
               </td>
             </ng-container>
 
@@ -208,7 +211,7 @@
             <ng-container matColumnDef="amount">
               <th mat-header-cell *matHeaderCellDef class="col-2"> Amount </th>
               <td mat-cell *matCellDef="let invoiceItem" class="invoice-item-amount right-align col-2">
-                {{itemAmount(invoiceItem.controls.unitPrice.value, invoiceItem.controls.discount.value, invoiceItem.controls.quantity.value)}} {{currency.value}}
+                {{itemAmount(invoiceItem.controls.unitPrice.value, invoiceItem.controls.discountPercent.value, invoiceItem.controls.quantity.value)}} {{currency.value}}
               </td>
             </ng-container>
 

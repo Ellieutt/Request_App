@@ -123,7 +123,7 @@ export class AdvancedInvoiceComponent implements OnInit {
     this.invoiceData = this.formBuilder.group({
       meta: {
         format: 'rnf_invoice',
-        version: '0.0.2',
+        version: '0.0.3',
       },
       creationDate: this.creationDate,
       invoiceNumber: this.invoiceNumber,
@@ -153,7 +153,7 @@ export class AdvancedInvoiceComponent implements OnInit {
     'name',
     'quantity',
     'unitPrice',
-    'discount',
+    'discountPercent',
     'taxPercent',
     'amount',
   ];
@@ -183,11 +183,19 @@ export class AdvancedInvoiceComponent implements OnInit {
             this.web3Service.decimalValidator(this.currency),
           ]),
         ],
-        discount: [null, this.web3Service.decimalValidator(this.currency)],
+        discountPercent: [null, 
+          Validators.compose([
+            this.web3Service.decimalValidator(this.currency),
+            // TODO: check decimal precision because we only handle 2
+            Validators.min(0),
+            Validators.max(100)
+          ])
+        ],
         taxPercent: [
           null,
           Validators.compose([
             Validators.required,
+            // TODO: check decimal precision because we only handle 2
             this.web3Service.decimalValidator(this.currency),
           ]),
         ],
@@ -208,10 +216,9 @@ export class AdvancedInvoiceComponent implements OnInit {
       (acc, item) =>
         acc.add(
           this.web3Service
-            .amountToBN(item.unitPrice, this.currency.value)
-            .sub(
-              this.web3Service.amountToBN(item.discount, this.currency.value)
-            )
+            .amountToBN((item.unitPrice ? item.unitPrice.toString() : '0'), this.currency.value)
+            .mul(this.web3Service.BN(Math.round((10000 - item.discountPercent * 100))))
+            .div(this.web3Service.BN(10000))
             .mul(this.web3Service.BN(item.quantity || 0))
         ),
       this.web3Service.BN()
@@ -223,10 +230,9 @@ export class AdvancedInvoiceComponent implements OnInit {
       (acc, item) =>
         acc.add(
           this.web3Service
-            .amountToBN(item.unitPrice, this.currency.value)
-            .sub(
-              this.web3Service.amountToBN(item.discount, this.currency.value)
-            )
+            .amountToBN((item.unitPrice ? item.unitPrice.toString() : '0'), this.currency.value)
+            .mul(this.web3Service.BN(Math.round((10000 - item.discountPercent * 100))))
+            .div(this.web3Service.BN(10000))
             .mul(this.web3Service.BN(item.quantity || 0))
             .mul(this.web3Service.BN(Math.round(item.taxPercent * 100)))
             .div(this.web3Service.BN(10000))
@@ -241,15 +247,16 @@ export class AdvancedInvoiceComponent implements OnInit {
     this.totalWithTax = this.taxFreeTotal.add(this.vatTotal);
   }
 
-  itemAmount(unitPrice, discount, quantity) {
+  itemAmount(unitPrice, discountPercent, quantity) {
     if (!this.web3Service.web3Ready) {
       return '0';
     }
     return this.web3Service.BNToAmount(
       this.web3Service
-        .amountToBN(unitPrice, this.currency.value)
-        .sub(this.web3Service.amountToBN(discount, this.currency.value))
-        .mul(this.web3Service.BN(quantity || 0)),
+        .amountToBN((unitPrice ? unitPrice.toString() : '0'), this.currency.value)
+        .mul(this.web3Service.BN(quantity || 0))
+        .mul(this.web3Service.BN(Math.round((10000 - discountPercent * 100))))
+        .div(this.web3Service.BN(10000)),
       this.currency.value
     );
   }
@@ -304,11 +311,11 @@ export class AdvancedInvoiceComponent implements OnInit {
     data['invoiceItems'].forEach(item => {
       item['currency'] = this.currency.value;
       item['unitPrice'] = this.web3Service
-        .amountToBN(item['unitPrice'], this.currency.value)
+        .amountToBN(item['unitPrice'].toString(), this.currency.value)
         .toString();
-      if (item['discount']) {
-        item['discount'] = this.web3Service
-          .amountToBN(item['discount'], this.currency.value)
+      if (item['discountPercent']) {
+        item['discountPercent'] = this.web3Service
+          .amountToBN(item['discountPercent'].toString(), this.currency.value)
           .toString();
       }
       if (deliveryDate) {
