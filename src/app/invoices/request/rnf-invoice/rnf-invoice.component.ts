@@ -49,6 +49,17 @@ export class RnfInvoiceComponent implements OnInit {
   }
 
   getTaxFreeTotal() {
+    /*
+    return this.data['invoiceItems'].reduce(
+      (acc, item) =>
+        acc.add(
+          this.web3Service
+            .BN(item.unitPrice)
+            .mul(item.discountPercent ? this.web3Service.BN(Math.round(10000 - item.discountPercent * 100)) : 10000)
+        ),
+        this.web3Service.BN()
+      );
+      */
     return this.data['invoiceItems'].reduce(
       (acc, item) =>
         acc.add(
@@ -58,7 +69,14 @@ export class RnfInvoiceComponent implements OnInit {
             .sub(this.web3Service.BN(item.discount || 0))
             .mul(this.web3Service.BN(item.quantity))
             // Data format versions 0.0.3+
-            .mul(item.discountPercent ? this.web3Service.BN(Math.round((1 - item.discountPercent) * 100)) : 1)
+            .mul(
+              this.web3Service.BN(
+                Math.round(
+                  10000 - (item.discountPercent ? item.discountPercent : 0) 
+                  * 100
+                )
+              )
+            )
             .div(this.web3Service.BN(10000))
         ),
       this.web3Service.BN()
@@ -82,7 +100,14 @@ export class RnfInvoiceComponent implements OnInit {
             .sub(this.web3Service.BN(item.discount || 0))
             .mul(this.web3Service.BN(item.quantity))
             // Data format versions 0.0.3+
-            .mul(item.discountPercent ? this.web3Service.BN(Math.round((1 - item.discountPercent) * 100)) : 1)
+            .mul(
+              this.web3Service.BN(
+                Math.round(
+                  10000 - (item.discountPercent ? item.discountPercent : 0) 
+                  * 100
+                )
+              )
+            )
             .div(this.web3Service.BN(10000))
             .mul(this.web3Service.BN(Math.round(item.taxPercent * 100)))
             .div(this.web3Service.BN(10000))
@@ -142,7 +167,14 @@ export class RnfInvoiceComponent implements OnInit {
       this.web3Service
         .BN(unitPrice)
         .mul(this.web3Service.BN(quantity))
-        .mul(discountPercent ? this.web3Service.BN(Math.round((1 - discountPercent) * 100)) : 1)
+        .mul(
+          this.web3Service.BN(
+            Math.round(
+              10000 - (discountPercent ? discountPercent : 0) 
+              * 100
+            )
+          )
+        )
         .div(this.web3Service.BN(10000)),
       this.request.currency
     );

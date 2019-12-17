@@ -23,7 +23,7 @@
         <ng-container *ngIf="data.meta.version === '0.0.1'">
           {{invoiceItem.unitPrice}} {{request.currency}}
         </ng-container>
-        <ng-container *ngIf="data.meta.version === '0.0.2'">
+        <ng-container *ngIf="data.meta.version !== '0.0.1'">
           {{this.web3Service.BNToAmount(this.web3Service.BN(invoiceItem.unitPrice), request.currency)}}
           {{request.currency}}
         </ng-container>
@@ -107,7 +107,7 @@
     <ng-container *ngIf="data.meta.version === '0.0.1'">
       {{data.paymentTerms.lateFeesFix}}
     </ng-container>
-    <ng-container *ngIf="data.meta.version === '0.0.2'">
+    <ng-container *ngIf="data.meta.version !== '0.0.1'">
       {{this.web3Service.BNToAmount(this.web3Service.BN(data.paymentTerms.lateFeesFix), request.currency)}}
     </ng-container>
     {{request.currency}} of late fees after the payment due date

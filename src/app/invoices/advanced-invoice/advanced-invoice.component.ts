@@ -313,11 +313,6 @@ export class AdvancedInvoiceComponent implements OnInit {
       item['unitPrice'] = this.web3Service
         .amountToBN(item['unitPrice'].toString(), this.currency.value)
         .toString();
-      if (item['discountPercent']) {
-        item['discountPercent'] = this.web3Service
-          .amountToBN(item['discountPercent'].toString(), this.currency.value)
-          .toString();
-      }
       if (deliveryDate) {
         item['deliveryDate'] = deliveryDate;
       }
