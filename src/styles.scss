@@ -602,14 +602,16 @@ input[type='number'] {
   -moz-appearance: textfield;
 }
 
-.container {
-  max-width: 1260px !important;
+@media (min-width: 1200px) {
+  .container {
+    max-width: 1180px !important;	
+  }	
 }
 
-@media (max-width: 500px) {
+
+@media (min-width: 1500px) {
   .container {
-    padding-left: 2px;
-    padding-right: 2px;
+    max-width: 1500px !important;
   }
 }
 
@@ -721,10 +723,6 @@ ul li:after {
   }
 }
 
-.cdk-column-request-payee-address, .cdk-column-request-payer {
-  position: relative;
-}
-
 .address-label-outer {
   cursor: pointer;
   padding: 3px 24px 3px;
@@ -744,10 +742,6 @@ ul li:after {
   canvas {
     border-radius: 0;
   }
-}
-
-.cdk-column-requestId a {
-  text-decoration: underline !important;
 }
 
 mat-header-row {

@@ -5,6 +5,7 @@
 </address-book>
 
 <div class="container">
+  <div class="dashboard-container">
     <div class="d-flex mb-4">
       <mat-spinner class="ml-3" [diameter]="20"
       *ngIf="searchValue &&  loading && (!dataSource || dataSource.data.length < 1)"></mat-spinner>
@@ -166,5 +167,7 @@
         </mat-toolbar-row>
       </mat-toolbar>
     </div>
+    
+  </div>
 
 </div>
