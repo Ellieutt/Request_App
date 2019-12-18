@@ -60,6 +60,7 @@
     "ngx-popover": "0.0.16",
     "requestnetwork-data-format": "^0.1.2",
     "rxjs": "^6.1.0",
+    "set-value": "^2.0.1",
     "wallet-address-validator": "^0.1.7",
     "web3": "1.0.0-beta.34",
     "web3-provider-engine": "^14.0.5",
