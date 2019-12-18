@@ -23,6 +23,7 @@ export class RnfInvoiceComponent implements OnInit {
     'unitPrice',
     'quantity',
     'discount',
+    //'discountPercent', // TODO remove if sure
     'taxPercent',
   ];
 
@@ -53,8 +54,19 @@ export class RnfInvoiceComponent implements OnInit {
         acc.add(
           this.web3Service
             .BN(item.unitPrice)
+            // Data format versions 0.0.1 & 0.0.2
             .sub(this.web3Service.BN(item.discount || 0))
             .mul(this.web3Service.BN(item.quantity))
+            // Data format versions 0.0.3+
+            .mul(
+              this.web3Service.BN(
+                Math.round(
+                  10000 -
+                    (item.discountPercent ? item.discountPercent : 0) * 100
+                )
+              )
+            )
+            .div(this.web3Service.BN(10000))
         ),
       this.web3Service.BN()
     );
@@ -73,8 +85,19 @@ export class RnfInvoiceComponent implements OnInit {
         acc.add(
           this.web3Service
             .BN(item.unitPrice)
+            // Data format versions 0.0.1 & 0.0.2
             .sub(this.web3Service.BN(item.discount || 0))
             .mul(this.web3Service.BN(item.quantity))
+            // Data format versions 0.0.3+
+            .mul(
+              this.web3Service.BN(
+                Math.round(
+                  10000 -
+                    (item.discountPercent ? item.discountPercent : 0) * 100
+                )
+              )
+            )
+            .div(this.web3Service.BN(10000))
             .mul(this.web3Service.BN(Math.round(item.taxPercent * 100)))
             .div(this.web3Service.BN(10000))
         ),
@@ -97,11 +120,12 @@ export class RnfInvoiceComponent implements OnInit {
     this.totalWithTax = this.taxFreeTotal.add(this.vatTotal);
   }
 
-  itemAmount(unitPrice, discount, quantity) {
+  itemAmount(unitPrice, discountOrDiscPercent, quantity) {
     if (!this.web3Service.web3Ready) {
       return '0';
     }
     if (this.data['meta']['version'] === '0.0.1') {
+      const discount = discountOrDiscPercent;
       return this.web3Service.BNToAmount(
         this.web3Service
           .amountToBN(unitPrice.toString(), this.request.currency)
@@ -116,11 +140,28 @@ export class RnfInvoiceComponent implements OnInit {
       );
     }
 
+    if (this.data['meta']['version'] === '0.0.2') {
+      const discount = discountOrDiscPercent;
+      return this.web3Service.BNToAmount(
+        this.web3Service
+          .BN(unitPrice)
+          .sub(this.web3Service.BN(discount || 0))
+          .mul(this.web3Service.BN(quantity)),
+        this.request.currency
+      );
+    }
+
+    const discountPercent = discountOrDiscPercent;
     return this.web3Service.BNToAmount(
       this.web3Service
         .BN(unitPrice)
-        .sub(this.web3Service.BN(discount || 0))
-        .mul(this.web3Service.BN(quantity)),
+        .mul(this.web3Service.BN(quantity))
+        .mul(
+          this.web3Service.BN(
+            Math.round(10000 - (discountPercent ? discountPercent : 0) * 100)
+          )
+        )
+        .div(this.web3Service.BN(10000)),
       this.request.currency
     );
   }
@@ -130,7 +171,7 @@ export class RnfInvoiceComponent implements OnInit {
       this.data['invoiceItems']
         .reduce(
           (acc, item) =>
-            acc + item.quantity * (item.unitPrice - (item.discount || 0)),
+            acc + item.quantity * (item.unitPrice - (item.discount || 0)), // V0.0.1
           0
         )
         .toString(),
@@ -142,7 +183,7 @@ export class RnfInvoiceComponent implements OnInit {
           (acc, item) =>
             acc +
             item.quantity *
-              (item.unitPrice - (item.discount || 0)) *
+            (item.unitPrice - (item.discount || 0)) * // V0.0.1
               (item.taxPercent * 0.01),
           0
         )
