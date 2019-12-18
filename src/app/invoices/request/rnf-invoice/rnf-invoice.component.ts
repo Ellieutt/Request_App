@@ -61,8 +61,8 @@ export class RnfInvoiceComponent implements OnInit {
             .mul(
               this.web3Service.BN(
                 Math.round(
-                  10000 - (item.discountPercent ? item.discountPercent : 0) 
-                  * 100
+                  10000 -
+                    (item.discountPercent ? item.discountPercent : 0) * 100
                 )
               )
             )
@@ -92,8 +92,8 @@ export class RnfInvoiceComponent implements OnInit {
             .mul(
               this.web3Service.BN(
                 Math.round(
-                  10000 - (item.discountPercent ? item.discountPercent : 0) 
-                  * 100
+                  10000 -
+                    (item.discountPercent ? item.discountPercent : 0) * 100
                 )
               )
             )
@@ -158,10 +158,7 @@ export class RnfInvoiceComponent implements OnInit {
         .mul(this.web3Service.BN(quantity))
         .mul(
           this.web3Service.BN(
-            Math.round(
-              10000 - (discountPercent ? discountPercent : 0) 
-              * 100
-            )
+            Math.round(10000 - (discountPercent ? discountPercent : 0) * 100)
           )
         )
         .div(this.web3Service.BN(10000)),
@@ -174,7 +171,7 @@ export class RnfInvoiceComponent implements OnInit {
       this.data['invoiceItems']
         .reduce(
           (acc, item) =>
-            acc + item.quantity * (item.unitPrice - (item.discount || 0)),          // V0.0.1
+            acc + item.quantity * (item.unitPrice - (item.discount || 0)), // V0.0.1
           0
         )
         .toString(),
@@ -186,7 +183,7 @@ export class RnfInvoiceComponent implements OnInit {
           (acc, item) =>
             acc +
             item.quantity *
-              (item.unitPrice - (item.discount || 0)) *                             // V0.0.1
+            (item.unitPrice - (item.discount || 0)) * // V0.0.1
               (item.taxPercent * 0.01),
           0
         )

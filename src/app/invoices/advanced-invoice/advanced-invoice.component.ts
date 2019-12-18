@@ -183,13 +183,14 @@ export class AdvancedInvoiceComponent implements OnInit {
             this.web3Service.decimalValidator(this.currency),
           ]),
         ],
-        discountPercent: [null, 
+        discountPercent: [
+          null,
           Validators.compose([
             this.web3Service.decimalValidator(this.currency),
             // TODO: check decimal precision because we only handle 2
             Validators.min(0),
             Validators.max(100),
-          ])
+          ]),
         ],
         taxPercent: [
           null,
@@ -217,8 +218,15 @@ export class AdvancedInvoiceComponent implements OnInit {
       (acc, item) =>
         acc.add(
           this.web3Service
-            .amountToBN((item.unitPrice ? item.unitPrice.toString() : '0'), this.currency.value)
-            .mul(this.web3Service.BN(Math.round((10000 - item.discountPercent * 100))))
+            .amountToBN(
+              item.unitPrice ? item.unitPrice.toString() : '0',
+              this.currency.value
+            )
+            .mul(
+              this.web3Service.BN(
+                Math.round(10000 - item.discountPercent * 100)
+              )
+            )
             .div(this.web3Service.BN(10000))
             .mul(this.web3Service.BN(item.quantity || 0))
         ),
@@ -231,8 +239,15 @@ export class AdvancedInvoiceComponent implements OnInit {
       (acc, item) =>
         acc.add(
           this.web3Service
-            .amountToBN((item.unitPrice ? item.unitPrice.toString() : '0'), this.currency.value)
-            .mul(this.web3Service.BN(Math.round((10000 - item.discountPercent * 100))))
+            .amountToBN(
+              item.unitPrice ? item.unitPrice.toString() : '0',
+              this.currency.value
+            )
+            .mul(
+              this.web3Service.BN(
+                Math.round(10000 - item.discountPercent * 100)
+              )
+            )
             .div(this.web3Service.BN(10000))
             .mul(this.web3Service.BN(item.quantity || 0))
             .mul(this.web3Service.BN(Math.round(item.taxPercent * 100)))
@@ -254,9 +269,9 @@ export class AdvancedInvoiceComponent implements OnInit {
     }
     return this.web3Service.BNToAmount(
       this.web3Service
-        .amountToBN((unitPrice ? unitPrice.toString() : '0'), this.currency.value)
+        .amountToBN(unitPrice ? unitPrice.toString() : '0', this.currency.value)
         .mul(this.web3Service.BN(quantity || 0))
-        .mul(this.web3Service.BN(Math.round((10000 - discountPercent * 100))))
+        .mul(this.web3Service.BN(Math.round(10000 - discountPercent * 100)))
         .div(this.web3Service.BN(10000)),
       this.currency.value
     );
