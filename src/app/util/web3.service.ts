@@ -10,6 +10,7 @@ import RequestNetwork, {
   utils,
 } from '@requestnetwork/request-network.js';
 
+const ENS = require('ethereum-ens');
 const Web3ProviderEngine = require('web3-provider-engine');
 import * as FilterSubprovider from 'web3-provider-engine/subproviders/filters';
 import * as FetchSubprovider from 'web3-provider-engine/subproviders/fetch';
@@ -52,6 +53,7 @@ export class Web3Service {
   public BN;
   public isAddress;
   public getBlockNumber;
+  public ens;
 
   private minABI = [
     // balanceOf
@@ -298,6 +300,8 @@ export class Web3Service {
         new Web3.providers.HttpProvider(this.infuraNodeUrl[1])
       );
     }
+
+    this.ens = new ENS(this.web3.currentProvider);
 
     // instanciate requestnetwork.js
     try {
@@ -780,7 +784,7 @@ export class Web3Service {
   }
 
   isAddressValidator(curr: string | FormControl) {
-    return (control: FormControl) => {
+    return async (control: FormControl) => {
       if (control.value) {
         const currency =
           typeof curr === 'string'
@@ -788,10 +792,11 @@ export class Web3Service {
             : curr.value === 'BTC'
               ? 'BTC'
               : 'ETH';
+        const isEnsAddress = await this.getEnsAddress(control.value) != null;
         if (
           (currency === 'ETH' &&
             this.web3Ready &&
-            !this.isAddress(control.value)) ||
+            !this.isAddress(control.value) && !isEnsAddress) ||
           (currency !== 'ETH' &&
             !WAValidator.validate(
               control.value,
@@ -933,6 +938,14 @@ export class Web3Service {
         JSON.stringify(cookieList),
         1
       );
+    }
+  }
+
+  public async getEnsAddress(address) {
+    try {
+      return await this.ens.resolver(address).addr();
+    } catch (e) {
+      return null;
     }
   }
 }

@@ -66,7 +66,7 @@
     "zone.js": "^0.8.26"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^0.7.1",
+    "@angular-devkit/build-angular": "^0.7.5",
     "@angular/compiler-cli": "^6.1.4",
     "@angular/language-service": "^6.1.4",
     "@babel/runtime": "^7.4.3",
@@ -80,6 +80,7 @@
     "commitizen": "^3.0.2",
     "dappeteer": "^0.2.1",
     "eth-lightwallet": "^3.0.1",
+    "ethereum-ens": "^0.7.8",
     "ganache-cli": "^6.1.6",
     "go-ipfs-dep": "^0.4.17",
     "hooked-web3-provider": "^1.0.0",
