@@ -49,6 +49,7 @@
     "@requestnetwork/request-network.js": "0.14.1",
     "angular-blockies": "1.1.1",
     "angularx-qrcode": "^1.2.2",
+    "axios": "^0.18.1",
     "bootstrap": "^4.1.3",
     "concurrently": "^4.0.1",
     "core-js": "^2.5.7",
