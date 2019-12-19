@@ -256,7 +256,7 @@ export class HomeComponent implements OnInit {
     return true;
   }
 
-  createRequest(isSend = false) {
+  async createRequest(isSend = false) {
     if (this.createLoading || this.web3Service.watchDog()) {
       return;
     }
@@ -285,25 +285,32 @@ export class HomeComponent implements OnInit {
 
     data['miscellaneous'] = { builderId: 'app.request.network' };
 
+    const payeeIdAddress = this.web3Service.isAddress(this.payeeIdAddressFormControl.value) ?
+                        this.payeeIdAddressFormControl.value : await this.web3Service.getEnsAddress(this.payeeIdAddressFormControl.value);
+    const payeePaymentAddress = this.web3Service.isAddress(this.payeePaymentAddressFormControl.value) ?
+      this.payeePaymentAddressFormControl.value : await this.web3Service.getEnsAddress(this.payeePaymentAddressFormControl.value);
+    const payerPaymentAddress = this.web3Service.isAddress(this.payerAddressFormControl.value) ?
+      this.payerAddressFormControl.value : await this.web3Service.getEnsAddress(this.payerAddressFormControl.value);
+
     const callback = response => {
       this.createLoading = false;
 
       if (response.transaction) {
         const request = {
           payee: {
-            address: this.payeeIdAddressFormControl.value,
+            address: payeeIdAddress,
             balance: this.expectedAmountFormControl.value,
             expectedAmount: this.expectedAmountFormControl.value,
           },
           currencyContract: {
             payeePaymentAddress:
-              this.payeePaymentAddressFormControl.value &&
-                this.payeePaymentAddressFormControl.value !== this.account
-                ? this.payeePaymentAddressFormControl.value
+            payeePaymentAddress &&
+            payeePaymentAddress !== this.account
+                ? payerPaymentAddress
                 : null,
           },
           currency: this.currencyFormControl.value,
-          payer: this.payerAddressFormControl.value,
+          payer: payerPaymentAddress,
           data: { data: {} },
         };
 
@@ -361,10 +368,10 @@ export class HomeComponent implements OnInit {
     this.web3Service
       .createRequest(
         this.payeeOrPayer,
-        this.payerAddressFormControl.value,
+        payerPaymentAddress,
         this.expectedAmountFormControl.value,
         this.currencyFormControl.value,
-        this.payeePaymentAddressFormControl.value,
+        payeePaymentAddress,
         { data },
         this.payerRefundAddressFormControl.value,
         currencyAddress
