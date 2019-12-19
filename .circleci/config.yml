@@ -7,7 +7,7 @@ references:
     attach_workspace:
       at: *working_directory
   node_image: &node_image
-    image: circleci/node:8
+    image: circleci/node:10
   python_image: &python_image
     image: circleci/python:2.7-jessie
   ganache_image: &ganache_image
