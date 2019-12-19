@@ -110,7 +110,7 @@ export class AdvancedInvoiceComponent implements OnInit {
     );
 
     this.payeeETHAddress.setAsyncValidators(
-      this.web3Service.isAddressValidator(this.currency),
+      this.web3Service.isAddressValidator(this.currency)
     );
 
     this.payerETHAddress.setValidators(
@@ -121,7 +121,7 @@ export class AdvancedInvoiceComponent implements OnInit {
     );
 
     this.payerETHAddress.setAsyncValidators(
-      this.web3Service.isAddressValidator(this.currency),
+      this.web3Service.isAddressValidator(this.currency)
     );
 
     this.addInvoiceItem(false);
@@ -368,11 +368,17 @@ export class AdvancedInvoiceComponent implements OnInit {
     }
     */
 
-   const payeePaymentAddress = this.web3Service.isAddress(this.payeeETHAddress.value) ?
-   this.payeeETHAddress.value : await this.web3Service.getEnsAddress(this.payeeETHAddress.value);
+    const payeePaymentAddress = this.web3Service.isAddress(
+      this.payeeETHAddress.value
+    )
+      ? this.payeeETHAddress.value
+      : await this.web3Service.getEnsAddress(this.payeeETHAddress.value);
 
-   const payerPaymentAddress = this.web3Service.isAddress(this.payerETHAddress.value) ?
-   this.payerETHAddress.value : await this.web3Service.getEnsAddress(this.payerETHAddress.value);
+    const payerPaymentAddress = this.web3Service.isAddress(
+      this.payerETHAddress.value
+    )
+      ? this.payerETHAddress.value
+      : await this.web3Service.getEnsAddress(this.payerETHAddress.value);
 
     const callback = response => {
       this.sendingInvoice = false;
@@ -392,8 +398,7 @@ export class AdvancedInvoiceComponent implements OnInit {
           },
           currencyContract: {
             payeePaymentAddress:
-              payeePaymentAddress &&
-              payeePaymentAddress !== this.account
+              payeePaymentAddress && payeePaymentAddress !== this.account
                 ? payeePaymentAddress
                 : null,
           },

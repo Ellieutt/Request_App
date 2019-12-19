@@ -792,11 +792,12 @@ export class Web3Service {
             : curr.value === 'BTC'
               ? 'BTC'
               : 'ETH';
-        const isEnsAddress = await this.getEnsAddress(control.value) != null;
+        const isEnsAddress = (await this.getEnsAddress(control.value)) != null;
         if (
           (currency === 'ETH' &&
             this.web3Ready &&
-            !this.isAddress(control.value) && !isEnsAddress) ||
+            !this.isAddress(control.value) &&
+            !isEnsAddress) ||
           (currency !== 'ETH' &&
             !WAValidator.validate(
               control.value,

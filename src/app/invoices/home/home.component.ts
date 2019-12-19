@@ -37,13 +37,13 @@ export class HomeComponent implements OnInit {
       if (
         this.payeeIdAddressFormControl.value &&
         this.payeeIdAddressFormControl.value.toLowerCase() ===
-        control.value.toLowerCase()
+          control.value.toLowerCase()
       ) {
         return { sameAddressAsPayeeAddress: true };
       } else if (
         this.payeePaymentAddressFormControl.value &&
         this.payeePaymentAddressFormControl.value.toLowerCase() ===
-        control.value.toLowerCase()
+          control.value.toLowerCase()
       ) {
         return { sameAddressAsPaymentAddress: true };
       }
@@ -65,26 +65,25 @@ export class HomeComponent implements OnInit {
 
     this.currencyFormControl = new FormControl('ETH', [Validators.required]);
     this.payeeIdAddressFormControl = new FormControl('', [Validators.required]);
-    this.payeePaymentAddressFormControl = new FormControl('', [
-      Validators.required,
-    ],
-    this.web3Service.isAddressValidator(this.currencyFormControl)
+    this.payeePaymentAddressFormControl = new FormControl(
+      '',
+      [Validators.required],
+      this.web3Service.isAddressValidator(this.currencyFormControl)
     );
     this.expectedAmountFormControl = new FormControl('', [
       Validators.required,
       this.web3Service.decimalValidator(this.currencyFormControl),
     ]);
-    this.payerAddressFormControl = new FormControl('', [
-      Validators.required,
-      this.sameAddressValidator.bind(this),
-    ],
+    this.payerAddressFormControl = new FormControl(
+      '',
+      [Validators.required, this.sameAddressValidator.bind(this)],
       this.web3Service.isAddressValidator('ETH').bind(this)
     );
 
-    this.payerRefundAddressFormControl = new FormControl('', [
-      this.sameAddressValidator.bind(this),
-    ],
-    this.web3Service.isAddressValidator(this.currencyFormControl)
+    this.payerRefundAddressFormControl = new FormControl(
+      '',
+      [this.sameAddressValidator.bind(this)],
+      this.web3Service.isAddressValidator(this.currencyFormControl)
     );
     this.dateFormControl = new FormControl('');
     this.reasonFormControl = new FormControl('');
@@ -285,12 +284,27 @@ export class HomeComponent implements OnInit {
 
     data['miscellaneous'] = { builderId: 'app.request.network' };
 
-    const payeeIdAddress = this.web3Service.isAddress(this.payeeIdAddressFormControl.value) ?
-                        this.payeeIdAddressFormControl.value : await this.web3Service.getEnsAddress(this.payeeIdAddressFormControl.value);
-    const payeePaymentAddress = this.web3Service.isAddress(this.payeePaymentAddressFormControl.value) ?
-      this.payeePaymentAddressFormControl.value : await this.web3Service.getEnsAddress(this.payeePaymentAddressFormControl.value);
-    const payerPaymentAddress = this.web3Service.isAddress(this.payerAddressFormControl.value) ?
-      this.payerAddressFormControl.value : await this.web3Service.getEnsAddress(this.payerAddressFormControl.value);
+    const payeeIdAddress = this.web3Service.isAddress(
+      this.payeeIdAddressFormControl.value
+    )
+      ? this.payeeIdAddressFormControl.value
+      : await this.web3Service.getEnsAddress(
+          this.payeeIdAddressFormControl.value
+        );
+    const payeePaymentAddress = this.web3Service.isAddress(
+      this.payeePaymentAddressFormControl.value
+    )
+      ? this.payeePaymentAddressFormControl.value
+      : await this.web3Service.getEnsAddress(
+          this.payeePaymentAddressFormControl.value
+        );
+    const payerPaymentAddress = this.web3Service.isAddress(
+      this.payerAddressFormControl.value
+    )
+      ? this.payerAddressFormControl.value
+      : await this.web3Service.getEnsAddress(
+          this.payerAddressFormControl.value
+        );
 
     const callback = response => {
       this.createLoading = false;
@@ -304,8 +318,7 @@ export class HomeComponent implements OnInit {
           },
           currencyContract: {
             payeePaymentAddress:
-            payeePaymentAddress &&
-            payeePaymentAddress !== this.account
+              payeePaymentAddress && payeePaymentAddress !== this.account
                 ? payerPaymentAddress
                 : null,
           },
@@ -362,7 +375,7 @@ export class HomeComponent implements OnInit {
     const currencyAddress =
       this.currencyFormControl.value !== 'ETH'
         ? this.web3Service.getCurrencyAddress(this.currencyFormControl.value)
-          .main
+            .main
         : null;
 
     this.web3Service
