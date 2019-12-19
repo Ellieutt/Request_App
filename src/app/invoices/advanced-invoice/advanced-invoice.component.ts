@@ -104,18 +104,24 @@ export class AdvancedInvoiceComponent implements OnInit {
   ) {
     this.payeeETHAddress.setValidators(
       Validators.compose([
-        this.web3Service.isAddressValidator(this.currency),
         this.web3Service.isSameAddressValidator(this.payerETHAddress),
         Validators.required,
       ])
     );
 
+    this.payeeETHAddress.setAsyncValidators(
+      this.web3Service.isAddressValidator(this.currency)
+    );
+
     this.payerETHAddress.setValidators(
       Validators.compose([
-        this.web3Service.isAddressValidator(this.currency),
         this.web3Service.isSameAddressValidator(this.payeeETHAddress),
         Validators.required,
       ])
+    );
+
+    this.payerETHAddress.setAsyncValidators(
+      this.web3Service.isAddressValidator(this.currency)
     );
 
     this.addInvoiceItem(false);
@@ -277,7 +283,7 @@ export class AdvancedInvoiceComponent implements OnInit {
     );
   }
 
-  sendInvoice() {
+  async sendInvoice() {
     this.sendingInvoice = true;
 
     if (this.web3Service.watchDog()) {
@@ -362,6 +368,18 @@ export class AdvancedInvoiceComponent implements OnInit {
     }
     */
 
+    const payeePaymentAddress = this.web3Service.isAddress(
+      this.payeeETHAddress.value
+    )
+      ? this.payeeETHAddress.value
+      : await this.web3Service.getEnsAddress(this.payeeETHAddress.value);
+
+    const payerPaymentAddress = this.web3Service.isAddress(
+      this.payerETHAddress.value
+    )
+      ? this.payerETHAddress.value
+      : await this.web3Service.getEnsAddress(this.payerETHAddress.value);
+
     const callback = response => {
       this.sendingInvoice = false;
 
@@ -371,21 +389,21 @@ export class AdvancedInvoiceComponent implements OnInit {
           'Ok',
           'info-snackbar'
         );
+
         const request = {
           payee: {
-            address: this.payeeETHAddress.value,
+            address: payeePaymentAddress,
             balance: this.totalWithTax.toString(),
             expectedAmount: this.totalWithTax.toString(),
           },
           currencyContract: {
             payeePaymentAddress:
-              this.payeeETHAddress.value &&
-              this.payeeETHAddress.value !== this.account
-                ? this.payeeETHAddress.value
+              payeePaymentAddress && payeePaymentAddress !== this.account
+                ? payeePaymentAddress
                 : null,
           },
           currency: this.currency.value,
-          payer: this.payerETHAddress.value,
+          payer: payerPaymentAddress,
           data: { data: Object.assign({}, data) },
         };
 
@@ -426,12 +444,12 @@ export class AdvancedInvoiceComponent implements OnInit {
     this.web3Service
       .createRequest(
         'Payee',
-        this.payerETHAddress.value,
+        payerPaymentAddress,
         this.web3Service.BNToAmount(this.totalWithTax, this.currency.value),
         this.currency.value,
-        this.payeeETHAddress.value,
+        payeePaymentAddress,
         { data },
-        this.payerETHAddress.value
+        payerPaymentAddress
       )
       .on('broadcasted', response => {
         callback(response);
