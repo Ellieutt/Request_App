@@ -11,9 +11,9 @@
 <button mat-button class="account-menu-button no-focus-overlay py-1" (click)="openModal()">
   <div *ngIf="web3Service.accountObservable | async as account; else accountLocked"
     class="d-flex justify-content-between align-items-center">
-    <angular-blockies *ngIf="web3Service.ledgerConnected" [options]="{ seed: account.toLowerCase() }" class="blockies">
-    </angular-blockies>
 
+    <img *ngIf="web3Service.ledgerConnected" style="width: 30px; position: relative; top: -1px; left: -10px;"
+      src="assets/img/ledger-icon-colour.png">
     <img *ngIf="!web3Service.ledgerConnected" style="width: 30px; position: relative; top: -1px; left: -10px;"
       src="assets/img/metamask-icon-colour.png">
 
