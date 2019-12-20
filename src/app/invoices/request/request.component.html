@@ -32,7 +32,7 @@
         <div class="mr-lg-auto col-lg-6 col-xl-5 mr-xl-auto request-invoice-container">
           <network-identifier [isRinkeby]="web3Service.networkIdObservable.value == 4"></network-identifier>
           <mat-card class="p-0 br-7 sh-blue" id="request-invoice-outer">
-            <div id="{{ isInvoiceRequest() ? 'request-invoice-inner-pdf' : ''}}" class="request-invoice-inner-pdf">
+            <div id="request-invoice-inner-pdf" class="request-invoice-inner-pdf">
               <div class="d-flex p-4 btr-7">
                 <img class="px-3" style="max-height: 75px;padding:0!important;" src="assets/img/request-logo.png">
                 <div class="ml-auto text-right px-3">
