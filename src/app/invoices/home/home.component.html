@@ -41,7 +41,7 @@
         <form [formGroup]="requestForm" autocomplete="off">
           <div class="p-4 mb-5">
             <mat-form-field class="w-100 mb-1" *ngIf="isRequestForm">
-              <input matInput type="text" name="ETHAddress" [placeholder]="'Your Address'"
+              <input matInput type="text" name="ETHAddress" [placeholder]="'On which ' + getBlockchainSymbol() + ' address do you want to receieve the funds?'"
                 [formControl]="payeePaymentAddressFormControl">
               <mat-error *ngIf="payeePaymentAddressFormControl.hasError('required')">
                 Payment address is
@@ -73,7 +73,7 @@
             </div>
             <mat-form-field class="w-100 mb-1">
               <input matInput type="text" name="payerETHAddress"
-                placeholder="{{ isRequestForm ? 'Payer’s ETH address': 'Recipient’s ETH address'}}"
+                placeholder="{{ isRequestForm ? 'Payer’s Ethereum or ENS address': 'Recipient’s Ethereum or ENS address'}}"
                 [formControl]="payerAddressFormControl">
               <mat-error *ngIf="payerAddressFormControl.hasError('required')">
                 payer's address is
@@ -110,7 +110,7 @@
               </mat-error>
             </mat-form-field>
             <mat-form-field class="w-100" hintLabel="Max 256 characters">
-              <input matInput type="text" name="reason" placeholder="Reason: Bounty, Salary, Expense, etc… (optional)"
+              <input matInput type="text" name="reason" placeholder="Reason (optional)"
                 maxlength="256" [formControl]="reasonFormControl">
               <mat-hint align="end">{{ reasonFormControl?.value.length || 0 }}/256</mat-hint>
             </mat-form-field>

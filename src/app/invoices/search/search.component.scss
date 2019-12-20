@@ -46,7 +46,6 @@ div.top-filters div.active {
 	overflow: auto;
 	max-height: 528px;
 	font-weight: 400;
-	width: 1230px;
 }
 
 .mobile-view {
@@ -77,7 +76,11 @@ div.top-filters div.active {
   flex: 0 0 155px !important;
 }
 
-.cdk-column-requestId, .cdk-column-request-payer, .cdk-column-request-payee-address {
+.cdk-column-requestId {
+	flex: 0 0 125px !important;
+}
+
+.cdk-column-request-payer, .cdk-column-request-payee-address {
   flex: 0 0 225px !important;
 }
 
@@ -86,7 +89,7 @@ div.top-filters div.active {
 }
 
 .cdk-column-_meta-timestamp {
-  flex: 0 0 195px;
+  flex: 0 0 185px;
 }
 
 @media screen and (max-width: 500px) {
