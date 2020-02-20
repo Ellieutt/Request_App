@@ -10,6 +10,7 @@ import RequestNetwork, {
   utils,
 } from '@requestnetwork/request-network.js';
 
+const ENS = require('ethereum-ens');
 const Web3ProviderEngine = require('web3-provider-engine');
 import * as FilterSubprovider from 'web3-provider-engine/subproviders/filters';
 import * as FetchSubprovider from 'web3-provider-engine/subproviders/fetch';
@@ -40,6 +41,7 @@ export class Web3Service {
   public etherscanUrl: string;
 
   public accountObservable = new BehaviorSubject<string>(null);
+  public accountLoadingObservable = new BehaviorSubject<string>(null);
   public networkIdObservable = new BehaviorSubject<number>(null);
 
   private web3NotReadyMsg = 'Error when trying to instanciate web3.';
@@ -51,6 +53,7 @@ export class Web3Service {
   public BN;
   public isAddress;
   public getBlockNumber;
+  public ens;
 
   private minABI = [
     // balanceOf
@@ -277,6 +280,7 @@ export class Web3Service {
         this.web3 = new Web3(providerEngine);
         this.ledgerConnected = true;
         this.refreshAccounts(true);
+        this.accountLoadingObservable.next('connected');
       } else {
         await this.enableWeb3();
         // if Web3 has been injected by the browser (Mist/MetaMask)
@@ -290,11 +294,14 @@ export class Web3Service {
       console.warn(
         `No web3 detected. Falling back to ${this.infuraNodeUrl[1]}.`
       );
+      this.accountLoadingObservable.next('noWeb3');
       this.networkIdObservable.next(1); // mainnet by default
       this.web3 = new Web3(
         new Web3.providers.HttpProvider(this.infuraNodeUrl[1])
       );
     }
+
+    this.ens = new ENS(this.web3.currentProvider);
 
     // instanciate requestnetwork.js
     try {
@@ -326,7 +333,13 @@ export class Web3Service {
         try {
           // The only way to ask user to login on Metamask is to ask for a connection, even if it was approved in the past.
           // At this stage, if the user already approved the connection in the past and connects to Metemask, he may leave the approval running in the background.
-          await window.ethereum.enable();
+          const that = this;
+          setTimeout(function() {
+            if (!window.ethereum.selectedAddress) {
+              that.accountLoadingObservable.next('enableWeb3');
+            }
+          }, 500);
+          window.ethereum.enable();
         } catch (error) {
           if (!window.ethereum.selectedAddress) {
             this.utilService.openSnackBar(
@@ -348,7 +361,8 @@ export class Web3Service {
     }
 
     const accs = await this.web3.eth.getAccounts();
-    if (this.accountObservable.value !== accs[0]) {
+    if (accs[0] && this.accountObservable.value !== accs[0]) {
+      this.accountLoadingObservable.next('connected');
       this.accountObservable.next(accs[0]);
     }
   }
@@ -770,7 +784,7 @@ export class Web3Service {
   }
 
   isAddressValidator(curr: string | FormControl) {
-    return (control: FormControl) => {
+    return async (control: FormControl) => {
       if (control.value) {
         const currency =
           typeof curr === 'string'
@@ -778,10 +792,12 @@ export class Web3Service {
             : curr.value === 'BTC'
               ? 'BTC'
               : 'ETH';
+        const isEnsAddress = (await this.getEnsAddress(control.value)) != null;
         if (
           (currency === 'ETH' &&
             this.web3Ready &&
-            !this.isAddress(control.value)) ||
+            !this.isAddress(control.value) &&
+            !isEnsAddress) ||
           (currency !== 'ETH' &&
             !WAValidator.validate(
               control.value,
@@ -923,6 +939,14 @@ export class Web3Service {
         JSON.stringify(cookieList),
         1
       );
+    }
+  }
+
+  public async getEnsAddress(address) {
+    try {
+      return await this.ens.resolver(address).addr();
+    } catch (e) {
+      return null;
     }
   }
 }

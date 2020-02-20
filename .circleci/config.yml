@@ -7,7 +7,7 @@ references:
     attach_workspace:
       at: *working_directory
   node_image: &node_image
-    image: circleci/node:8
+    image: circleci/node:10
   python_image: &python_image
     image: circleci/python:2.7-jessie
   ganache_image: &ganache_image
@@ -78,7 +78,7 @@ jobs:
       - run:
           name: Run E2E tests
           command: yarn e2e:ci
-  deploy:
+  deploy-staging:
     docker: 
       - *python_image
     working_directory: *working_directory
@@ -91,6 +91,19 @@ jobs:
           name: Deploy to S3
           command:
             aws s3 sync ./dist s3://baguette-app.request.network --acl public-read --delete
+  deploy-live:
+    docker: 
+      - *python_image
+    working_directory: *working_directory
+    steps:
+      - *attach_workspace
+      - run:
+          name: Install awscli
+          command: sudo pip install awscli
+      - deploy:
+          name: Deploy to S3
+          command:
+            aws s3 sync ./dist s3://app.request.network --acl public-read --delete
 workflows:
   version: 2
   build:
@@ -102,10 +115,18 @@ workflows:
       - build:
           requires:
             - install
-      - deploy:
+      - deploy-staging:
           requires:
             - build
             - format-lint
           filters:
             branches:
               only: staging
+      - deploy-live:
+          requires:
+            - build
+            - format-lint
+          filters:
+            branches:
+              only: master
+

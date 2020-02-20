@@ -178,8 +178,8 @@ export class RequestComponent implements OnInit, OnDestroy, AfterContentInit {
 
     const loadReceiptJs = setInterval(function() {
       if (document.getElementById('download-receipt')) {
-        that.loadScript('../assets/js/receipt.js');
         clearInterval(loadReceiptJs);
+        that.loadScript('../assets/js/receipt.js');
       }
     }, 500);
   }
@@ -189,7 +189,6 @@ export class RequestComponent implements OnInit, OnDestroy, AfterContentInit {
     const script = document.createElement('script');
     script.innerHTML = '';
     script.src = url;
-    script.async = false;
     script.defer = true;
     body.appendChild(script);
   }

@@ -4,11 +4,17 @@
       <h1>Request a cryptocurrency payment.</h1>
       <br />
       <ul>
-        <li><b>Decentralized</b><br />An open network for transaction requests</li>
-        <li><b>Easy-to-use</b><br />No signup or personal information needed to get started</li>
-        <li><b>Multiple currency support</b><br />11+ currencies including ETH & DAI</li>
+        <li><b>Completely Decentralized</b><br />Your data remains independent, trustworthy and accessible</li>
+        <li><b>Private and easy-to-use</b><br />No signup or personal information needed to get started</li>
+        <li><b>Peer-to-peer</b><br />No middleman means low fees and instant transfers 365 days a year</li>
+        <li><b>Advanced Integrations</b><br />Export your data to your accounting software or sync automatically
+          with one of our partner apps</li>
       </ul>
-      <a routerLink="/invoice" class="d-inline-block mt-3 fs-16" style="color: #00e6a0">+ Create an Invoice</a>
+      <span class="business-access">
+        <b>Are you a busines that needs to add more information to your transaction?</b>
+        <br />
+        Try our<a routerLink="/invoice" class="d-inline-block mt-3 fs-16" style="color: #00e6a0">&nbsp; invoicing tool</a>.
+      </span>
     </div>
     <div class="col-md-6 ml-md-auto">
       <network-identifier [isRinkeby]="getNetworkValue() == 4"></network-identifier>
@@ -37,7 +43,7 @@
         <form [formGroup]="requestForm" autocomplete="off">
           <div class="p-4 mb-5">
             <mat-form-field class="w-100 mb-1" *ngIf="isRequestForm">
-              <input matInput type="text" name="ETHAddress" [placeholder]="'Your Address'"
+              <input matInput type="text" name="ETHAddress" [placeholder]="'On which ' + getBlockchainSymbol() + ' address do you want to receieve the funds?'"
                 [formControl]="payeePaymentAddressFormControl">
               <mat-error *ngIf="payeePaymentAddressFormControl.hasError('required')">
                 Payment address is
@@ -69,7 +75,7 @@
             </div>
             <mat-form-field class="w-100 mb-1">
               <input matInput type="text" name="payerETHAddress"
-                placeholder="{{ isRequestForm ? 'Payer’s ETH address': 'Recipient’s ETH address'}}"
+                placeholder="{{ isRequestForm ? 'Payer’s Ethereum or ENS address': 'Recipient’s Ethereum or ENS address'}}"
                 [formControl]="payerAddressFormControl">
               <mat-error *ngIf="payerAddressFormControl.hasError('required')">
                 payer's address is
@@ -106,7 +112,7 @@
               </mat-error>
             </mat-form-field>
             <mat-form-field class="w-100" hintLabel="Max 256 characters">
-              <input matInput type="text" name="reason" placeholder="Reason: Bounty, Salary, Expense, etc… (optional)"
+              <input matInput type="text" name="reason" placeholder="Reason (optional)"
                 maxlength="256" [formControl]="reasonFormControl">
               <mat-hint align="end">{{ reasonFormControl?.value.length || 0 }}/256</mat-hint>
             </mat-form-field>
@@ -132,45 +138,18 @@
 
 <div class="bg-white home-elements">
   <div class="container">
-    <div class="row my-5">
-      <div class="col-md-6">
-        <img style="width: 100%" src="assets/img/home-doc.png" />
-      </div>
-      <div class="col-md-5 ml-md-auto">
-        <h1>Documented transactions</h1>
-        <p>Complete records of your cryptocurrency payments to use in your accounting and other flows.</p>
-      </div>
-    </div>
-    <div class="row my-5 pt-4">
-      <div class="col-md-5">
-        <h1>Peer-to-peer payments</h1>
-        <p>The payment goes directly from the payer to your wallet, no middleman.</p>
-      </div>
-      <div class="col-md-6 ml-md-auto">
-        <img style="width: 100%" src="assets/img/home-p2p.png" />
-      </div>
-    </div>
-    <div class="row my-6 pt-4">
-      <div class="col-md-5">
-        <img style="width: 100%" src="assets/img/home-fees.png" />
-      </div>
-      <div class="col-md-5 ml-md-auto">
-        <h1>No added fees</h1>
-        <p>For transactions of any size from anywhere in the world.</p>
-      </div>
-    </div>
-  </div>
+    <img class="how-to" src="assets/img/how-to-request-cryptocurrency.png" />
 </div>
 
 <div class="home-figures">
   <div class="row py-6">
     <div class="col-md-6 home-item">
-      <h1>$600,000+</h1>
+      <h1>$780,000+</h1>
       <p>has already been transferred<br />
         using the Request network</p>
     </div>
     <div class="col-md-6 home-item">
-      <h1>1300+</h1>
+      <h1>1500+</h1>
       <p>Requests for payment <br />
         already created</p>
     </div>

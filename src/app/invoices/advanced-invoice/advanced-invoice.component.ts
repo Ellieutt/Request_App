@@ -84,6 +84,7 @@ export class AdvancedInvoiceComponent implements OnInit {
       region: [null],
       country: [null],
     }),
+    taxRegistration: [null],
   });
 
   public paymentTerms = this.formBuilder.group({
@@ -103,18 +104,24 @@ export class AdvancedInvoiceComponent implements OnInit {
   ) {
     this.payeeETHAddress.setValidators(
       Validators.compose([
-        this.web3Service.isAddressValidator(this.currency),
         this.web3Service.isSameAddressValidator(this.payerETHAddress),
         Validators.required,
       ])
     );
 
+    this.payeeETHAddress.setAsyncValidators(
+      this.web3Service.isAddressValidator(this.currency)
+    );
+
     this.payerETHAddress.setValidators(
       Validators.compose([
-        this.web3Service.isAddressValidator(this.currency),
         this.web3Service.isSameAddressValidator(this.payeeETHAddress),
         Validators.required,
       ])
+    );
+
+    this.payerETHAddress.setAsyncValidators(
+      this.web3Service.isAddressValidator(this.currency)
     );
 
     this.addInvoiceItem(false);
@@ -122,7 +129,7 @@ export class AdvancedInvoiceComponent implements OnInit {
     this.invoiceData = this.formBuilder.group({
       meta: {
         format: 'rnf_invoice',
-        version: '0.0.2',
+        version: '0.0.3',
       },
       creationDate: this.creationDate,
       invoiceNumber: this.invoiceNumber,
@@ -152,7 +159,7 @@ export class AdvancedInvoiceComponent implements OnInit {
     'name',
     'quantity',
     'unitPrice',
-    'discount',
+    'discountPercent',
     'taxPercent',
     'amount',
   ];
@@ -182,12 +189,22 @@ export class AdvancedInvoiceComponent implements OnInit {
             this.web3Service.decimalValidator(this.currency),
           ]),
         ],
-        discount: [null, this.web3Service.decimalValidator(this.currency)],
+        discountPercent: [
+          null,
+          Validators.compose([
+            this.web3Service.decimalValidator(this.currency),
+            // TODO: check decimal precision because we only handle 2
+            Validators.min(0),
+            Validators.max(100),
+          ]),
+        ],
         taxPercent: [
           null,
           Validators.compose([
-            Validators.required,
+            // TODO: check decimal precision because we only handle 2
             this.web3Service.decimalValidator(this.currency),
+            Validators.min(0),
+            Validators.max(100),
           ]),
         ],
       })
@@ -207,10 +224,16 @@ export class AdvancedInvoiceComponent implements OnInit {
       (acc, item) =>
         acc.add(
           this.web3Service
-            .amountToBN(item.unitPrice, this.currency.value)
-            .sub(
-              this.web3Service.amountToBN(item.discount, this.currency.value)
+            .amountToBN(
+              item.unitPrice ? item.unitPrice.toString() : '0',
+              this.currency.value
             )
+            .mul(
+              this.web3Service.BN(
+                Math.round(10000 - item.discountPercent * 100)
+              )
+            )
+            .div(this.web3Service.BN(10000))
             .mul(this.web3Service.BN(item.quantity || 0))
         ),
       this.web3Service.BN()
@@ -222,10 +245,16 @@ export class AdvancedInvoiceComponent implements OnInit {
       (acc, item) =>
         acc.add(
           this.web3Service
-            .amountToBN(item.unitPrice, this.currency.value)
-            .sub(
-              this.web3Service.amountToBN(item.discount, this.currency.value)
+            .amountToBN(
+              item.unitPrice ? item.unitPrice.toString() : '0',
+              this.currency.value
             )
+            .mul(
+              this.web3Service.BN(
+                Math.round(10000 - item.discountPercent * 100)
+              )
+            )
+            .div(this.web3Service.BN(10000))
             .mul(this.web3Service.BN(item.quantity || 0))
             .mul(this.web3Service.BN(Math.round(item.taxPercent * 100)))
             .div(this.web3Service.BN(10000))
@@ -240,20 +269,21 @@ export class AdvancedInvoiceComponent implements OnInit {
     this.totalWithTax = this.taxFreeTotal.add(this.vatTotal);
   }
 
-  itemAmount(unitPrice, discount, quantity) {
+  itemAmount(unitPrice, discountPercent, quantity) {
     if (!this.web3Service.web3Ready) {
       return '0';
     }
     return this.web3Service.BNToAmount(
       this.web3Service
-        .amountToBN(unitPrice, this.currency.value)
-        .sub(this.web3Service.amountToBN(discount, this.currency.value))
-        .mul(this.web3Service.BN(quantity || 0)),
+        .amountToBN(unitPrice ? unitPrice.toString() : '0', this.currency.value)
+        .mul(this.web3Service.BN(quantity || 0))
+        .mul(this.web3Service.BN(Math.round(10000 - discountPercent * 100)))
+        .div(this.web3Service.BN(10000)),
       this.currency.value
     );
   }
 
-  sendInvoice() {
+  async sendInvoice() {
     this.sendingInvoice = true;
 
     if (this.web3Service.watchDog()) {
@@ -303,13 +333,8 @@ export class AdvancedInvoiceComponent implements OnInit {
     data['invoiceItems'].forEach(item => {
       item['currency'] = this.currency.value;
       item['unitPrice'] = this.web3Service
-        .amountToBN(item['unitPrice'], this.currency.value)
+        .amountToBN(item['unitPrice'].toString(), this.currency.value)
         .toString();
-      if (item['discount']) {
-        item['discount'] = this.web3Service
-          .amountToBN(item['discount'], this.currency.value)
-          .toString();
-      }
       if (deliveryDate) {
         item['deliveryDate'] = deliveryDate;
       }
@@ -343,6 +368,18 @@ export class AdvancedInvoiceComponent implements OnInit {
     }
     */
 
+    const payeePaymentAddress = this.web3Service.isAddress(
+      this.payeeETHAddress.value
+    )
+      ? this.payeeETHAddress.value
+      : await this.web3Service.getEnsAddress(this.payeeETHAddress.value);
+
+    const payerPaymentAddress = this.web3Service.isAddress(
+      this.payerETHAddress.value
+    )
+      ? this.payerETHAddress.value
+      : await this.web3Service.getEnsAddress(this.payerETHAddress.value);
+
     const callback = response => {
       this.sendingInvoice = false;
 
@@ -352,21 +389,21 @@ export class AdvancedInvoiceComponent implements OnInit {
           'Ok',
           'info-snackbar'
         );
+
         const request = {
           payee: {
-            address: this.payeeETHAddress.value,
+            address: payeePaymentAddress,
             balance: this.totalWithTax.toString(),
             expectedAmount: this.totalWithTax.toString(),
           },
           currencyContract: {
             payeePaymentAddress:
-              this.payeeETHAddress.value &&
-              this.payeeETHAddress.value !== this.account
-                ? this.payeeETHAddress.value
+              payeePaymentAddress && payeePaymentAddress !== this.account
+                ? payeePaymentAddress
                 : null,
           },
           currency: this.currency.value,
-          payer: this.payerETHAddress.value,
+          payer: payerPaymentAddress,
           data: { data: Object.assign({}, data) },
         };
 
@@ -407,12 +444,12 @@ export class AdvancedInvoiceComponent implements OnInit {
     this.web3Service
       .createRequest(
         'Payee',
-        this.payerETHAddress.value,
+        payerPaymentAddress,
         this.web3Service.BNToAmount(this.totalWithTax, this.currency.value),
         this.currency.value,
-        this.payeeETHAddress.value,
+        payeePaymentAddress,
         { data },
-        this.payerETHAddress.value
+        payerPaymentAddress
       )
       .on('broadcasted', response => {
         callback(response);
