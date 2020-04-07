@@ -90,7 +90,7 @@ export class CSVExportComponent {
       'Requester Label',
       'Payer',
       'Payer Label',
-      'Payment Addres',
+      'Payment Address',
       'Amount',
       'Currency',
       'Status',
