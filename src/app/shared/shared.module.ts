@@ -31,6 +31,7 @@ import { MatMomentDateModule } from '@angular/material-moment-adapter';
 import { MatTreeModule } from '@angular/material/tree';
 
 import { AccountComponent } from './account/account.component';
+import { CreateComponent } from './create/create.component';
 import { GasSelectorComponent } from './gas-selector/gas-selector.component';
 import { RouterModule } from '@angular/router';
 import { BlockiesModule } from 'angular-blockies';
@@ -91,6 +92,7 @@ import { CSVExportComponent } from './CSV-export/CSV-export.component';
   ],
   declarations: [
     AccountComponent,
+    CreateComponent,
     GasSelectorComponent,
     RequestMetadataComponent,
     CurrencyConverterComponent,
@@ -111,7 +113,7 @@ import { CSVExportComponent } from './CSV-export/CSV-export.component';
     BlockiesModule,
     PopoverModule,
     QRCodeModule,
-
+    CreateComponent,
     AccountComponent,
     GasSelectorComponent,
     RequestMetadataComponent,
